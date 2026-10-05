@@ -1,0 +1,7 @@
+# Konfigurace Cloudflare Pages projektu "polovodice-mockup".
+# Zdroj pravdy pro nasazení statického exportu Next.js do Cloudflare Pages.
+# Dokumentace: https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+"$schema" = "./node_modules/wrangler/config-schema.json"
+name = "polovodice-mockup"
+pages_build_output_dir = "./out"
+compatibility_date = "2026-10-05"

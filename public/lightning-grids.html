@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Výběr bleskového gridu // POLOVODIČE ČVUT FEL</title>
+  <style>
+    :root {
+      --bg: #0b0f2a;
+      --card-bg: #141846;
+      --text: #ffffff;
+      --muted: #94a3b8;
+      --cyan: #44d8eb;
+      --blue: #3a2ad0;
+      --border: #24264a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 32px 20px 80px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    p.subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      background: rgba(68, 216, 235, 0.15);
+      color: var(--cyan);
+      border: 1px solid rgba(68, 216, 235, 0.3);
+      font-size: 11px;
+      font-family: monospace;
+      font-weight: bold;
+      border-radius: 3px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .grid-list {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .variant-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .variant-header {
+      padding: 16px 24px;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .variant-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .variant-num {
+      background: var(--cyan);
+      color: #050724;
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 900;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+
+    .variant-desc {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: monospace;
+    }
+
+    .preview-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    @media (max-width: 860px) {
+      .preview-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .preview-box {
+      height: 260px;
+      position: relative;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preview-box.dark {
+      background-color: #080B38;
+      border-right: 1px solid var(--border);
+    }
+
+    .preview-box.light {
+      background-color: #F8FAFC;
+    }
+
+    .preview-label {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      font-family: monospace;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .dark .preview-label {
+      background: rgba(0, 0, 0, 0.6);
+      color: var(--cyan);
+      border: 1px solid rgba(68, 216, 235, 0.3);
+    }
+
+    .light .preview-label {
+      background: rgba(255, 255, 255, 0.85);
+      color: #0065BD;
+      border: 1px solid rgba(0, 101, 189, 0.2);
+    }
+
+    /* Ukázková karta obsahu na pozadí pro ověření čitelnosti */
+    .sample-content {
+      position: relative;
+      z-index: 2;
+      max-width: 320px;
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 4px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .dark .sample-content {
+      background: rgba(20, 24, 70, 0.85);
+      border: 1px solid rgba(68, 216, 235, 0.3);
+      color: #fff;
+    }
+
+    .light .sample-content {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid #E2E8F0;
+      color: #0F172A;
+    }
+
+    .sample-tag {
+      font-family: monospace;
+      font-size: 10px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      display: inline-block;
+    }
+
+    .dark .sample-tag { color: var(--cyan); }
+    .light .sample-tag { color: #0065BD; }
+
+    .sample-title {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    .sample-desc {
+      font-size: 11px;
+      line-height: 1.4;
+      opacity: 0.8;
+    }
+
+    /* ========================================================
+       10 BLESKOVÝCH GRIDŮ (DEFINICE POZADÍ)
+       ======================================================== */
+
+    /* 1. Ostrý bleskový kříž (60px) */
+    .grid-v1-dark {
+      background-size: 60px 60px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M 0 30 L 18 30 L 25 18 L 35 42 L 42 30 L 60 30 M 30 0 L 30 18 L 18 25 L 42 35 L 30 42 L 30 60' fill='none' stroke='rgba(68,216,235,0.22)' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='miter'/%3E%3Ccircle cx='30' cy='30' r='2.5' fill='rgba(68,216,235,0.7)'/%3E%3C/svg%3E");
+    }
+    .grid-v1-light {
+      background-size: 60px 60px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M 0 30 L 18 30 L 25 18 L 35 42 L 42 30 L 60 30 M 30 0 L 30 18 L 18 25 L 42 35 L 30 42 L 30 60' fill='none' stroke='rgba(0,101,189,0.18)' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='miter'/%3E%3Ccircle cx='30' cy='30' r='2.5' fill='rgba(0,101,189,0.5)'/%3E%3C/svg%3E");
+    }
+
+    /* 2. Plazmová síť s diagonálami (80px) */
+    .grid-v2-dark {
+      background-size: 80px 80px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M 0 40 L 14 26 L 24 54 L 40 30 L 56 54 L 66 26 L 80 40 M 40 0 L 26 14 L 54 24 L 30 40 L 54 56 L 26 66 L 40 80 M 0 0 L 14 16 L 9 20 L 26 28 L 22 34 L 40 40 L 54 56 L 49 60 L 66 68 L 62 74 L 80 80' fill='none' stroke='rgba(68,216,235,0.22)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='miter'/%3E%3Ccircle cx='40' cy='40' r='2.5' fill='rgba(67,246,200,0.8)'/%3E%3C/svg%3E");
+    }
+    .grid-v2-light {
+      background-size: 80px 80px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M 0 40 L 14 26 L 24 54 L 40 30 L 56 54 L 66 26 L 80 40 M 40 0 L 26 14 L 54 24 L 30 40 L 54 56 L 26 66 L 40 80 M 0 0 L 14 16 L 9 20 L 26 28 L 22 34 L 40 40 L 54 56 L 49 60 L 66 68 L 62 74 L 80 80' fill='none' stroke='rgba(0,101,189,0.18)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='miter'/%3E%3Ccircle cx='40' cy='40' r='2.5' fill='rgba(0,101,189,0.5)'/%3E%3C/svg%3E");
+    }
+
+    /* 3. Čistý 3-lomený bleskový krok (50px) */
+    .grid-v3-dark {
+      background-size: 50px 50px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M 0 0 L 15 0 L 22 -6 L 28 6 L 35 0 L 50 0 M 0 0 L 0 15 L -6 22 L 6 28 L 0 35 L 0 50' fill='none' stroke='rgba(68,216,235,0.2)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='miter' overflow='visible'/%3E%3Ccircle cx='0' cy='0' r='2' fill='rgba(68,216,235,0.6)'/%3E%3C/svg%3E");
+    }
+    .grid-v3-light {
+      background-size: 50px 50px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M 0 0 L 15 0 L 22 -6 L 28 6 L 35 0 L 50 0 M 0 0 L 0 15 L -6 22 L 6 28 L 0 35 L 0 50' fill='none' stroke='rgba(0,101,189,0.16)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='miter' overflow='visible'/%3E%3Ccircle cx='0' cy='0' r='2' fill='rgba(0,101,189,0.45)'/%3E%3C/svg%3E");
+    }
+
+    /* 4. Dvojitý blesk s jiskřištěm (64px) */
+    .grid-v4-dark {
+      background-size: 64px 64px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M 0 32 L 16 32 L 24 20 L 32 44 L 40 20 L 48 44 L 54 32 L 64 32 M 32 0 L 32 16 L 20 24 L 44 32 L 20 40 L 44 48 L 32 54 L 32 64' fill='none' stroke='rgba(68,216,235,0.22)' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='miter'/%3E%3Ccircle cx='32' cy='32' r='2.5' fill='rgba(67,246,200,0.7)'/%3E%3C/svg%3E");
+    }
+    .grid-v4-light {
+      background-size: 64px 64px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M 0 32 L 16 32 L 24 20 L 32 44 L 40 20 L 48 44 L 54 32 L 64 32 M 32 0 L 32 16 L 20 24 L 44 32 L 20 40 L 44 48 L 32 54 L 32 64' fill='none' stroke='rgba(0,101,189,0.18)' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='miter'/%3E%3Ccircle cx='32' cy='32' r='2.5' fill='rgba(0,101,189,0.45)'/%3E%3C/svg%3E");
+    }
+
+    /* 5. Rozvětvený blesk s výboji do stran (72px) */
+    .grid-v5-dark {
+      background-size: 72px 72px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cpath d='M 0 36 L 20 36 L 26 24 L 36 48 L 46 24 L 52 36 L 72 36 M 36 0 L 36 20 L 24 26 L 48 36 L 24 46 L 36 52 L 36 72' fill='none' stroke='rgba(68,216,235,0.2)' stroke-width='1.4'/%3E%3Cpath d='M 26 24 L 18 14 M 46 48 L 54 58 M 24 46 L 14 54 M 48 26 L 58 18' fill='none' stroke='rgba(67,246,200,0.22)' stroke-width='1.2' stroke-linecap='round'/%3E%3Ccircle cx='36' cy='36' r='2' fill='rgba(68,216,235,0.8)'/%3E%3C/svg%3E");
+    }
+    .grid-v5-light {
+      background-size: 72px 72px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cpath d='M 0 36 L 20 36 L 26 24 L 36 48 L 46 24 L 52 36 L 72 36 M 36 0 L 36 20 L 24 26 L 48 36 L 24 46 L 36 52 L 36 72' fill='none' stroke='rgba(0,101,189,0.16)' stroke-width='1.4'/%3E%3Cpath d='M 26 24 L 18 14 M 46 48 L 54 58 M 24 46 L 14 54 M 48 26 L 58 18' fill='none' stroke='rgba(0,101,189,0.2)' stroke-width='1.2' stroke-linecap='round'/%3E%3Ccircle cx='36' cy='36' r='2' fill='rgba(0,101,189,0.6)'/%3E%3C/svg%3E");
+    }
+
+    /* 6. Tesla kosočtverečný mesh (56px) */
+    .grid-v6-dark {
+      background-size: 56px 56px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cpath d='M 28 0 L 16 12 L 24 16 L 0 28 L 16 32 L 12 40 L 28 56 L 40 44 L 32 40 L 56 28 L 40 24 L 44 16 Z' fill='none' stroke='rgba(68,216,235,0.22)' stroke-width='1.4' stroke-linejoin='miter'/%3E%3Ccircle cx='28' cy='28' r='2' fill='rgba(67,246,200,0.6)'/%3E%3C/svg%3E");
+    }
+    .grid-v6-light {
+      background-size: 56px 56px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cpath d='M 28 0 L 16 12 L 24 16 L 0 28 L 16 32 L 12 40 L 28 56 L 40 44 L 32 40 L 56 28 L 40 24 L 44 16 Z' fill='none' stroke='rgba(0,101,189,0.18)' stroke-width='1.4' stroke-linejoin='miter'/%3E%3Ccircle cx='28' cy='28' r='2' fill='rgba(0,101,189,0.5)'/%3E%3C/svg%3E");
+    }
+
+    /* 7. Hustá mikro-blesková matrice (38px) */
+    .grid-v7-dark {
+      background-size: 38px 38px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 38 38'%3E%3Cpath d='M 0 19 L 10 19 L 14 11 L 24 27 L 28 19 L 38 19 M 19 0 L 19 10 L 11 14 L 27 24 L 19 28 L 19 38' fill='none' stroke='rgba(68,216,235,0.2)' stroke-width='1.3' stroke-linejoin='miter'/%3E%3Ccircle cx='19' cy='19' r='1.5' fill='rgba(68,216,235,0.7)'/%3E%3C/svg%3E");
+    }
+    .grid-v7-light {
+      background-size: 38px 38px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 38 38'%3E%3Cpath d='M 0 19 L 10 19 L 14 11 L 24 27 L 28 19 L 38 19 M 19 0 L 19 10 L 11 14 L 27 24 L 19 28 L 19 38' fill='none' stroke='rgba(0,101,189,0.17)' stroke-width='1.3' stroke-linejoin='miter'/%3E%3Ccircle cx='19' cy='19' r='1.5' fill='rgba(0,101,189,0.5)'/%3E%3C/svg%3E");
+    }
+
+    /* 8. Hexagonální elektrický voštinový blesk (70px x 60px) */
+    .grid-v8-dark {
+      background-size: 70px 60px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='60' viewBox='0 0 70 60'%3E%3Cpath d='M 0 30 L 17 0 L 22 4 L 18 10 L 35 0 L 52 0 L 48 6 L 53 10 L 70 30 L 52 60 L 48 54 L 53 50 L 35 60 L 18 60 L 22 54 L 17 50 Z' fill='none' stroke='rgba(68,216,235,0.22)' stroke-width='1.3' stroke-linejoin='miter'/%3E%3Ccircle cx='35' cy='30' r='2' fill='rgba(67,246,200,0.6)'/%3E%3C/svg%3E");
+    }
+    .grid-v8-light {
+      background-size: 70px 60px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='60' viewBox='0 0 70 60'%3E%3Cpath d='M 0 30 L 17 0 L 22 4 L 18 10 L 35 0 L 52 0 L 48 6 L 53 10 L 70 30 L 52 60 L 48 54 L 53 50 L 35 60 L 18 60 L 22 54 L 17 50 Z' fill='none' stroke='rgba(0,101,189,0.18)' stroke-width='1.3' stroke-linejoin='miter'/%3E%3Ccircle cx='35' cy='30' r='2' fill='rgba(0,101,189,0.5)'/%3E%3C/svg%3E");
+    }
+
+    /* 9. Cyber PCB blesk – 45° a 90° lomy (64px) */
+    .grid-v9-dark {
+      background-size: 64px 64px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M 0 32 L 18 32 L 26 16 L 38 48 L 46 32 L 64 32 M 32 0 L 32 18 L 16 26 L 48 38 L 32 46 L 32 64 M 0 0 L 16 16 L 10 22 L 22 22 L 32 32 L 42 42 L 52 42 L 46 48 L 64 64' fill='none' stroke='rgba(68,216,235,0.2)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='miter'/%3E%3Ccircle cx='32' cy='32' r='2.5' fill='rgba(68,216,235,0.7)'/%3E%3C/svg%3E");
+    }
+    .grid-v9-light {
+      background-size: 64px 64px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M 0 32 L 18 32 L 26 16 L 38 48 L 46 32 L 64 32 M 32 0 L 32 18 L 16 26 L 48 38 L 32 46 L 32 64 M 0 0 L 16 16 L 10 22 L 22 22 L 32 32 L 42 42 L 52 42 L 46 48 L 64 64' fill='none' stroke='rgba(0,101,189,0.17)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='miter'/%3E%3Ccircle cx='32' cy='32' r='2.5' fill='rgba(0,101,189,0.45)'/%3E%3C/svg%3E");
+    }
+
+    /* 10. Diamantový pulzující bleskový krystal (76px) */
+    .grid-v10-dark {
+      background-size: 76px 76px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76' height='76' viewBox='0 0 76 76'%3E%3Cpath d='M 38 0 L 22 18 L 30 20 L 0 38 L 20 46 L 18 54 L 38 76 L 54 58 L 46 56 L 76 38 L 56 30 L 58 22 Z M 0 38 L 76 38 M 38 0 L 38 76' fill='none' stroke='rgba(68,216,235,0.22)' stroke-width='1.4' stroke-linejoin='miter'/%3E%3Ccircle cx='38' cy='38' r='3' fill='rgba(67,246,200,0.7)'/%3E%3C/svg%3E");
+    }
+    .grid-v10-light {
+      background-size: 76px 76px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76' height='76' viewBox='0 0 76 76'%3E%3Cpath d='M 38 0 L 22 18 L 30 20 L 0 38 L 20 46 L 18 54 L 38 76 L 54 58 L 46 56 L 76 38 L 56 30 L 58 22 Z M 0 38 L 76 38 M 38 0 L 38 76' fill='none' stroke='rgba(0,101,189,0.18)' stroke-width='1.4' stroke-linejoin='miter'/%3E%3Ccircle cx='38' cy='38' r='3' fill='rgba(0,101,189,0.5)'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76' height='76' viewBox='0 0 76 76'%3E%3Cpath d='M 38 0 L 22 18 L 30 20 L 0 38 L 20 46 L 18 54 L 38 76 L 54 58 L 46 56 L 76 38 L 56 30 L 58 22 Z M 0 38 L 76 38 M 38 0 L 38 76' fill='none' stroke='rgba(0,101,189,0.18)' stroke-width='1.4' stroke-linejoin='miter'/%3E%3Ccircle cx='38' cy='38' r='3' fill='rgba(0,101,189,0.5)'/%3E%3C/svg%3E");
+    }
+
+    /* 11. Kosočtvercový bleskový rastr – Vercel Subtle (80px, čára -> zub nahoru -> zub dolů -> čára) */
+    .grid-v11-dark {
+      background-size: 80px 80px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M 0 40 L 14 26 L 17 17 L 23 31 L 26 14 L 40 0 L 54 14 L 63 17 L 49 23 L 66 26 L 80 40 L 66 54 L 63 63 L 57 49 L 54 66 L 40 80 L 26 66 L 17 63 L 31 57 L 14 54 Z' fill='none' stroke='rgba(68,216,235,0.08)' stroke-width='1' stroke-linejoin='miter'/%3E%3Ccircle cx='40' cy='0' r='1.5' fill='rgba(67,246,200,0.6)'/%3E%3Ccircle cx='80' cy='40' r='1.5' fill='rgba(67,246,200,0.6)'/%3E%3Ccircle cx='40' cy='80' r='1.5' fill='rgba(67,246,200,0.6)'/%3E%3Ccircle cx='0' cy='40' r='1.5' fill='rgba(67,246,200,0.6)'/%3E%3C/svg%3E");
+    }
+    .grid-v11-light {
+      background-size: 80px 80px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M 0 40 L 14 26 L 17 17 L 23 31 L 26 14 L 40 0 L 54 14 L 63 17 L 49 23 L 66 26 L 80 40 L 66 54 L 63 63 L 57 49 L 54 66 L 40 80 L 26 66 L 17 63 L 31 57 L 14 54 Z' fill='none' stroke='rgba(0,101,189,0.06)' stroke-width='1' stroke-linejoin='miter'/%3E%3Ccircle cx='40' cy='0' r='1.5' fill='rgba(0,101,189,0.4)'/%3E%3Ccircle cx='80' cy='40' r='1.5' fill='rgba(0,101,189,0.4)'/%3E%3Ccircle cx='40' cy='80' r='1.5' fill='rgba(0,101,189,0.4)'/%3E%3Ccircle cx='0' cy='40' r='1.5' fill='rgba(0,101,189,0.4)'/%3E%3C/svg%3E");
+    }
+    /* 12. Kosočtvercový bleskový rastr – Výrazný ostrý zub (70px) */
+    .grid-v12-dark {
+      background-size: 70px 70px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 70 70'%3E%3Cpath d='M 0 35 L 12 23 L 18 15 L 21 24 L 23 12 L 35 0 L 47 12 L 49 24 L 52 15 L 58 23 L 70 35 L 58 47 L 52 55 L 49 46 L 47 58 L 35 70 L 23 58 L 21 46 L 18 55 L 12 47 Z' fill='none' stroke='rgba(68,216,235,0.24)' stroke-width='1.6' stroke-linejoin='miter'/%3E%3Ccircle cx='35' cy='0' r='2' fill='rgba(68,216,235,0.7)'/%3E%3Ccircle cx='70' cy='35' r='2' fill='rgba(68,216,235,0.7)'/%3E%3C/svg%3E");
+    }
+    .grid-v12-light {
+      background-size: 70px 70px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 70 70'%3E%3Cpath d='M 0 35 L 12 23 L 18 15 L 21 24 L 23 12 L 35 0 L 47 12 L 49 24 L 52 15 L 58 23 L 70 35 L 58 47 L 52 55 L 49 46 L 47 58 L 35 70 L 23 58 L 21 46 L 18 55 L 12 47 Z' fill='none' stroke='rgba(0,101,189,0.2)' stroke-width='1.6' stroke-linejoin='miter'/%3E%3Ccircle cx='35' cy='0' r='2' fill='rgba(0,101,189,0.5)'/%3E%3Ccircle cx='70' cy='35' r='2' fill='rgba(0,101,189,0.5)'/%3E%3C/svg%3E");
+    }
+
+    /* 13. Kosočtvercový bleskový rastr – Kompaktní mikro-rastr (50px) */
+    .grid-v13-dark {
+      background-size: 50px 50px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M 0 25 L 9 16 L 13 11 L 15 17 L 16 9 L 25 0 L 34 9 L 35 17 L 37 11 L 41 16 L 50 25 L 41 34 L 37 39 L 35 33 L 34 41 L 25 50 L 16 41 L 15 33 L 13 39 L 9 34 Z' fill='none' stroke='rgba(68,216,235,0.22)' stroke-width='1.4' stroke-linejoin='miter'/%3E%3Ccircle cx='25' cy='0' r='1.5' fill='rgba(67,246,200,0.6)'/%3E%3Ccircle cx='50' cy='25' r='1.5' fill='rgba(67,246,200,0.6)'/%3E%3C/svg%3E");
+    }
+    .grid-v13-light {
+      background-size: 50px 50px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M 0 25 L 9 16 L 13 11 L 15 17 L 16 9 L 25 0 L 34 9 L 35 17 L 37 11 L 41 16 L 50 25 L 41 34 L 37 39 L 35 33 L 34 41 L 25 50 L 16 41 L 15 33 L 13 39 L 9 34 Z' fill='none' stroke='rgba(0,101,189,0.18)' stroke-width='1.4' stroke-linejoin='miter'/%3E%3Ccircle cx='25' cy='0' r='1.5' fill='rgba(0,101,189,0.5)'/%3E%3Ccircle cx='50' cy='25' r='1.5' fill='rgba(0,101,189,0.5)'/%3E%3C/svg%3E");
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">POLOVODIČE // ČVUT FEL – VÝBĚR POZADÍ</div>
+      <h1>13 variant elektrického bleskového gridu</h1>
+      <p class="subtitle">
+        Prohlédněte si varianty bleskového gridu včetně nových kosočtvercových blesků (čára → zub nahoru → zub dolů → čára).
+        U každé varianty vidíte Dark Mode i Light Mode s ukázkou čitelnosti karty.
+      </p>
+    </header>
+
+    <div class="grid-list">
+
+      <!-- VARIANTA 1 -->
+      <div class="variant-card">
+        <div class="variant-header">
+          <div class="variant-title">
+            <span class="variant-num">01</span>
+            <span>Ostrý bleskový kříž (Sharp Lightning Cross)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 60px • 3-lomený blesk v ose X i Y • Výrazný lom (24px rozkmit)</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v1-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">ASIC // 3nm</span>
+              <div class="sample-title">Historický zlom pro český křemík</div>
+              <div class="sample-desc">onsemi potvrdilo investici 46 miliard Kč do výroby SiC čipů v Rožnově p. R.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v1-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">ASIC // 3nm</span>
+              <div class="sample-title">Historický zlom pro český křemík</div>
+              <div class="sample-desc">onsemi potvrdilo investici 46 miliard Kč do výroby SiC čipů v Rožnově p. R.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTA 2 -->
+      <div class="variant-card">
+        <div class="variant-header">
+          <div class="variant-title">
+            <span class="variant-num">02</span>
+            <span>Plazmová síť s diagonálními výboji (Plasma Mesh Network)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 80px • Horizontální, vertikální i diagonální blesky • Maximální propojení</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v2-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">VÝKONOVÁ ELEKTRONIKA</span>
+              <div class="sample-title">GaN tranzistory posouvají účinnost na 99,2 %</div>
+              <div class="sample-desc">Měnič pro rychlonabíjecí stanice s kmitočtem 1,2 MHz.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v2-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">VÝKONOVÁ ELEKTRONIKA</span>
+              <div class="sample-title">GaN tranzistory posouvají účinnost na 99,2 %</div>
+              <div class="sample-desc">Měnič pro rychlonabíjecí stanice s kmitočtem 1,2 MHz.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTA 3 -->
+      <div class="variant-card">
+        <div class="variant-header">
+          <div class="variant-title">
+            <span class="variant-num">03</span>
+            <span>Čistý 3-lomený bleskový krok (Clean 3-Stroke Bolt Line)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 50px • Spojitá čára přímo z rohů s bleskovým zalomením uprostřed</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v3-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">CLEANROOMS // ISO 6</span>
+              <div class="sample-title">Modernizace čistých prostor KN:E</div>
+              <div class="sample-desc">UV litografie a vakuové napařování na Karlově náměstí.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v3-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">CLEANROOMS // ISO 6</span>
+              <div class="sample-title">Modernizace čistých prostor KN:E</div>
+              <div class="sample-desc">UV litografie a vakuové napařování na Karlově náměstí.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTA 4 -->
+      <div class="variant-card">
+        <div class="variant-header">
+          <div class="variant-title">
+            <span class="variant-num">04</span>
+            <span>Dvojitý blesk s jiskřištěm (Double Bolt Spark Gap)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 64px • 2 blesky za sebou v každé ose • Zesílený elektrický uzel</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v4-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">HARDWARE // RISC-V</span>
+              <div class="sample-title">Český 32bitový RISC-V procesor</div>
+              <div class="sample-desc">Návrh Katedry mikroelektroniky s post-kvantovou kryptografií.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v4-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">HARDWARE // RISC-V</span>
+              <div class="sample-title">Český 32bitový RISC-V procesor</div>
+              <div class="sample-desc">Návrh Katedry mikroelektroniky s post-kvantovou kryptografií.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTA 5 -->
+      <div class="variant-card">
+        <div class="variant-header">
+          <div class="variant-title">
+            <span class="variant-num">05</span>
+            <span>Rozvětvený blesk s výboji (Branching Lightning Discharge)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 72px • Hlavní blesková linka s bočními větvemi jiskření</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v5-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">FOTONIKA // 6G</span>
+              <div class="sample-title">Fotonické čipy zrychlují optické sítě</div>
+              <div class="sample-desc">Přenosové rychlosti přes 1,6 Tb/s na křemíkovém substrátu.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v5-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">FOTONIKA // 6G</span>
+              <div class="sample-title">Fotonické čipy zrychlují optické sítě</div>
+              <div class="sample-desc">Přenosové rychlosti přes 1,6 Tb/s na křemíkovém substrátu.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTA 6 -->
+      <div class="variant-card">
+        <div class="variant-header">
+          <div class="variant-title">
+            <span class="variant-num">06</span>
+            <span>Tesla kosočtverečný blesk (Tesla Rhombus Lightning Grid)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 56px • Blesky tvořící kosočtverce • Vypadá jako vysokonapěťová plazmová koule</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v6-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">STRATEGIE // CHIPS ACT</span>
+              <div class="sample-title">Evropský akt o čipech v praxi</div>
+              <div class="sample-desc">Podpora polovodičového výzkumu a výroby v České republice.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v6-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">STRATEGIE // CHIPS ACT</span>
+              <div class="sample-title">Evropský akt o čipech v praxi</div>
+              <div class="sample-desc">Podpora polovodičového výzkumu a výroby v České republice.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTA 7 -->
+      <div class="variant-card">
+        <div class="variant-header">
+          <div class="variant-title">
+            <span class="variant-num">07</span>
+            <span>Hustá mikro-blesková matrice (Dense Micro-Lightning Matrix)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 38px • Kompaktní rastr s bleskem v každé buňce • Vysoká hustota detailu</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v7-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">EDA // CADENCE</span>
+              <div class="sample-title">Fyzická verifikace DRC/LVS čipů</div>
+              <div class="sample-desc">Pravidla návrhu pro nanoelektronické struktury.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v7-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">EDA // CADENCE</span>
+              <div class="sample-title">Fyzická verifikace DRC/LVS čipů</div>
+              <div class="sample-desc">Pravidla návrhu pro nanoelektronické struktury.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTA 8 -->
+      <div class="variant-card">
+        <div class="variant-header">
+          <div class="variant-title">
+            <span class="variant-num">08</span>
+            <span>Hexagonální elektrická plástev (Hexagonal Lightning Honeycomb)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 70px x 60px • Bleskové 60° zlomy v šestiúhelníkovém rastru</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v8-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">MATERIÁLY // SiC</span>
+              <div class="sample-title">Karbid křemíku pro automotive</div>
+              <div class="sample-desc">Vyšší průrazné napětí a tepelná vodivost než křemík.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v8-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">MATERIÁLY // SiC</span>
+              <div class="sample-title">Karbid křemíku pro automotive</div>
+              <div class="sample-desc">Vyšší průrazné napětí a tepelná vodivost než křemík.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTA 9 -->
+      <div class="variant-card">
+        <div class="variant-header">
+          <div class="variant-title">
+            <span class="variant-num">09</span>
+            <span>Cyber PCB blesk – 45° a 90° lomy (Cyber Circuit Lightning)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 64px • Kombinace plošného spoje a bleskového výboje • Technický hardware vzhled</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v9-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">HARDWARE // PCB</span>
+              <div class="sample-title">Vysokorychlostní návrh desek plošných spojů</div>
+              <div class="sample-desc">Signálová integrita a potlačení elektromagnetického rušení.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v9-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">HARDWARE // PCB</span>
+              <div class="sample-title">Vysokorychlostní návrh desek plošných spojů</div>
+              <div class="sample-desc">Signálová integrita a potlačení elektromagnetického rušení.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTA 10 -->
+      <div class="variant-card">
+        <div class="variant-header">
+          <div class="variant-title">
+            <span class="variant-num">10</span>
+            <span>Diamantový bleskový krystal (Diamond Lightning Crystal)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 76px • Bleskové diamantové krystaly spojené s kolmými linkami</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v10-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">KVANTOVÉ ČIPY</span>
+              <div class="sample-title">Supravodivé qubity na křemíkovém čipu</div>
+              <div class="sample-desc">Kvantové procesory navržené na Katedře mikroelektroniky.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v10-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">KVANTOVÉ ČIPY</span>
+              <div class="sample-title">Supravodivé qubity na křemíkovém čipu</div>
+              <div class="sample-desc">Kvantové procesory navržené na Katedře mikroelektroniky.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- VARIANTA 11 -->
+      <div class="variant-card" style="border: 2px solid var(--cyan);">
+        <div class="variant-header" style="background: rgba(68, 216, 235, 0.1);">
+          <div class="variant-title">
+            <span class="variant-num" style="background: #44D8EB; color: #080B38;">11</span>
+            <span>Kosočtvercový bleskový rastr – Standard (Rhombus Bolt 80px)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 80px • Kosočtverec: rovná čára → zub nahoru → zub dolů → rovná čára</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v11-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">KOSOČTVERCOVÝ GRID</span>
+              <div class="sample-title">Čára + zub nahoru + zub dolů + čára</div>
+              <div class="sample-desc">Každá strana kosočtverce nese bleskový zub a spojuje se se 4 sousedními kosočtverci.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v11-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">KOSOČTVERCOVÝ GRID</span>
+              <div class="sample-title">Čára + zub nahoru + zub dolů + čára</div>
+              <div class="sample-desc">Každá strana kosočtverce nese bleskový zub a spojuje se se 4 sousedními kosočtverci.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTA 12 -->
+      <div class="variant-card" style="border: 2px solid var(--cyan);">
+        <div class="variant-header" style="background: rgba(68, 216, 235, 0.1);">
+          <div class="variant-title">
+            <span class="variant-num" style="background: #44D8EB; color: #080B38;">12</span>
+            <span>Kosočtvercový bleskový rastr – Výrazný ostrý zub (Rhombus Sharp 70px)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 70px • Zvětšený ostrý rozkmit zubu pro ještě agresivnější elektrotechnický vzhled</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v12-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">VÝRAZNÝ OSTRÝ BLESK</span>
+              <div class="sample-title">Vysokonapěťový diamantový rastr</div>
+              <div class="sample-desc">Hlubší bleskové zuby s ostrým úhlem lomu pro maximální elektrický dojem.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v12-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">VÝRAZNÝ OSTRÝ BLESK</span>
+              <div class="sample-title">Vysokonapěťový diamantový rastr</div>
+              <div class="sample-desc">Hlubší bleskové zuby s ostrým úhlem lomu pro maximální elektrický dojem.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTA 13 -->
+      <div class="variant-card" style="border: 2px solid var(--cyan);">
+        <div class="variant-header" style="background: rgba(68, 216, 235, 0.1);">
+          <div class="variant-title">
+            <span class="variant-num" style="background: #44D8EB; color: #080B38;">13</span>
+            <span>Kosočtvercový bleskový rastr – Kompaktní hustý (Rhombus Micro 50px)</span>
+          </div>
+          <span class="variant-desc">Dlaždice: 50px • Hustší síť menších kosočtverců s jemnými bleskovými zuby</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box dark grid-v13-dark">
+            <div class="preview-label">Dark Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">HUSTÁ MATRICE</span>
+              <div class="sample-title">Kompaktní kosočtvercová síť</div>
+              <div class="sample-desc">Vhodné pro hustou mikroelektronickou texturu na pozadí.</div>
+            </div>
+          </div>
+          <div class="preview-box light grid-v13-light">
+            <div class="preview-label">Light Mode</div>
+            <div class="sample-content">
+              <span class="sample-tag">HUSTÁ MATRICE</span>
+              <div class="sample-title">Kompaktní kosočtvercová síť</div>
+              <div class="sample-desc">Vhodné pro hustou mikroelektronickou texturu na pozadí.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

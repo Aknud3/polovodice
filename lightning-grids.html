@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Vizuální katalog příbuzných barevných variant pro portál Polovodiče.">
+  <title>Polovodiče // katalog barevných variant</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --page: #070a22;
+      --panel: #11163d;
+      --text: #f8fbff;
+      --muted: #aab4d0;
+      --accent: #44d8eb;
+      --line: #29305b;
+      --focus: #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; padding: 32px 20px 80px; background: var(--page); color: var(--text); font: 16px/1.5 "IBM Plex Sans", system-ui, sans-serif; }
+    button { font: inherit; }
+    .page { max-width: 1280px; margin: 0 auto; }
+    .page-header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+    .eyebrow, .variant-number, .mode-label, .token, button { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .eyebrow { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 8px 0; font-size: clamp(28px, 4vw, 48px); line-height: 1; letter-spacing: -.04em; }
+    .intro { max-width: 760px; margin: 0; color: var(--muted); }
+    .notice { margin-top: 16px; padding: 10px 12px; border: 1px solid var(--line); border-left: 3px solid var(--accent); color: var(--muted); font: 12px/1.45 ui-monospace, monospace; }
+    .variant-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; }
+    .variant-card { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+    .variant-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 18px 18px 14px; }
+    .variant-number { color: var(--accent); font-size: 12px; font-weight: 700; }
+    h2 { margin: 4px 0 0; font-size: 20px; line-height: 1.1; }
+    .variant-description { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+    .copy-button { border: 1px solid var(--line); border-radius: 4px; padding: 7px 9px; background: transparent; color: var(--text); cursor: pointer; font-size: 11px; font-weight: 700; }
+    .copy-button:hover, .copy-button:focus-visible { border-color: var(--accent); color: var(--accent); }
+    .copy-button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    .preview-grid { display: grid; grid-template-columns: 1fr 1fr; }
+    .mode-preview { min-height: 170px; padding: 16px; }
+    .mode-label { margin-bottom: 12px; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .72; }
+    .mode-preview--light { background: var(--light-bg); color: var(--light-text); }
+    .mode-preview--dark { background: var(--dark-bg); color: var(--dark-text); }
+    .sample-card { padding: 13px; border: 1px solid var(--sample-border); border-radius: 5px; background: var(--sample-card); }
+    .sample-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; color: var(--sample-accent); font: 700 10px ui-monospace, monospace; }
+    .sample-card h3 { margin: 0 0 7px; font-size: 18px; line-height: 1.1; }
+    .sample-card p { margin: 0 0 13px; color: var(--sample-muted); font-size: 12px; }
+    .sample-chip { display: inline-block; padding: 4px 7px; border-radius: 3px; background: var(--sample-accent); color: var(--sample-on-accent); font: 700 10px ui-monospace, monospace; }
+    .token-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 12px; padding: 14px 18px 18px; border-top: 1px solid var(--line); }
+    .token { display: flex; align-items: center; gap: 7px; min-width: 0; color: var(--muted); font-size: 10px; }
+    .token-swatch { width: 14px; height: 14px; flex: 0 0 14px; border: 1px solid rgba(255,255,255,.2); border-radius: 3px; }
+    .token code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .copy-status { min-height: 1.5em; margin: 20px 0 0; color: var(--accent); font: 12px ui-monospace, monospace; }
+    @media (max-width: 500px) { body { padding-inline: 12px; } .variant-grid, .preview-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <p class="eyebrow">Polovodiče // ČVUT FEL cousin palette</p>
+      <h1>Vyber příbuzný barevný motiv</h1>
+      <p class="intro">Deset jemně posunutých variant. Každá zůstává ve stejné elektrické a technologické rodině jako FEL, ale používá vlastní odstín navy, modré a cyan akcentu.</p>
+      <p class="notice">Rozsah změny: až přibližně 20 % proti referenční paletě FEL. Všechny náhledy používají přesné tokeny vypsané pod variantou. Tlačítko COPY zkopíruje tokeny varianty.</p>
+    </header>
+
+    <section aria-labelledby="variants-heading">
+      <h2 id="variants-heading" hidden>Barevné varianty</h2>
+      <div id="variant-grid" class="variant-grid"></div>
+      <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script>
+    // DATA: Jednotný datový model. Klíče jsou záměrně pojmenované kvůli debuggeru.
+    const VARIANTS = [
+      { id: '01', name: 'Arctic Circuit', description: 'chladnější, čistší a více laboratorní', tokens: { dark: '#09113b', darkDeep: '#05082a', darkText: '#f7fafd', darkMuted: '#b8c4de', darkBorder: '#283467', lightBg: '#f7fafd', lightCard: '#ffffff', lightText: '#111a31', lightMuted: '#53627b', lightBorder: '#dbe4ee', blue: '#392bc9', blueHover: '#2a1db4', cvutBlue: '#0868bd', cvutDarkBlue: '#04518c', cyan: '#42d5e7', green: '#40edc1', violet: '#6848e8', waferGold: '#eea20c', circuitRed: '#e84747' } },
+      { id: '02', name: 'Deep Voltage', description: 'hlubší navy s výraznější elektrickou modrou', tokens: { dark: '#101742', darkDeep: '#070b2f', darkText: '#f8fbff', darkMuted: '#b7c5e5', darkBorder: '#334071', lightBg: '#f4f8ff', lightCard: '#ffffff', lightText: '#0d1838', lightMuted: '#52678a', lightBorder: '#cbd8ef', blue: '#4c39df', blueHover: '#3824c7', cvutBlue: '#1c78d1', cvutDarkBlue: '#0d579c', cyan: '#36c6f4', green: '#35e5b4', violet: '#7955f1', waferGold: '#f0a51b', circuitRed: '#ef5158' } },
+      { id: '03', name: 'Wafer Blue', description: 'nejbližší FEL, ale s jasnějším wafer akcentem', tokens: { dark: '#071b43', darkDeep: '#04102f', darkText: '#f4fbff', darkMuted: '#adbfdb', darkBorder: '#24466b', lightBg: '#edf8ff', lightCard: '#ffffff', lightText: '#0b2347', lightMuted: '#506986', lightBorder: '#c1d7eb', blue: '#2474d8', blueHover: '#125abd', cvutBlue: '#1689d8', cvutDarkBlue: '#0c5b9f', cyan: '#32d5ee', green: '#34edb4', violet: '#5b63ef', waferGold: '#e6a51c', circuitRed: '#e94b55' } },
+      { id: '04', name: 'Signal Navy', description: 'komunikační modř s ostrým cyan signálem', tokens: { dark: '#08183b', darkDeep: '#040c29', darkText: '#f6fbff', darkMuted: '#b0c2dc', darkBorder: '#294263', lightBg: '#eef7ff', lightCard: '#ffffff', lightText: '#10203b', lightMuted: '#516b88', lightBorder: '#c7d9eb', blue: '#3157d8', blueHover: '#203ebc', cvutBlue: '#1388c8', cvutDarkBlue: '#0b5c91', cyan: '#21d9e8', green: '#47efc4', violet: '#566eea', waferGold: '#e9a31b', circuitRed: '#e24955' } },
+      { id: '05', name: 'Ion Violet', description: 'fialovější technologický akcent, stále FEL navy', tokens: { dark: '#120d3e', darkDeep: '#080728', darkText: '#fbf9ff', darkMuted: '#c7bfe3', darkBorder: '#40346b', lightBg: '#f7f3ff', lightCard: '#ffffff', lightText: '#171038', lightMuted: '#655a82', lightBorder: '#d9d1ed', blue: '#6040d7', blueHover: '#4528bb', cvutBlue: '#2169c4', cvutDarkBlue: '#154e91', cyan: '#45cfe9', green: '#43e8bf', violet: '#8a55ef', waferGold: '#efa51d', circuitRed: '#e74a5d' } },
+      { id: '06', name: 'Copper Silicon', description: 'teplejší wafer gold na stále modrém základu', tokens: { dark: '#101735', darkDeep: '#080b25', darkText: '#fffaf4', darkMuted: '#d2c1af', darkBorder: '#514030', lightBg: '#fff8ed', lightCard: '#ffffff', lightText: '#1d2339', lightMuted: '#756657', lightBorder: '#e5d5c5', blue: '#3d45c8', blueHover: '#2c2daa', cvutBlue: '#116bbd', cvutDarkBlue: '#0b5488', cyan: '#3fd3e5', green: '#40e7b8', violet: '#6a55df', waferGold: '#d99016', circuitRed: '#df4d4d' } },
+      { id: '07', name: 'Blue Quartz', description: 'světlejší a vzdušnější quartz varianta', tokens: { dark: '#10224b', darkDeep: '#091735', darkText: '#f8fcff', darkMuted: '#b8cce2', darkBorder: '#3a5275', lightBg: '#f1f8ff', lightCard: '#ffffff', lightText: '#122b55', lightMuted: '#5b7397', lightBorder: '#d0def0', blue: '#3d63e0', blueHover: '#294bc5', cvutBlue: '#2588d6', cvutDarkBlue: '#1264a7', cyan: '#4bdff1', green: '#50f1ce', violet: '#6c73f2', waferGold: '#f0ad24', circuitRed: '#ed5660' } },
+      { id: '08', name: 'Low-Light Lab', description: 'méně sytá, večerní laboratorní paleta', tokens: { dark: '#11152f', darkDeep: '#090c20', darkText: '#edf2fb', darkMuted: '#9eaac2', darkBorder: '#323b57', lightBg: '#e9eef7', lightCard: '#f8fbff', lightText: '#20283d', lightMuted: '#647087', lightBorder: '#c5cede', blue: '#3438ae', blueHover: '#27268f', cvutBlue: '#23639e', cvutDarkBlue: '#164b78', cyan: '#2bb8ca', green: '#3bd3a9', violet: '#5e4fc1', waferGold: '#c58b19', circuitRed: '#c9474e' } },
+      { id: '09', name: 'Green Silicon', description: 'cyan posunutý k signální zelené', tokens: { dark: '#081d3d', darkDeep: '#041129', darkText: '#f4fffc', darkMuted: '#abd8ca', darkBorder: '#24554e', lightBg: '#edfff9', lightCard: '#ffffff', lightText: '#0e2b35', lightMuted: '#4f7770', lightBorder: '#c3e4da', blue: '#2856cb', blueHover: '#1842ac', cvutBlue: '#0879bb', cvutDarkBlue: '#075781', cyan: '#27d0d0', green: '#3beeb1', violet: '#4c72e3', waferGold: '#e2a21a', circuitRed: '#e34c55' } },
+      { id: '10', name: 'Frosted ASIC', description: 'nejměkčí magazínová varianta s ledovým akcentem', tokens: { dark: '#17234a', darkDeep: '#0b1434', darkText: '#fbfdff', darkMuted: '#c2cce0', darkBorder: '#465879', lightBg: '#f4f8ff', lightCard: '#ffffff', lightText: '#182b4a', lightMuted: '#657894', lightBorder: '#d5deec', blue: '#496ce3', blueHover: '#344fc4', cvutBlue: '#3d91dc', cvutDarkBlue: '#1c68ad', cyan: '#58e4f2', green: '#5af3d1', violet: '#7779f3', waferGold: '#f3b52d', circuitRed: '#ef6068' } }
+    ];
+
+    // DOM: Jediné místo, kde získáváme a držíme reference na stránku.
+    const variantGrid = document.querySelector('#variant-grid');
+    const copyStatus = document.querySelector('#copy-status');
+
+    // RENDER: Malé pojmenované funkce udržují DOM konstrukci sledovatelnou v debuggeru.
+    function createElement(tagName, className, textContent) {
+      const element = document.createElement(tagName);
+      element.className = className;
+      if (textContent !== undefined) element.textContent = textContent;
+      return element;
+    }
+
+    function createSample(mode, tokens) {
+      const isLight = mode === 'light';
+      const preview = createElement('div', 'mode-preview mode-preview--' + mode);
+      preview.style.setProperty('--' + mode + '-bg', tokens[isLight ? 'lightBg' : 'dark']);
+      preview.style.setProperty('--' + mode + '-text', tokens[isLight ? 'lightText' : 'darkText']);
+      preview.style.setProperty('--sample-border', tokens[isLight ? 'lightBorder' : 'darkBorder']);
+      preview.style.setProperty('--sample-card', tokens[isLight ? 'lightCard' : 'darkDeep']);
+      preview.style.setProperty('--sample-accent', tokens[isLight ? 'cvutBlue' : 'cyan']);
+      preview.style.setProperty('--sample-muted', tokens[isLight ? 'lightMuted' : 'darkMuted']);
+      preview.style.setProperty('--sample-on-accent', isLight ? '#ffffff' : tokens.dark);
+
+      const label = createElement('div', 'mode-label', isLight ? 'Light mode' : 'Dark mode');
+      const sample = createElement('div', 'sample-card');
+      const meta = createElement('div', 'sample-meta');
+      meta.append(createElement('span', '', 'POLOVODIČE'), createElement('span', '', '05. 10. 2026'));
+      sample.append(meta, createElement('h3', '', 'Nová generace čipů pro výkonovou elektroniku'), createElement('p', '', 'Čistý technologický magazín ve vizuální rodině FEL.'));
+      sample.append(createElement('span', 'sample-chip', 'MATERIÁLY'));
+      preview.append(label, sample);
+      return preview;
+    }
+
+    function createTokenList(tokens) {
+      const tokenGrid = createElement('div', 'token-grid');
+      Object.entries(tokens).forEach(([name, value]) => {
+        const token = createElement('div', 'token');
+        const swatch = createElement('span', 'token-swatch');
+        swatch.style.backgroundColor = value;
+        token.append(swatch, createElement('code', '', '--' + name + ': ' + value));
+        tokenGrid.append(token);
+      });
+      return tokenGrid;
+    }
+
+    function createVariantCard(variant) {
+      const card = createElement('article', 'variant-card');
+      const header = createElement('header', 'variant-header');
+      const headingGroup = createElement('div', 'variant-heading');
+      headingGroup.append(createElement('div', 'variant-number', 'VARIANTA ' + variant.id));
+      headingGroup.append(createElement('h2', '', variant.name), createElement('p', 'variant-description', variant.description));
+
+      const copyButton = createElement('button', 'copy-button', 'COPY');
+      copyButton.type = 'button';
+      copyButton.setAttribute('aria-label', 'Zkopírovat tokeny varianty ' + variant.id + ' ' + variant.name);
+      copyButton.addEventListener('click', () => copyVariantTokens(variant, copyButton));
+      header.append(headingGroup, copyButton);
+
+      const previewGrid = createElement('div', 'preview-grid');
+      previewGrid.append(createSample('light', variant.tokens), createSample('dark', variant.tokens));
+      card.append(header, previewGrid, createTokenList(variant.tokens));
+      return card;
+    }
+
+    function renderVariants() {
+      const fragment = document.createDocumentFragment();
+      VARIANTS.forEach((variant) => fragment.append(createVariantCard(variant)));
+      variantGrid.replaceChildren(fragment);
+    }
+
+    // EVENTS: Clipboard má bezpečný fallback pro file:// a omezené browser contexty.
+    async function copyVariantTokens(variant, button) {
+      const tokenText = JSON.stringify(variant.tokens, null, 2);
+      try {
+        if (!navigator.clipboard?.writeText) throw new Error('Clipboard API není dostupné');
+        await navigator.clipboard.writeText(tokenText);
+        button.textContent = 'COPIED';
+        copyStatus.textContent = 'Tokeny varianty ' + variant.id + ' byly zkopírovány.';
+      } catch {
+        copyStatus.textContent = 'Clipboard není dostupný. Tokeny varianty ' + variant.id + ' jsou viditelné pod náhledem.';
+      }
+      window.setTimeout(() => { button.textContent = 'COPY'; }, 1600);
+    }
+
+    renderVariants();
+  </script>
+</body>
+</html>

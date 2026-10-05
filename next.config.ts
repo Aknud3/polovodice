@@ -1,0 +1,19 @@
+import type { NextConfig } from "next";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  // Statický export pro Cloudflare Pages (projekt polovodice-mockup).
+  output: "export",
+  images: {
+    unoptimized: true,
+  },
+  outputFileTracingRoot: path.resolve(__dirname),
+};
+
+export default nextConfig;
+
+import('@opennextjs/cloudflare').then(m => m.initOpenNextCloudflareForDev());
