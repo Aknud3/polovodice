@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Search, X, ArrowRight } from "lucide-react";
 import { MOCK_ARTICLES } from "@/data/mock-data";
 import type { ArticleCategory } from "@/types/portal";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Kbd } from "./Kbd";
 
 interface CommandMenuProps {
@@ -12,20 +13,21 @@ interface CommandMenuProps {
   onClose: () => void;
 }
 
-const TOPIC_FILTERS: Array<{ id: ArticleCategory | "all"; label: string }> = [
-  { id: "all", label: "Všechna témata" },
-  { id: "chips", label: "Čipy" },
-  { id: "materials", label: "Materiály" },
-  { id: "power-elec", label: "Výkonová el." },
-  { id: "embedded", label: "Embedded & IoT" },
-  { id: "quantum", label: "Kvantové čipy" },
-  { id: "industry", label: "Průmysl & Chips Act" },
-  { id: "academic", label: "Akademie" },
-];
-
 export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
+  const { language, t } = useLanguage();
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<ArticleCategory | "all">("all");
+
+  const topicFilters: Array<{ id: ArticleCategory | "all"; label: string }> = [
+    { id: "all", label: t("allTopics") },
+    { id: "chips", label: t("chips") },
+    { id: "materials", label: t("materials") },
+    { id: "power-elec", label: t("powerElectronics") },
+    { id: "embedded", label: t("embedded") },
+    { id: "quantum", label: t("quantum") },
+    { id: "industry", label: t("industryChipsAct") },
+    { id: "academic", label: t("academic") },
+  ];
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -33,8 +35,6 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
         e.preventDefault();
         if (isOpen) {
           onClose();
-        } else {
-          window.dispatchEvent(new CustomEvent("open-command-menu"));
         }
       }
       if (e.key === "Escape" && isOpen) {
@@ -52,13 +52,18 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
 
   const cleanQuery = query.trim().toLowerCase();
   const matchingArticles = MOCK_ARTICLES.filter((article) => {
-    const matchesCategory = activeCategory === "all" || article.category === activeCategory;
-    const matchesTitle = cleanQuery.length === 0 || article.title.toLowerCase().includes(cleanQuery);
-    return matchesCategory && matchesTitle;
+    if (activeCategory !== "all" && article.category !== activeCategory) {
+      return false;
+    }
+    const localizedTitle =
+      language === "en" && article.en ? article.en.title : article.title;
+    return cleanQuery.length === 0 || localizedTitle.toLowerCase().includes(cleanQuery);
   });
-  const filteredArticles = cleanQuery.length === 0 && activeCategory === "all"
-    ? matchingArticles.slice(0, 4)
-    : matchingArticles;
+
+  const filteredArticles =
+    cleanQuery.length === 0 && activeCategory === "all"
+      ? matchingArticles.slice(0, 4)
+      : matchingArticles;
 
   return (
     <div className="fixed inset-0 z-100 flex items-start justify-center pt-20 px-4">
@@ -76,7 +81,7 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Hledat v nadpisech článků..."
+              placeholder={t("searchHeadlinesPlaceholder")}
               className="w-full border-0 bg-transparent text-base text-slate-900 outline-none placeholder:text-slate-400 dark:text-white"
               autoFocus
             />
@@ -86,15 +91,15 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
                 type="button"
                 onClick={onClose}
                 className="rounded-sm p-1 text-slate-400 hover:text-slate-700 dark:hover:text-neutral-200"
-                aria-label="Zavřít vyhledávání"
+                aria-label="Close"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-1.5 px-4 pb-3" aria-label="Filtrovat podle tématu">
-            {TOPIC_FILTERS.map((filter) => {
+          <div className="flex flex-wrap gap-1.5 px-4 pb-3" aria-label={t("allTopics")}>
+            {topicFilters.map((filter) => {
               const isActive = activeCategory === filter.id;
               return (
                 <button
@@ -117,43 +122,54 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
         <div className="max-h-96 overflow-y-auto p-2 divide-y divide-slate-100 dark:divide-neutral-800/60">
           {filteredArticles.length === 0 ? (
             <div className="py-12 text-center text-sm text-slate-500">
-              Nebyly nalezeny žádné nadpisy pro zadané téma nebo dotaz.
+              {t("noHeadlinesFound")}
             </div>
           ) : (
             <div>
               <div className="px-3 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-400">
-                {cleanQuery.length === 0 ? "Články podle tématu" : "Nadpisy článků"}
+                {cleanQuery.length === 0 ? t("articlesByTopic") : t("articleHeadlines")}
               </div>
               <ul className="mt-1 space-y-1">
-                {filteredArticles.map((article) => (
-                  <li key={article.id}>
-                    <Link
-                      href={`/zpravy/${article.slug}`}
-                      onClick={onClose}
-                      className="group flex items-center gap-3 rounded-sm p-3 transition-colors hover:bg-slate-50 dark:hover:bg-neutral-800/60"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <h4 className="line-clamp-2 text-sm font-semibold text-slate-900 transition-colors group-hover:text-[#0065bd] dark:text-neutral-100 dark:group-hover:text-fel-cyan">
-                          {article.title}
-                        </h4>
-                        <time className="mt-1 block text-[10px] font-mono text-slate-400" dateTime={article.publishedAt}>
-                          {article.publishedAt}
-                        </time>
-                      </div>
-                      <ArrowRight className="h-4 w-4 shrink-0 text-slate-400 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100" />
-                    </Link>
-                  </li>
-                ))}
+                {filteredArticles.map((article) => {
+                  const title =
+                    language === "en" && article.en ? article.en.title : article.title;
+                  return (
+                    <li key={article.id}>
+                      <Link
+                        href={`/zpravy/${article.slug}`}
+                        onClick={onClose}
+                        className="group flex items-center gap-3 rounded-sm p-3 transition-colors hover:bg-slate-50 dark:hover:bg-neutral-800/60"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <h4 className="line-clamp-2 text-sm font-semibold text-slate-900 transition-colors group-hover:text-[#0065bd] dark:text-neutral-100 dark:group-hover:text-fel-cyan">
+                            {title}
+                          </h4>
+                          <time
+                            className="mt-1 block text-[10px] font-mono text-slate-400"
+                            dateTime={article.publishedAt}
+                          >
+                            {article.publishedAt}
+                          </time>
+                        </div>
+                        <ArrowRight className="h-4 w-4 shrink-0 text-slate-400 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100" />
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
         </div>
 
         <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-2 text-[11px] font-mono text-slate-400 dark:border-neutral-800 dark:bg-[#0A0D30]">
-          <span>Hledání v databázi ČVUT FEL Polovodiče</span>
+          <span>{t("searchFooterLabel")}</span>
           <div className="hidden sm:flex items-center gap-3">
-            <span>Navigace <Kbd>↑</Kbd> <Kbd>↓</Kbd></span>
-            <span>Výběr <Kbd>↵</Kbd></span>
+            <span>
+              {t("navigateHint")} <Kbd>↑</Kbd> <Kbd>↓</Kbd>
+            </span>
+            <span>
+              {t("selectHint")} <Kbd>↵</Kbd>
+            </span>
           </div>
         </div>
       </div>

@@ -8,6 +8,9 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { TopicHubs } from "./TopicHubs";
 import { ArticleCard } from "./ArticleCard";
 
+/** Maximální počet karet v mřížce 3 × 1 (rules/layout.md §2.4). */
+const VISIBLE_ARTICLE_LIMIT = 3;
+
 interface HomeFeedProps {
   initialArticles: Article[];
   counts: CategoryCounts;
@@ -17,20 +20,19 @@ export function HomeFeed({ initialArticles, counts }: HomeFeedProps) {
   const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<ArticleCategory | "all">("all");
 
-  const filteredArticles = selectedCategory === "all"
-    ? initialArticles
-    : initialArticles.filter((article) => article.category === selectedCategory);
+  const filteredArticles = (
+    selectedCategory === "all"
+      ? initialArticles
+      : initialArticles.filter((article) => article.category === selectedCategory)
+  ).slice(0, VISIBLE_ARTICLE_LIMIT);
 
   return (
     <section id="ostatni-novinky" className="space-y-6">
       <div className="space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-neutral-200 dark:border-neutral-800">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-fel-blue dark:bg-fel-cyan" />
-            <h2 className="text-xl sm:text-2xl font-bold font-sans tracking-tight text-neutral-900 dark:text-white">
-              {t("otherNews")}
-            </h2>
-          </div>
+          <h2 className="text-xl sm:text-2xl font-bold font-sans tracking-tight text-neutral-900 dark:text-white">
+            {t("otherNews")}
+          </h2>
           <Link
             href="/zpravy"
             className="text-xs font-mono font-semibold text-fel-blue dark:text-fel-cyan hover:underline flex items-center gap-1 shrink-0"

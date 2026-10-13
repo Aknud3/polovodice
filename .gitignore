@@ -59,3 +59,4 @@ ehthumbs.db
 .cache/
 *.tmp
 *.temp
+*.tsbuildinfo

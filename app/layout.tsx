@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
@@ -7,9 +7,11 @@ import { Footer } from "@/components/layout/Footer";
 import { CookieBanner } from "@/components/ui/CookieBanner";
 
 export const metadata: Metadata = {
-  title: "POLOVODIČE // Informační portál pro technologie a čipy – ČVUT FEL",
-  description:
-    "Oficiální informační portál Fakulty elektrotechnické ČVUT v Praze zaměřený na polovodičový průmysl, návrh čipů ASIC/FPGA, výkonovou elektroniku GaN/SiC a program Elektronika a komunikace.",
+  title: {
+    default: "Polovodiče - Informační deník ze světa elektroniky",
+    template: "%s - Polovodiče",
+  },
+  description: "Informační deník ze světa elektroniky",
   keywords: [
     "polovodiče",
     "čipy",
@@ -25,6 +27,47 @@ export const metadata: Metadata = {
     "čisté prostory",
   ],
   authors: [{ name: "ČVUT FEL – Program Elektronika a komunikace" }],
+  manifest: "/icons/manifest.webmanifest",
+  // Jednoznačná deklarace: prohlížeče považují kandidáta se `sizes: "any"`
+  // za vhodného pro všechny velikosti, a kdyby jím byl pevně veliký `.ico`,
+  // přepnuly by na něj i přes novější SVG. Soubor `/favicon.ico` proto
+  // zůstává pouze na disku pro implicitní požadavky starších agentů.
+  icons: {
+    icon: [
+      { url: "/icons/icon.svg", type: "image/svg+xml", sizes: "any" },
+      { url: "/icons/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/icons/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+      { url: "/icons/favicon-48x48.png", type: "image/png", sizes: "48x48" },
+      { url: "/icons/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icons/icon-512.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [
+      {
+        url: "/icons/apple-touch-icon.png",
+        type: "image/png",
+        sizes: "180x180",
+      },
+    ],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/icons/safari-pinned-tab.svg",
+        color: "#081d3d",
+      },
+    ],
+  },
+  other: {
+    "msapplication-config": "/icons/browserconfig.xml",
+    "msapplication-TileColor": "#ffffff",
+  },
+};
+
+export const viewport: Viewport = {
+  colorScheme: "dark light",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#081d3d" },
+    { media: "(prefers-color-scheme: light)", color: "#edfff9" },
+  ],
 };
 
 export default function RootLayout({

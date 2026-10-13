@@ -121,10 +121,10 @@ Build vypíše `✓ Exporting (2/2)` a vytvoří v `out/` mimo jiné:
 out/index.html
 out/404.html
 out/zpravy.html
-out/udalosti.html
-out/servis.html
 out/lightning-grids.html
 out/zpravy/<slug>.html            (6 článků)
+out/icons/...                     (favicon, touch ikony, manifest, browserconfig)
+out/favicon.ico
 out/_next/static/...              (JS, CSS, fonty IBM Plex)
 ```
 
@@ -136,7 +136,7 @@ find out -name "*.html" | wc -l
 du -sh out
 ```
 
-Očekávané hodnoty z ověřeného buildu: **134 souborů** a přibližně **2,9 MB**.
+Očekávané hodnoty z ověřeného buildu: **134 souborů** a přibližně **2,9 MB** (stav před doplněním ikonového systému a nových článků). Počet souborů roste s každým přidaným článkem (`out/zpravy/<slug>.html`) i s každou ikonou v `public/icons/`; směrodatné je, že build vypíše `✓ Exporting` a `out/zpravy/` obsahuje HTML všech článků z `data/mock-data.ts`.
 
 ---
 
@@ -147,8 +147,6 @@ Očekávané hodnoty z ověřeného buildu: **134 souborů** a přibližně **2,
    - `/` – domovská stránka s hero článkem
    - `/zpravy` – archiv zpráv
    - `/zpravy/onsemi-investice-46-miliard-roznov-fel-cvut` – detail článku
-   - `/udalosti` – kalendář událostí
-   - `/servis` – studentský servis
 3. Zkontroluj, že se načítají fonty IBM Plex Sans a Mono (žádný fallback systémový font).
 4. Zkontroluj přepínač `CZ / EN` a přepínač světlého/tmavého režimu.
 5. Na telefonu ověř, že se v otevřeném vyhledávání nezobrazují klávesové nápovědy `ESC`, šipek ani `↵`.

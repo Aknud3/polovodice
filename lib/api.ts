@@ -7,6 +7,7 @@ import type {
   CampusEvent,
   PollData,
   CategoryCounts,
+  FacultyNewsItem,
 } from "@/types/portal";
 import {
   MOCK_ARTICLES,
@@ -64,6 +65,46 @@ export async function getFeaturedArticle(): Promise<Article> {
     return featured;
   }
   return MOCK_ARTICLES[0];
+}
+
+/**
+ * Získá nejdůležitější zprávy o fakultě (kategorie "academic") pro sekci
+ * „Informace o fakultě“ i pro kompaktní widget v bočním sloupci.
+ * Vrací zúžený typ bez plného obsahu článků, aby se do klientských komponent
+ * nepřenášel celý text. Pořadí odpovídá prioritě v datech.
+ */
+export async function getFacultyNews(limit?: number): Promise<FacultyNewsItem[]> {
+  const faculty = MOCK_ARTICLES.filter((art) => art.category === "academic").map(
+    ({ id, slug, title, perex, publishedAt, categoryLabel, en }) => ({
+      id,
+      slug,
+      title,
+      perex,
+      publishedAt,
+      categoryLabel,
+      en,
+    }),
+  );
+
+  if (typeof limit === "number" && limit > 0) {
+    return faculty.slice(0, limit);
+  }
+
+  return faculty;
+}
+
+/**
+ * Získá redakční články mimo zprávy o fakultě – tedy sadu pro hero,
+ * cyklovač „Další články“ a mřížku „Ostatní novinky“.
+ */
+export async function getEditorialArticles(limit?: number): Promise<Article[]> {
+  const editorial = MOCK_ARTICLES.filter((art) => art.category !== "academic");
+
+  if (typeof limit === "number" && limit > 0) {
+    return editorial.slice(0, limit);
+  }
+
+  return editorial;
 }
 
 /**
@@ -132,13 +173,15 @@ export async function getPollData(): Promise<PollData> {
 
 /**
  * Spočítá počet článků v jednotlivých kategoriích pro Topic Hubs.
+ * Volitelně počítá nad předanou sadou, aby počítadla filtrů odpovídala
+ * přesně tomu, co dokáže zobrazit mřížka „Ostatní novinky“.
  */
-export async function getCategoryCounts(): Promise<CategoryCounts> {
+export async function getCategoryCounts(articles: Article[] = MOCK_ARTICLES): Promise<CategoryCounts> {
   const counts: CategoryCounts = {
-    all: MOCK_ARTICLES.length,
+    all: articles.length,
   };
 
-  for (const art of MOCK_ARTICLES) {
+  for (const art of articles) {
     counts[art.category] = (counts[art.category] ?? 0) + 1;
   }
 

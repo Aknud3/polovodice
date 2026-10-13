@@ -47,6 +47,29 @@ Klíčovým pilířem úspěchu je dostupnost špičkových inženýrů v oboru 
       efficiencyPercent: 99.4,
     },
     tags: ["onsemi", "SiC", "Chips Act", "Národní strategie", "Rožnov", "Automotive"],
+    en: {
+      title: "Historic Milestone for Czech Silicon: onsemi Invests $2 Billion in Rožnov and Expands Partnership with CTU FEL",
+      perex: "US semiconductor giant onsemi has officially confirmed a massive investment to build a new vertically integrated Silicon Carbide (SiC) wafer and chip manufacturing facility. The Department of Microelectronics at CTU FEL becomes a key partner for R&D and talent education.",
+      content: `
+US semiconductor giant onsemi has confirmed a landmark investment of CZK 46 billion (approximately USD 2 billion) to expand its manufacturing campus in Rožnov pod Radhoštěm. The Czech Republic will host one of the world's most advanced vertically integrated facilities, covering the entire production chain from Silicon Carbide (SiC) crystal growth, wafer slicing and polishing, to final lithography processing and packaging of integrated power modules.
+
+### Aligning with the European Chips Act
+The investment directly fulfills the goals of the **European Chips Act** and the **National Semiconductor Strategy of the Czech Republic**, which aims to triple the capacity of the Czech semiconductor sector by 2029.
+
+Production in Rožnov pod Radhoštěm will primarily serve the automotive and clean energy sectors. SiC chips enable a significant increase in electric vehicle driving range (up to 12–15%) and faster charging times thanks to their ability to operate at voltages exceeding 1,200 V and switching frequencies of hundreds of kilohertz with minimal thermal losses.
+
+### Strategic Role of the Electronics and Communications (EK) Programme
+A key pillar of this expansion is the availability of top-tier engineers in IC design and microelectronic technologies. The Faculty of Electrical Engineering at CTU in Prague, led by the Department of Microelectronics, is expanding its strategic partnership with onsemi:
+- Opening a joint power semiconductor research laboratory at the Charles Square campus.
+- Direct financial scholarships for students in the new Master's programme **Electronics and Integrated Systems (EIS)**.
+- Joint Master's theses and hands-on internships in cleanrooms and IC design centers.
+      `,
+      categoryLabel: "STRATEGY // CHIPS ACT",
+      imageAlt: "Silicon wafer inside a semiconductor fabrication cleanroom",
+      authorTitle: "Head of the Department of Microelectronics",
+      authorDepartment: "CTU FEL – Department of Microelectronics",
+      tags: ["onsemi", "SiC", "Chips Act", "National Strategy", "Rožnov", "Automotive"],
+    },
   },
   {
     id: "art-2",
@@ -81,6 +104,25 @@ Celý proces návrhu ASIC čipu probíhá v několika fázích:
       packageType: "FC-BGA 1156",
     },
     tags: ["ASIC", "Cadence", "Synopsys", "SystemVerilog", "RTL", "EDA"],
+    en: {
+      title: "Complete IC Design Flow: How Custom ASIC Chips Are Created at CTU FEL from RTL Code to Physical Layout",
+      perex: "Look inside the hands-on laboratory courses at the Department of Microelectronics. From SystemVerilog and logic synthesis to static timing analysis and DRC verification in industrial Cadence and Synopsys EDA tools.",
+      content: `
+Modern microchip development has reached a complexity where tens of billions of transistors reside on a silicon die measuring just a few square millimeters. Within the new Master's programme Electronics and Integrated Systems (EIS), students work with the exact same industrial EDA suites used by companies such as Apple, NVIDIA, and Qualcomm.
+
+The complete ASIC design flow consists of several key stages:
+1. **Architectural Design & Specification:** Defining functional blocks, data paths, and standard interfaces (such as AXI bus and SPI).
+2. **RTL Coding:** Describing circuit behavior in hardware description languages like SystemVerilog or VHDL.
+3. **Functional Verification:** Building UVM (Universal Verification Methodology) testbenches and running coverage-driven simulations.
+4. **Logic Synthesis:** Translating RTL code into a gate-level netlist mapped to a specific semiconductor foundry library (Foundry PDK).
+5. **Place & Route (Physical Layout):** Placing standard cells and routing metal interconnects while meeting strict Design Rule Checks (DRC) and Static Timing Analysis (STA) constraints.
+      `,
+      categoryLabel: "CHIP DESIGN // ASIC & EDA",
+      imageAlt: "Integrated circuit layout design on a workstation monitor",
+      authorTitle: "Assistant Professor",
+      authorDepartment: "CTU FEL – Department of Microelectronics",
+      tags: ["ASIC", "Cadence", "Synopsys", "SystemVerilog", "RTL", "EDA"],
+    },
   },
   {
     id: "art-3",
@@ -113,6 +155,23 @@ Výzkumný tým programu Elektronika a komunikace dokončil testování nového 
       efficiencyPercent: 99.2,
     },
     tags: ["GaN", "Měniče", "Spínané zdroje", "Elektromobilita", "Účinnost"],
+    en: {
+      title: "Power Conversion Breakthrough: Gallium Nitride (GaN) Pushes Switching Converter Efficiency to 99.2%",
+      perex: "The Power Electronics Laboratory has unveiled a new multiphase converter prototype for DC fast-charging stations. Using GaN HEMT switches reduced passive component volume to one-third of its original size.",
+      content: `
+Silicon has dominated power electronics for more than half a century, but its physical limits—governed by its 1.12 eV bandgap—prevent further reductions in switching losses at megahertz frequencies.
+
+A research team from the Electronics and Communications programme has completed testing of a new converter topology utilizing both commercial and experimental Gallium Nitride on Silicon (GaN-on-Si) transistors. Key measurement results include:
+- Achieved energy conversion efficiency: **99.2%** at a 5 kW load.
+- Switching frequency: **1.2 MHz** (compared to 65–100 kHz for conventional silicon MOSFETs).
+- A dramatic reduction in the size and weight of ferrite inductors and ceramic filter capacitors.
+      `,
+      categoryLabel: "POWER ELECTRONICS // GaN",
+      imageAlt: "Printed circuit board with GaN power transistors and inductors",
+      authorTitle: "Associate Professor",
+      authorDepartment: "CTU FEL – Department of Circuit Theory",
+      tags: ["GaN", "Converters", "Switched-Mode Power", "E-Mobility", "Efficiency"],
+    },
   },
   {
     id: "art-4",
@@ -143,6 +202,23 @@ Nové vybavení zahrnuje:
       material: "Si",
     },
     tags: ["Cleanrooms", "ISO 6", "Karlovo náměstí", "Litografie", "Výroba"],
+    en: {
+      title: "KN:E Cleanrooms After Major Upgrade: CTU FEL Offers State-of-the-Art ISO 6 Environment",
+      perex: "The modernization of the cleanroom laboratory complex for photolithography, vacuum deposition, and diffusion processes at the Charles Square campus has been completed, serving both sensor fabrication and student research.",
+      content: `
+The cleanroom laboratory facilities of the Faculty of Electrical Engineering at Charles Square (Building E) have undergone a comprehensive overhaul of their HVAC air handling and HEPA/ULPA filtration systems. Certification confirmed compliance with strict **ISO Class 6** standards (fewer than 1,000,000 particles larger than 0.1 µm per cubic meter).
+
+Newly installed equipment includes:
+- A contactless UV mask aligner with 0.8 µm optical resolution.
+- A Reactive Ion Etching (RIE) system for precision patterning of semiconductor layers.
+- A surface profilometer and Atomic Force Microscope (AFM) for nanostructure diagnostics.
+      `,
+      categoryLabel: "LABORATORIES // CLEANROOMS",
+      imageAlt: "Researcher in a protective cleanroom suit working under yellow light",
+      authorTitle: "Cleanroom Facility Manager",
+      authorDepartment: "CTU FEL – Department of Microelectronics",
+      tags: ["Cleanrooms", "ISO 6", "Charles Square", "Lithography", "Fabrication"],
+    },
   },
   {
     id: "art-5",
@@ -175,6 +251,23 @@ Klíčové vlastnosti čipu:
       packageType: "QFN-48",
     },
     tags: ["RISC-V", "Kryptografie", "IoT", "Vestavné systémy", "Tape-out"],
+    en: {
+      title: "Czech Silicon for Secure IoT: CTU FEL Unveils Open 32-Bit RISC-V Processor with Hardware Encryption",
+      perex: "The open RISC-V architecture is experiencing a global boom. A joint team from the Digital Design and Microelectronics departments has designed a chip featuring a built-in post-quantum cryptographic core and ultra-low sleep power.",
+      content: `
+Technological independence from proprietary processor cores such as ARM is one of the defining trends of modern chip engineering. A team led by researchers at CTU FEL has successfully completed the tape-out of a new processor prototype based on the open RISC-V instruction set (RV32IMC).
+
+Key specifications of the chip:
+- Integrated cryptographic hardware accelerator supporting post-quantum algorithms (Kyber / Dilithium).
+- Active-mode power consumption of only **18 µW/MHz**.
+- Built-in countermeasures against Differential Power Analysis (DPA) side-channel attacks.
+      `,
+      categoryLabel: "HARDWARE // RISC-V & IOT",
+      imageAlt: "Microprocessor chip mounted on a printed circuit board",
+      authorTitle: "Senior Researcher",
+      authorDepartment: "CTU FEL – Electronics and Communications Programme",
+      tags: ["RISC-V", "Cryptography", "IoT", "Embedded Systems", "Tape-out"],
+    },
   },
   {
     id: "art-6",
@@ -206,6 +299,310 @@ Fotonické integrované obvody (Photonic Integrated Circuits – PIC) nahrazují
       packageType: "Optical Co-Packaged",
     },
     tags: ["Fotonika", "Kvantové čipy", "Optické sítě", "6G", "PhotonDelta"],
+    en: {
+      title: "Light Instead of Electrons: Photonic Integrated Circuits (PIC) Accelerate Optical Data Interconnects",
+      perex: "The Department of Radioelectronics and optoelectronics teams at CTU FEL are developing silicon photonics for next-generation 6G networks and optical server interconnects in AI data centers.",
+      content: `
+Electricity consumption in artificial intelligence data centers is growing exponentially, with copper interconnects between processors and memory modules forming one of the primary bottlenecks.
+
+Photonic Integrated Circuits (PICs) replace copper traces with optical waveguides fabricated directly on a silicon substrate:
+- Data transmission rates exceeding **1.6 Tb/s per single chip**.
+- Latency reduced by 80% compared to conventional electrical interconnects.
+- Active research collaboration within the European PhotonDelta consortium.
+      `,
+      categoryLabel: "PHOTONICS // QUANTUM CHIPS",
+      imageAlt: "Laser beam and optical waveguides in a photonics laboratory",
+      authorTitle: "Professor of Optoelectronics",
+      authorDepartment: "CTU FEL – Department of Radioelectronics",
+      tags: ["Photonics", "Quantum Chips", "Optical Networks", "6G", "PhotonDelta"],
+    },
+  },
+  {
+    id: "art-7",
+    slug: "letni-skola-polovodicovych-technologii-2027",
+    title: "Letní škola polovodičových technologií FEL ČVUT 2027: přihlášky do 31. března",
+    perex: "Týdenní intenzivní kurz na Karlově náměstí provede studenty celým řetězcem od návrhu čipu po měření v čistých prostorech. Kapacita je 24 míst, přihlášky se podávají přes studijní systém.",
+    content: `
+Fakulta elektrotechnická ČVUT otevírá sedmý ročník **Letní školy polovodičových technologií**, který se uskuteční v areálu Karlova náměstí (budova E) a v čistých prostorech KN:E.
+
+Program letní školy:
+1. **Návrh čipu:** od SystemVerilogu přes logickou syntézu po fyzický layout v Cadence Virtuoso.
+2. **Technologie:** litografie, vakuové napařování, difuzní procesy a leptání v čistých prostorech třídy ISO 6.
+3. **Charakterizace:** měření na waferové úrovni, profilometrie a diagnostika pomocí AFM.
+4. **Exkurze:** provozní prohlídka laboratoří a setkání s inženýry z partnerských firem.
+
+Kurz je určen studentům bakalářského i magisterského studia programu Elektronika a komunikace a dalším zájemcům z technických oborů. Podmínkou účasti je absolvování úvodního předmětu z mikroelektroniky.
+    `,
+    category: "academic",
+    categoryLabel: "FAKULTA // LETNÍ ŠKOLA",
+    imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Studenti v laboratoři mikroelektroniky během praktické výuky",
+    publishedAt: "12. 10. 2026",
+    readTimeMinutes: 3,
+    author: {
+      name: "prof. Ing. Jiří Vobecký, CSc.",
+      title: "Vedoucí Katedry mikroelektroniky",
+      department: "ČVUT FEL – Katedra mikroelektroniky",
+    },
+    tags: ["Letní škola", "Vzdělávání", "Čisté prostory", "Přihlášky"],
+    en: {
+      title: "CTU FEL Summer School of Semiconductor Technologies 2027: Applications Open Until March 31",
+      perex: "An intensive one-week course at the Charles Square campus guides students through the entire workflow from IC design to cleanroom wafer characterization. Capacity is limited to 24 participants.",
+      content: `
+The Faculty of Electrical Engineering at CTU is opening the seventh edition of the **Summer School of Semiconductor Technologies**, held at the Charles Square campus (Building E) and inside the KN:E cleanrooms.
+
+Summer school curriculum:
+1. **IC Design:** From SystemVerilog and logic synthesis to physical layout in Cadence Virtuoso.
+2. **Cleanroom Fabrication:** Photolithography, vacuum evaporation, diffusion processes, and etching in ISO 6 cleanrooms.
+3. **Characterization:** Wafer-level electrical probing, surface profilometry, and AFM nanoscale diagnostics.
+4. **Industry Networking:** Guided laboratory tours and workshops with engineers from partner semiconductor companies.
+
+The course is open to Bachelor's and Master's students of the Electronics and Communications programme as well as applicants from related technical fields.
+      `,
+      categoryLabel: "FACULTY // SUMMER SCHOOL",
+      imageAlt: "Students working inside the microelectronics laboratory",
+      authorTitle: "Head of the Department of Microelectronics",
+      authorDepartment: "CTU FEL – Department of Microelectronics",
+      tags: ["Summer School", "Education", "Cleanrooms", "Applications"],
+    },
+  },
+  {
+    id: "art-8",
+    slug: "dny-otevrenych-dveri-fel-cvut-cisty-prostory",
+    title: "Dny otevřených dveří FEL ČVUT: prohlídka čistých prostor KN:E a laboratoří mikroelektroniky",
+    perex: "Zájemci z řad veřejnosti i uchazečů o studium si mohou prohlédnout čisté prostory třídy ISO 6, mask aligner pro UV litografii a měřicí pracoviště na Karlově náměstí.",
+    content: `
+Fakulta elektrotechnická pořádá **Dny otevřených dveří** s komentovanými prohlídkami laboratoří Katedry mikroelektroniky.
+
+Návštěvníci uvidí:
+- Čisté prostory KN:E-32 s certifikací **ISO 6** včetně vzduchotechniky a filtračních systémů.
+- Bezkontaktní mask aligner pro UV litografii a pracoviště reaktivního iontového leptání (RIE).
+- Měřicí komoru pro charakterizaci výkonových SiC a GaN struktur.
+- Ukázky studentských projektů a prototypů čipů z programu EIS.
+
+Prohlídky probíhají v hodinových blocích, vstup do čistých prostor je pouze v doprovodu personálu a s ochranným oděvem, který je zajištěn na místě.
+    `,
+    category: "academic",
+    categoryLabel: "FAKULTA // DEN OTEVŘENÝCH DVEŘÍ",
+    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Křemíkový wafer představený veřejnosti v laboratoři",
+    publishedAt: "10. 10. 2026",
+    readTimeMinutes: 2,
+    author: {
+      name: "Ing. Zdeněk Pekárek",
+      title: "Správce čistých prostor",
+      department: "ČVUT FEL – Katedra mikroelektroniky",
+    },
+    tags: ["Den otevřených dveří", "Čisté prostory", "Karlovo náměstí", "Uchazeči"],
+    en: {
+      title: "CTU FEL Open Days: Guided Tours of the KN:E Cleanrooms and Microelectronics Laboratories",
+      perex: "Prospective students and members of the public can explore the ISO 6 cleanrooms, UV lithography mask aligner, and semiconductor measurement setups at the Charles Square campus.",
+      content: `
+The Faculty of Electrical Engineering invites prospective students and visitors to its **Open Days**, featuring guided tours of the Department of Microelectronics laboratories.
+
+What visitors will see:
+- The **ISO 6** certified KN:E-32 cleanrooms, including air filtration and environmental control systems.
+- Contactless UV lithography mask aligner and Reactive Ion Etching (RIE) workstations.
+- High-voltage characterization chambers for testing SiC and GaN power devices.
+- Live demonstrations of student projects and chip prototypes from the EIS programme.
+
+Tours run in hourly blocks. Entry into the cleanroom zone requires protective garments provided on-site and accompaniment by laboratory staff.
+      `,
+      categoryLabel: "FACULTY // OPEN DAYS",
+      imageAlt: "Silicon wafer presented during a laboratory tour",
+      authorTitle: "Cleanroom Facility Manager",
+      authorDepartment: "CTU FEL – Department of Microelectronics",
+      tags: ["Open Days", "Cleanrooms", "Charles Square", "Prospective Students"],
+    },
+  },
+  {
+    id: "art-9",
+    slug: "stipendijni-program-onsemi-program-eis",
+    title: "Stipendijní program onsemi pro studenty programu EIS: až 20 000 Kč měsíčně",
+    perex: "Společnost onsemi rozšiřuje podporu studentů magisterského programu Elektronika a integrované systémy. Stipendium je spojené s prací na společných projektech a stáží v Rožnově pod Radhoštěm.",
+    content: `
+V návaznosti na investici do nového závodu v Rožnově pod Radhoštěm otevírá společnost onsemi **stipendijní program** pro studenty programu Elektronika a integrované systémy (EIS).
+
+Podmínky programu:
+- Měsíční stipendium až **20 000 Kč** po dobu dvou semestrů.
+- Povinná účast na společném výzkumném projektu Katedry mikroelektroniky a onsemi.
+- Nabídka odborné stáže v design centru nebo v čistých prostorech výrobního závodu.
+- Možnost zpracování diplomové práce na téma výkonových SiC struktur.
+
+Přihlášky se podávají elektronicky přes studijní oddělení, součástí je motivační dopis a přehled dosažených výsledků.
+    `,
+    category: "academic",
+    categoryLabel: "FAKULTA // STIPENDIA",
+    imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Mikroprocesorový čip jako symbol stipendijního programu onsemi",
+    publishedAt: "08. 10. 2026",
+    readTimeMinutes: 3,
+    author: {
+      name: "doc. Ing. Jan Novotný, Ph.D.",
+      title: "Docent",
+      department: "ČVUT FEL – Program Elektronika a komunikace",
+    },
+    tags: ["Stipendia", "onsemi", "EIS", "Podpora studentů"],
+    en: {
+      title: "onsemi Scholarship Programme for EIS Master's Students: Up to CZK 20,000 per Month",
+      perex: "onsemi is expanding its financial support for students enrolled in the Electronics and Integrated Systems Master's programme, combining monthly stipends with R&D projects and internships in Rožnov.",
+      content: `
+Following its major fab investment in Rožnov pod Radhoštěm, onsemi is launching a dedicated **scholarship programme** for students of the Electronics and Integrated Systems (EIS) Master's programme.
+
+Programme benefits and terms:
+- Monthly scholarship of up to **CZK 20,000** for two semesters.
+- Participation in a joint R&D project between the Department of Microelectronics and onsemi.
+- Guaranteed paid internship at an IC design center or fabrication cleanroom facility.
+- Opportunity to write a Master's thesis focused on SiC power semiconductor structures.
+
+Applications are submitted electronically via the Study Department and include a cover letter and academic transcript.
+      `,
+      categoryLabel: "FACULTY // SCHOLARSHIPS",
+      imageAlt: "Microprocessor chip representing the onsemi scholarship programme",
+      authorTitle: "Associate Professor",
+      authorDepartment: "CTU FEL – Electronics and Communications Programme",
+      tags: ["Scholarships", "onsemi", "EIS", "Student Support"],
+    },
+  },
+  {
+    id: "art-10",
+    slug: "prijimaci-rizeni-eis-akademicky-rok-2027-2028",
+    title: "Přijímací řízení do magisterského programu EIS pro akademický rok 2027/2028 je otevřeno",
+    perex: "Program Elektronika a integrované systémy přijímá přihlášky do 30. dubna. Součástí přijímacího řízení je pohovor zaměřený na základy elektroniky a motivaci ke studiu mikroelektroniky.",
+    content: `
+Fakulta elektrotechnická vyhlásila **přijímací řízení** do navazujícího magisterského programu Elektronika a integrované systémy (EIS) pro akademický rok 2027/2028.
+
+Průběh přijímacího řízení:
+1. **Elektronická přihláška** ve studijním systému do 30. dubna 2027.
+2. **Odborný pohovor** z okruhů teorie obvodů, číslicové techniky a základů polovodičových součástek.
+3. **Motivační část** zaměřená na volbu specializace (návrh čipů, technologie, výkonová elektronika).
+
+Uchazeči mohou doložit výsledky bakalářské práce, odborné stáže nebo účast na soutěžích. Program je vyučován v češtině s možností volitelných přednášek v angličtině.
+    `,
+    category: "academic",
+    categoryLabel: "FAKULTA // PŘIJÍMACÍ ŘÍZENÍ",
+    imageUrl: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Návrh integrovaného obvodu na monitoru během výuky",
+    publishedAt: "06. 10. 2026",
+    readTimeMinutes: 3,
+    author: {
+      name: "Ing. Tomáš Horák, Ph.D.",
+      title: "Odborný asistent",
+      department: "ČVUT FEL – Katedra mikroelektroniky",
+    },
+    tags: ["Přijímací řízení", "EIS", "Studium", "Magisterský program"],
+    en: {
+      title: "Admissions Open for the EIS Master's Programme for Academic Year 2027/2028",
+      perex: "The Electronics and Integrated Systems programme is accepting applications until April 30. The admission process includes an interview focused on electronics fundamentals and motivation for microelectronics.",
+      content: `
+The Faculty of Electrical Engineering has officially opened **admissions** for the follow-up Master's programme Electronics and Integrated Systems (EIS) for the 2027/2028 academic year.
+
+Admission stages:
+1. **Online Application:** Submitted through the university study system by April 30, 2027.
+2. **Technical Interview:** Covering circuit theory, digital design, and semiconductor device fundamentals.
+3. **Specialization Discussion:** Focused on the applicant's preferred track (IC design, semiconductor technology, or power electronics).
+
+Applicants may present their Bachelor's thesis results, industry internships, or engineering competition achievements.
+      `,
+      categoryLabel: "FACULTY // ADMISSIONS",
+      imageAlt: "Integrated circuit layout on a monitor during a class session",
+      authorTitle: "Assistant Professor",
+      authorDepartment: "CTU FEL – Department of Microelectronics",
+      tags: ["Admissions", "EIS", "Study", "Master's Programme"],
+    },
+  },
+  {
+    id: "art-11",
+    slug: "letni-staze-v-cistych-prostorech-kn-e",
+    title: "Letní studentské stáže v čistých prostorech KN:E: dvanáct míst pro bakaláře i magistráty",
+    perex: "Katedra mikroelektroniky vypisuje placené letní stáže v laboratořích na Karlově náměstí. Studenti se zapojí do reálných projektů výroby senzorů a měření polovodičových struktur.",
+    content: `
+Katedra mikroelektroniky vypisuje **dvanáct placených stáží** pro letní období v čistých prostorech KN:E a v návrhových laboratořích.
+
+Náplň stáží:
+- Asistence při fotolitografii a leptání křemíkových struktur.
+- Měření elektrických parametrů SiC a GaN součástek.
+- Příprava testovacích struktur pro studentské projekty.
+- Práce s EDA nástroji Cadence a Synopsys na reálných blocích obvodu.
+
+Stáže jsou vhodné pro studenty od třetího ročníku bakalářského studia. Odborný dohled zajišťují zaměstnanci katedry, výstupem je odborná zpráva nebo rozšířená semestrální práce.
+    `,
+    category: "academic",
+    categoryLabel: "FAKULTA // STÁŽE",
+    imageUrl: "https://images.unsplash.com/photo-1597733336794-12d05021d510?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Pracoviště s elektronikou připravené pro studentské stáže",
+    publishedAt: "02. 10. 2026",
+    readTimeMinutes: 3,
+    author: {
+      name: "Ing. Martin Daněk, Ph.D.",
+      title: "Výzkumník",
+      department: "ČVUT FEL – Program Elektronika a komunikace",
+    },
+    tags: ["Stáže", "Čisté prostory", "Bakalářské studium", "Laboratoře"],
+    en: {
+      title: "Summer Student Internships in KN:E Cleanrooms: Twelve Positions for Bachelor's and Master's Students",
+      perex: "The Department of Microelectronics is offering paid summer internships at its Charles Square laboratories. Students will join active sensor fabrication and semiconductor characterization projects.",
+      content: `
+The Department of Microelectronics has opened **twelve paid summer internship positions** in the KN:E cleanrooms and IC design laboratories.
+
+Internship responsibilities:
+- Assisting with photolithography and etching of silicon structures.
+- Electrical characterization of SiC and GaN power devices.
+- Preparing test structures and wafer samples for student projects.
+- Working with Cadence and Synopsys EDA tools on real circuit blocks.
+
+Internships are suited for students from their third year of Bachelor's studies onward. Faculty researchers provide direct mentorship, and the output can be credited toward a thesis or semester project.
+      `,
+      categoryLabel: "FACULTY // INTERNSHIPS",
+      imageAlt: "Electronics measurement workstation prepared for student interns",
+      authorTitle: "Senior Researcher",
+      authorDepartment: "CTU FEL – Electronics and Communications Programme",
+      tags: ["Internships", "Cleanrooms", "Bachelor's Study", "Laboratories"],
+    },
+  },
+  {
+    id: "art-12",
+    slug: "ieee-ispsd-2027-call-for-papers-praha",
+    title: "FEL ČVUT hostí konferenci IEEE ISPSD 2027: call for papers do 15. ledna",
+    perex: "Praha se stane dějištěm přední světové konference o výkonových polovodičových součástkách. Fakulta zajišťuje organizaci a vyzývá výzkumné týmy k zaslání abstraktů.",
+    content: `
+Fakulta elektrotechnická ČVUT byla vybrána jako hostitel mezinárodní konference **IEEE ISPSD 2027** (International Symposium on Power Semiconductor Devices and ICs), která se zaměřuje na výkonové polovodičové součástky a integrované obvody.
+
+Klíčové termíny:
+- Zaslání abstraktů: **do 15. ledna 2027**.
+- Oznámení přijetí: březen 2027.
+- Vlastní konference: červen 2027 v Praze.
+
+Konference pokrývá SiC a GaN struktury, návrh výkonových integrovaných obvodů, spolehlivost a tepelné management. Studenti FEL ČVUT se mohou zapojit jako dobrovolníci a organizační tým.
+    `,
+    category: "academic",
+    categoryLabel: "FAKULTA // KONFERENCE",
+    publishedAt: "30. 09. 2026",
+    readTimeMinutes: 3,
+    author: {
+      name: "prof. Ing. Jiří Vobecký, CSc.",
+      title: "Vedoucí Katedry mikroelektroniky",
+      department: "ČVUT FEL – Katedra mikroelektroniky",
+    },
+    tags: ["Konference", "IEEE ISPSD", "Power Devices", "Výzkum"],
+    en: {
+      title: "CTU FEL Hosts IEEE ISPSD 2027 Conference in Prague: Call for Papers Open Until January 15",
+      perex: "Prague will host the premier global conference on power semiconductor devices and integrated circuits. The faculty is leading the organization and invites research teams to submit abstracts.",
+      content: `
+The Faculty of Electrical Engineering at CTU has been selected to host **IEEE ISPSD 2027** (International Symposium on Power Semiconductor Devices and ICs), the flagship global conference dedicated to power semiconductor devices and integrated circuits.
+
+Key dates:
+- Abstract submission deadline: **January 15, 2027**.
+- Notification of acceptance: March 2027.
+- Conference dates: June 2027 in Prague.
+
+The symposium covers SiC and GaN devices, smart power ICs, device reliability, and advanced thermal management. CTU FEL students are invited to join the organizing and volunteer teams.
+      `,
+      categoryLabel: "FACULTY // CONFERENCE",
+      authorTitle: "Head of the Department of Microelectronics",
+      authorDepartment: "CTU FEL – Department of Microelectronics",
+      tags: ["Conference", "IEEE ISPSD", "Power Devices", "Research"],
+    },
   },
 ];
 

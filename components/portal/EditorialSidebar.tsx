@@ -2,14 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Clock, Calendar, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import type { Article } from "@/types/portal";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import type { Article, FacultyNewsItem } from "@/types/portal";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import { FacultyNewsRail } from "./FacultyNews";
+import { ArticleMedia } from "./ArticleMedia";
 
 interface EditorialSidebarProps {
   articles?: Article[];
+  facultyNews?: FacultyNewsItem[];
 }
 
-export function EditorialSidebar({ articles = [] }: EditorialSidebarProps) {
+export function EditorialSidebar({ articles = [], facultyNews = [] }: EditorialSidebarProps) {
+  const { language, t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Auto-cycle článků každých 5 sekund pro živý animovaný prvek
@@ -22,6 +27,15 @@ export function EditorialSidebar({ articles = [] }: EditorialSidebarProps) {
   }, [articles.length]);
 
   const currentArticle = articles[currentIndex];
+  const isEn = language === "en" && currentArticle?.en;
+  const currentTitle = isEn ? currentArticle.en!.title : currentArticle?.title;
+  const currentPerex = isEn ? currentArticle.en!.perex : currentArticle?.perex;
+  const currentCategoryLabel = isEn
+    ? currentArticle.en!.categoryLabel
+    : (currentArticle?.categoryLabel ?? "");
+  const currentImageAlt = isEn
+    ? (currentArticle.en!.imageAlt ?? currentArticle?.imageAlt)
+    : currentArticle?.imageAlt;
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev - 1 + articles.length) % articles.length);
@@ -32,40 +46,15 @@ export function EditorialSidebar({ articles = [] }: EditorialSidebarProps) {
   };
 
   return (
-    <aside className="space-y-6">
-      {/* 1. ČISTÝ DATUMOVÝ BLOK (Bez balastu) */}
-      <div className="rounded-sm border border-slate-200 dark:border-neutral-800 bg-white dark:bg-[#141846] p-4 sm:p-5 shadow-xs">
-        <div className="space-y-2.5 text-xs font-mono">
-          <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-neutral-800">
-            <span className="text-slate-500 dark:text-neutral-400 flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-[#0065bd] dark:text-fel-cyan" />
-              Dnešní datum:
-            </span>
-            <strong className="text-slate-900 dark:text-white font-semibold">
-              5. října 2026
-            </strong>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-slate-500 dark:text-neutral-400 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              Poslední aktualizace:
-            </span>
-            <strong className="text-emerald-700 dark:text-emerald-400 font-semibold">
-              Dnes v 14:00
-            </strong>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. ANIMOVANÝ CYKLUJÍCÍ PRVEK ČLÁNKŮ */}
+    <aside className="h-full flex flex-col justify-between gap-4 lg:gap-0">
+      {/* 1. ANIMOVANÝ CYKLUJÍCÍ PRVEK ČLÁNKŮ */}
       {articles.length > 0 && currentArticle && (
         <div className="rounded-sm border border-slate-200 dark:border-neutral-800 bg-white dark:bg-[#141846] p-4 sm:p-5 shadow-xs space-y-4">
           {/* Záhlaví cyklovače */}
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-neutral-800 text-xs font-mono">
             <div>
               <span className="font-bold uppercase tracking-wider text-slate-900 dark:text-white text-[11px]">
-                Další články
+                {t("moreArticles")}
               </span>
             </div>
             <div className="flex items-center gap-1">
@@ -73,7 +62,7 @@ export function EditorialSidebar({ articles = [] }: EditorialSidebarProps) {
                 type="button"
                 onClick={handlePrev}
                 className="min-w-9 min-h-9 p-1 flex items-center justify-center hover:text-[#0065bd] dark:hover:text-fel-cyan rounded-xs text-slate-400 focus-ring"
-                aria-label="Předchozí článek"
+                aria-label={t("prevArticle")}
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -84,7 +73,7 @@ export function EditorialSidebar({ articles = [] }: EditorialSidebarProps) {
                 type="button"
                 onClick={handleNext}
                 className="min-w-9 min-h-9 p-1 flex items-center justify-center hover:text-[#0065bd] dark:hover:text-fel-cyan rounded-xs text-slate-400 focus-ring"
-                aria-label="Další článek"
+                aria-label={t("nextArticle")}
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -97,12 +86,12 @@ export function EditorialSidebar({ articles = [] }: EditorialSidebarProps) {
             className="group block space-y-2.5 transition-all duration-300"
           >
             <div className="aspect-video w-full rounded-xs overflow-hidden bg-neutral-900 relative">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                key={currentArticle.id}
-                src={currentArticle.imageUrl}
-                alt={currentArticle.imageAlt}
-                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 animate-in fade-in"
+              <ArticleMedia
+                imageUrl={currentArticle.imageUrl}
+                imageAlt={currentImageAlt}
+                label={currentCategoryLabel}
+                compact
+                imageClassName="group-hover:scale-105 transition-transform duration-500"
               />
             </div>
 
@@ -111,15 +100,15 @@ export function EditorialSidebar({ articles = [] }: EditorialSidebarProps) {
                 {currentArticle.publishedAt}
               </span>
               <h4 className="text-sm font-bold font-sans text-slate-900 dark:text-white group-hover:text-[#0065bd] dark:group-hover:text-fel-cyan transition-colors line-clamp-2 leading-snug">
-                {currentArticle.title}
+                {currentTitle}
               </h4>
               <p className="text-xs text-slate-700 dark:text-neutral-300 line-clamp-2 leading-relaxed">
-                {currentArticle.perex}
+                {currentPerex}
               </p>
             </div>
 
             <div className="pt-2 text-xs font-mono font-semibold text-[#0065bd] dark:text-fel-cyan flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-              <span>Přejít na článek</span>
+              <span>{t("goToArticle")}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </Link>
@@ -136,22 +125,21 @@ export function EditorialSidebar({ articles = [] }: EditorialSidebarProps) {
                     ? "w-4 bg-[#0065bd] dark:bg-fel-cyan"
                     : "w-1.5 bg-slate-300 dark:bg-neutral-700 hover:bg-slate-400"
                 }`}
-                aria-label={`Přejít na článek ${idx + 1}`}
+                aria-label={`${t("goToArticle")} ${idx + 1}`}
               />
             ))}
           </div>
         </div>
       )}
 
-      {/* 3. RYCHLÝ ODKAZ DO ARCHIVU */}
-      <div className="rounded-sm border border-slate-200 dark:border-neutral-800 bg-white dark:bg-[#141846] p-4 shadow-xs">
-        <Link
-          href="/zpravy"
-          className="group flex items-center justify-between text-xs font-mono font-semibold text-slate-900 dark:text-white hover:text-[#0065bd] dark:hover:text-fel-cyan transition-colors"
-        >
-          <span>Celý archiv zpráv</span>
-          <ArrowRight className="w-3.5 h-3.5 text-[#0065bd] dark:text-fel-cyan group-hover:translate-x-1 transition-transform" />
-        </Link>
+      {/* 2. TECHNICKÝ ODDĚLOVAČ – čistá jemná linka pro rozbití pozornosti a lícování */}
+      <div className="flex-1 min-h-6 flex items-center justify-center py-2" aria-hidden="true">
+        <div className="h-px w-full bg-border" />
+      </div>
+
+      {/* 3. INFORMACE O FAKULTĚ – jeden rotující blok lícující se spodní hranou hero */}
+      <div className="shrink-0">
+        <FacultyNewsRail articles={facultyNews} />
       </div>
     </aside>
   );

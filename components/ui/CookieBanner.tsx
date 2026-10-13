@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { Cookie, X } from "lucide-react";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 export function CookieBanner() {
+  const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export function CookieBanner() {
   return (
     <div
       role="region"
-      aria-label="Informace o souborech cookies"
+      aria-label={t("cookiesTitle")}
       className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-md z-50 p-4 rounded-sm border border-neutral-200 dark:border-neutral-700 bg-white/95 dark:bg-[#141846]/95 backdrop-blur-md shadow-xl animate-in slide-in-from-bottom duration-300"
     >
       <div className="flex items-start gap-3">
@@ -42,17 +44,17 @@ export function CookieBanner() {
         </div>
         <div className="flex-1 space-y-1">
           <h4 className="text-xs font-mono font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
-            Soubory cookies
+            {t("cookiesTitle")}
           </h4>
           <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
-            Tento portál využívá pouze nezbytné technické cookies pro ukládání vašeho nastavení motivu (světlý/tmavý) a jazykové preference.
+            {t("cookiesDescription")}
           </p>
         </div>
         <button
           type="button"
           onClick={() => setIsVisible(false)}
           className="text-neutral-400 hover:text-neutral-600 dark:hover:text-white p-1 rounded-xs"
-          aria-label="Zavřít lištu cookies"
+          aria-label="Close"
         >
           <X className="w-3.5 h-3.5" />
         </button>
@@ -64,7 +66,7 @@ export function CookieBanner() {
           onClick={handleAccept}
           className="focus-ring px-4 py-1.5 rounded-xs bg-fel-blue hover:bg-fel-blue-hover text-white text-xs font-mono font-semibold transition-colors shadow-xs"
         >
-          Rozumím a přijmout
+          {t("cookiesAccept")}
         </button>
       </div>
     </div>

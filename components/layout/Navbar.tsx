@@ -45,15 +45,15 @@ export function Navbar() {
               />
             </div>
 
-            <span className="w-px h-6 bg-neutral-300 dark:bg-neutral-700" />
+            <span className="hidden sm:block w-px h-6 bg-neutral-300 dark:bg-neutral-700" />
 
-            {/* Název portálu a stručný redakční podtitul */}
-            <span className="min-w-0 flex flex-col justify-center">
+            {/* Název portálu a stručný redakční podtitul (skrytý na telefonu) */}
+            <span className="hidden sm:flex min-w-0 flex-col justify-center">
               <span className="font-sans font-extrabold text-base sm:text-2xl tracking-tight text-neutral-900 dark:text-white leading-none truncate group-hover:text-fel-blue dark:group-hover:text-fel-cyan transition-colors">
                 POLOVODIČE
               </span>
               <span className="block mt-0.5 text-[9px] sm:text-[11px] font-mono leading-tight text-neutral-500 dark:text-neutral-400 truncate">
-                Informační deník ze světa elektroniky
+                {t("portalSubtitle")}
               </span>
             </span>
           </Link>
@@ -64,10 +64,10 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setIsSearchOpen(true)}
-              className="focus-ring flex items-center justify-center gap-2 px-2 sm:px-3 py-1.5 h-9 w-9 sm:w-auto rounded-sm border border-neutral-200 dark:border-neutral-700 bg-neutral-100/80 dark:bg-neutral-900/60 text-neutral-600 dark:text-neutral-300 hover:border-fel-blue dark:hover:border-fel-cyan hover:text-neutral-900 dark:hover:text-white transition-colors text-xs font-mono"
+              className="focus-ring flex items-center justify-center gap-2 px-3 sm:px-4 py-2 h-10 w-10 sm:w-auto sm:min-w-52 rounded-sm border border-neutral-200 dark:border-neutral-700 bg-neutral-100/80 dark:bg-neutral-900/60 text-neutral-600 dark:text-neutral-300 hover:border-fel-blue dark:hover:border-fel-cyan hover:text-neutral-900 dark:hover:text-white transition-colors text-sm font-mono"
               aria-label={t("searchAria")}
             >
-              <Search className="w-3.5 h-3.5 text-neutral-400" />
+              <Search className="w-4 h-4 text-neutral-400" />
               <span className="hidden sm:inline">{t("search")}</span>
             </button>
 

@@ -38,6 +38,17 @@ export interface Author {
   email?: string;
 }
 
+export interface ArticleTranslation {
+  title: string;
+  perex: string;
+  content: string;
+  categoryLabel: string;
+  imageAlt?: string;
+  authorTitle?: string;
+  authorDepartment?: string;
+  tags?: string[];
+}
+
 export interface Article {
   id: string;
   slug: string;
@@ -46,15 +57,26 @@ export interface Article {
   content: string;               // Markdown / text obsah článku
   category: ArticleCategory;
   categoryLabel: string;         // Např. "NÁVRH ČIPŮ // ASIC"
-  imageUrl: string;
-  imageAlt: string;
+  imageUrl?: string;             // Volitelné: bez obrázku se vykreslí šablona (rules/theme.md §8)
+  imageAlt?: string;
   publishedAt: string;           // Formát např. "05. 10. 2026"
   readTimeMinutes: number;       // Např. 4
   author: Author;
   featured?: boolean;            // Hlavní otvírák portálu (Hero)
   specs?: SemiconductorSpecs;    // Technická specifikace pro Key Takeaway box
   tags: string[];
+  en?: ArticleTranslation;
 }
+
+/**
+ * Zúžený pohled na článek pro sekci „Informace o fakultě“ a její widget
+ * v bočním sloupci. Neobsahuje plný text článku, aby se do klientských
+ * komponent nepřenášel celý obsah.
+ */
+export type FacultyNewsItem = Pick<
+  Article,
+  "id" | "slug" | "title" | "perex" | "publishedAt" | "categoryLabel" | "en"
+>;
 
 export interface StorystreamItem {
   id: string;
