@@ -3,7 +3,7 @@ import { getArticles } from "@/lib/api";
 import { NewsArchiveClient } from "@/components/portal/NewsArchiveClient";
 
 export const metadata: Metadata = {
-  title: "Archiv zpráv - Polovodiče",
+  title: "Archiv zpráv",
   description: "Informační deník ze světa elektroniky",
 };
 

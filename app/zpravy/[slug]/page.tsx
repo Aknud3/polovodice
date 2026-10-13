@@ -17,11 +17,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const article = await getArticleBySlug(slug);
 
   if (!article) {
-    return { title: "Článek nenalezen - Polovodiče" };
+    return { title: "Článek nenalezen" };
   }
 
   return {
-    title: `${article.title} - Polovodiče`,
+    title: article.title,
     description: article.perex,
   };
 }
