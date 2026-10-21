@@ -69,6 +69,7 @@ export interface Article {
   featured?: boolean;
   specs?: SemiconductorSpecs;
   tags: string[];
+  audience: [Audience, ...Audience[]];
   en?: ArticleTranslation;
 }
 ```
@@ -119,6 +120,7 @@ Stávající `cn()` helper a ostatní inženýrské standardy zůstávají beze 
   - `metadata.icons` s `icon` (SVG s `sizes: "any"` + PNG s přesnými velikostmi), `apple` (180×180) a `other` s `rel: "mask-icon"` na `safari-pinned-tab.svg`; klíč `shortcut` se nepoužívá,
   - `metadata.other` s `msapplication-config` a `msapplication-TileColor`,
   - `viewport.themeColor` pro tmavý (`#081d3d`) i světlý (`#edfff9`) režim.
+- **Lokalizace metadat:** statický export neumožňuje měnit `<title>` a `description` podle klientského přepínače jazyka. Metadata všech rout jsou proto **česky** (zdroj: `generateMetadata()` v příslušné `page.tsx`) a jazykový přepínač mění pouze obsah stránky. Tento stav je záměrný, nikoliv chyba hydratace.
 - **Zkrácená metadata portálu:**
   - Titulek: `title: "Polovodiče - Informační deník ze světa elektroniky"` (hlavní nadpis Polovodiče, šablona `%s - Polovodiče` pro podstránky, oddělovač pomlčka `-` bez `//`).
   - Popis: `description: "Informační deník ze světa elektroniky"`.
@@ -142,13 +144,15 @@ Stávající `cn()` helper a ostatní inženýrské standardy zůstávají beze 
 ## 8. Datová vrstva: Informace o fakultě a homepage
 
 - Zprávy o fakultě (letní škola, dny otevřených dveří, přijímací řízení, stáže, stipendia, konference) jsou standardní `Article` s `category: "academic"`. MUSÍ mít vyplněný `slug`, `perex`, `publishedAt` a `author` (obrázek je volitelný, viz §9), aby fungoval detail `/zpravy/[slug]`, archiv i vyhledávání.
+- Každý `Article` MUSÍ mít vyplněné `audience: [Audience, ...Audience[]]` – interní značku cílových skupin, pro které je zpráva určena. Značka je povinná i pro články o fakultě; neprázdné pole vynucuje typ, takže článek bez skupiny nelze publikovat ani zobrazit na `/pro-koho/[audience]` (`rules/layout.md` §2.18).
+- `getArticlesByAudience(audience: Audience)` vrací články obsahující danou skupinu v poli `audience`, v pořadí `MOCK_ARTICLES` – tedy shodně s archivem bez dalšího řazení.
 - `lib/api.ts` MUSÍ poskytovat `getFacultyNews(limit?)`: vrací články kategorie `academic` seřazené podle priority (nejdůležitější první), volitelně oříznuté na `limit`, a to ve **zúženém typu `FacultyNewsItem`** (`types/portal.ts`) bez plného textu článku – do klientských komponent se nesmí přenášet `content`.
 - Homepage MUSÍ pracovat se dvěma oddělenými sadami:
   - `facultyNews` = `getFacultyNews()` – pro sekci „Informace o fakultě“ a pro rail widget,
   - `editorialArticles` = `getEditorialArticles()` (tj. `getArticles()` **bez** kategorie `academic`) – pro hero, cyklovač „Další články“ a mřížku „Ostatní novinky“.
 - `getCategoryCounts(articles?)` MUSÍ umět spočítat počty nad předanou sadou, aby počítadla filtrů odpovídala tomu, co mřížka skutečně umí zobrazit (`rules/layout.md` §2.4). Bez argumentu počítá přes celý archiv.
 - Podstránka archivu `/zpravy` v `NewsArchiveClient.tsx` rozděluje výpis článků do dvou samostatných sekcí: **Všeobecné informace** (`category !== "academic"`) a **Informace o fakultě** (`category === "academic"`). Filtry rubrik a materiálů jsou dočasně odstraněny, vyhledávací pole používá placeholder `Hledat...` a filtruje obě sekce současně.
-- Všech 12 článků v `data/mock-data.ts` má kompletní anglický překlad v objektu `en` (`ArticleTranslation`) a v `lib/api.ts` / `types/portal.ts` je součástí i `FacultyNewsItem`.
+- Všechny články v `data/mock-data.ts` mají kompletní anglický překlad v objektu `en` (`ArticleTranslation`) a v `lib/api.ts` / `types/portal.ts` je součástí i `FacultyNewsItem`.
 - Klientské komponenty (`HeroFeature`, `ArticleCard`, `EditorialSidebar`, `FacultyNews`, `NewsArchiveClient`, `ArticleDetailClient`, `CommandMenu`, `CookieBanner`) přepínají jak veškeré popisky UI, tak i obsah článků do angličtiny při `language === "en"`.
 - Komponenta `components/portal/SectionTemplate.tsx`, podstránky `app/udalosti/page.tsx` a `app/servis/page.tsx` i komponenta `components/portal/EventList.tsx` jsou smazány. Sekci o fakultě zajišťuje `components/portal/FacultyNews.tsx` (`FacultyNewsSection` a `FacultyNewsRail`).
 
@@ -163,3 +167,80 @@ Stávající `cn()` helper a ostatní inženýrské standardy zůstávají beze 
 - Sekce „Informace o fakultě“ zobrazuje první **4** položky (2 × 2) – ořez se děje v komponentě sekce (`rules/layout.md` §2.5).
 - `TopicHubs` používá univerzální rozbalovací menu (dropdown) na všech zařízeních (`TopicHubs.tsx`), viz `rules/layout.md` §2.4.
 - Ikona `Cpu` v šabloně bez obrázku je dekorace obsahu, nikoliv brand mark – pravidla pro ikony prohlížeče (`rules/theme.md` §5) se jí netýkají.
+
+---
+
+## 10. Datové entity rozšířeného portálu (Akce, Projekty, Výzvy, Medailonky, Partneři)
+
+Podle `analyza-dratoveho-modelu-webu.md` a `PLAN-ROZSIRENI.md` se typový systém v `types/portal.ts` rozšiřuje o pět entit a sdílené číselníky. Atributy přesně odpovídají analýze §9.
+
+### Číselníky
+```typescript
+export type Audience = "students" | "researchers" | "public" | "partners" | "media";
+export type EventType = "event" | "conference" | "summer-school";
+export type ProjectStatus = "preparation" | "running" | "completed";
+export type FacultyUnit = "fel" | "kme" | "fjfi" | "fd" | "external";
+```
+- `Audience` slouží zároveň jako hodnoty rozcestníku cílových skupin na homepage, jako filtr u Akcí a Výzev a jako **povinná interní značka každého článku** (`Article.audience`).
+- `FacultyUnit` je dočasný placeholder číselníku fakult/součástí (finální sjednocení je otevřený bod); projekt/výzva má právě jednu hlavní součást.
+- Letní škola je `Event` s `type: "summer-school"` – jeden záznam sdílený sekcemi Akce i Vzdělávání.
+
+### Entity
+```typescript
+export interface ContactPerson { name: string; email: string; department: string; }
+
+export interface PortalEvent {
+  id: string; slug: string; type: EventType;
+  title: string; perex: string; location: string;
+  startsAt: string;           // ISO "2026-11-12" (zdroj pro řazení i formátování)
+  endsAt?: string;            // ISO
+  imageUrl?: string; imageAlt?: string;
+  audience: Audience[]; registrationUrl?: string;
+  en?: { title: string; perex: string; location: string; imageAlt?: string };
+}
+
+export interface Project {
+  id: string; slug: string; title: string; description: string;
+  status: ProjectStatus; unit: FacultyUnit;
+  audience: Audience[];
+  contact: ContactPerson; outputs: string[];
+  imageUrl?: string; imageAlt?: string; startsAt?: string; endsAt?: string;
+  en?: { title: string; description: string; outputs?: string[]; imageAlt?: string };
+}
+
+export interface ProjectCall {
+  id: string; slug: string; title: string; description: string;
+  audience: Audience[]; conditions: string[]; deadline: string;
+  contact: ContactPerson; unit: FacultyUnit;
+  imageUrl?: string; imageAlt?: string;
+  en?: { title: string; description: string; conditions?: string[]; imageAlt?: string };
+}
+
+export interface Profile { // Medailonek
+  id: string; slug: string; name: string; title: string; content: string;
+  publishedAt: string; photoUrl?: string; photoAlt?: string;
+  audience: Audience[];
+  en?: { title: string; content: string; photoAlt?: string };
+}
+
+export interface Partner { id: string; name: string; url: string; }
+
+export interface TimelineItem {
+  kind: "event" | "project" | "profile" | "article";
+  id: string; title: string; date: string; sortDate: string; href: string;
+}
+```
+
+### API vrstva (`lib/api.ts`)
+- `getEvents(filter?: { type?: EventType | "all" })` – akce řazené vzestupně podle `startsAt`.
+- `getUpcomingEvents(limit = 2)` – nejbližší akce od dnešního data (pro homepage).
+- `getProjects(unit?: FacultyUnit | "all")`, `getProjectCalls()`, `getProjectBySlug(slug)`, `getProjectCallBySlug(slug)`.
+- `getProfiles()`, `getProfileBySlug(slug)`, `getPartners()`.
+- `getTimelineItems(kind?)` – agregace Akcí, Projektů, Medailonků a Článků do jednotného `TimelineItem[]` řazeného sestupně podle `sortDate`; u článků se `sortDate` parsuje z českého formátu `publishedAt` (`DD. MM. YYYY`).
+- `getArticlesByAudience(audience: Audience)` – vrací pouze články s danou skupinou v `audience`, v pořadí `MOCK_ARTICLES` (shodné s archivem); zdroj pro podstránky `/pro-koho/[audience]`.
+- `AUDIENCE_SLUGS` a `AUDIENCE_ORDER` jsou definované v `lib/audiences.ts` (bez importu mock dat, aby je šlo použít i v klientských komponentách) a mapují české URL slugy na interní identifikátory cílových skupin: `studenti` -> `students`, `vyzkumnici` -> `researchers`, `verejnost` -> `public`, `partneri` -> `partners`, `media` -> `media`.
+- Formátování data akce z ISO probíhá v klientských komponentách podle aktivního jazyka (`cs`: `12. 11. 2026`, `en`: `November 12, 2026`).
+
+### Routy
+- `/akce` (přehled + filtr typu), `/projekty` (mřížka + filtr součástí + výzvy), `/projekty/[slug]` (detail projektu i výzvy), `/vzdelavani`, `/o-nas`, `/zpravy/medailonky`, `/zpravy/medailonky/[slug]`, `/pro-koho/[audience]` (podstránky cílových skupin ve stylu archivu zpráv – pouze články s interní značkou dané skupiny a sub-menu všech pěti skupin).
+- Všechny `[slug]` i `[audience]` routy MUSÍ mít `generateStaticParams` odvozené z příslušných getterů a mapování; statický export zůstává povinný.

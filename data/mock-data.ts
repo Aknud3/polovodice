@@ -5,6 +5,13 @@ import type {
   MarketIndexItem,
   CampusEvent,
   PollData,
+  PortalEvent,
+  Project,
+  ProjectCall,
+  Profile,
+  Partner,
+  Opportunity,
+  FaqItem,
 } from "@/types/portal";
 
 export const MOCK_ARTICLES: Article[] = [
@@ -47,6 +54,7 @@ Klíčovým pilířem úspěchu je dostupnost špičkových inženýrů v oboru 
       efficiencyPercent: 99.4,
     },
     tags: ["onsemi", "SiC", "Chips Act", "Národní strategie", "Rožnov", "Automotive"],
+    audience: ["partners", "media", "students"],
     en: {
       title: "Historic Milestone for Czech Silicon: onsemi Invests $2 Billion in Rožnov and Expands Partnership with CTU FEL",
       perex: "US semiconductor giant onsemi has officially confirmed a massive investment to build a new vertically integrated Silicon Carbide (SiC) wafer and chip manufacturing facility. The Department of Microelectronics at CTU FEL becomes a key partner for R&D and talent education.",
@@ -104,6 +112,7 @@ Celý proces návrhu ASIC čipu probíhá v několika fázích:
       packageType: "FC-BGA 1156",
     },
     tags: ["ASIC", "Cadence", "Synopsys", "SystemVerilog", "RTL", "EDA"],
+    audience: ["students", "researchers"],
     en: {
       title: "Complete IC Design Flow: How Custom ASIC Chips Are Created at CTU FEL from RTL Code to Physical Layout",
       perex: "Look inside the hands-on laboratory courses at the Department of Microelectronics. From SystemVerilog and logic synthesis to static timing analysis and DRC verification in industrial Cadence and Synopsys EDA tools.",
@@ -155,6 +164,7 @@ Výzkumný tým programu Elektronika a komunikace dokončil testování nového 
       efficiencyPercent: 99.2,
     },
     tags: ["GaN", "Měniče", "Spínané zdroje", "Elektromobilita", "Účinnost"],
+    audience: ["researchers", "partners"],
     en: {
       title: "Power Conversion Breakthrough: Gallium Nitride (GaN) Pushes Switching Converter Efficiency to 99.2%",
       perex: "The Power Electronics Laboratory has unveiled a new multiphase converter prototype for DC fast-charging stations. Using GaN HEMT switches reduced passive component volume to one-third of its original size.",
@@ -202,6 +212,7 @@ Nové vybavení zahrnuje:
       material: "Si",
     },
     tags: ["Cleanrooms", "ISO 6", "Karlovo náměstí", "Litografie", "Výroba"],
+    audience: ["students", "researchers", "public"],
     en: {
       title: "KN:E Cleanrooms After Major Upgrade: CTU FEL Offers State-of-the-Art ISO 6 Environment",
       perex: "The modernization of the cleanroom laboratory complex for photolithography, vacuum deposition, and diffusion processes at the Charles Square campus has been completed, serving both sensor fabrication and student research.",
@@ -251,6 +262,7 @@ Klíčové vlastnosti čipu:
       packageType: "QFN-48",
     },
     tags: ["RISC-V", "Kryptografie", "IoT", "Vestavné systémy", "Tape-out"],
+    audience: ["students", "researchers", "media"],
     en: {
       title: "Czech Silicon for Secure IoT: CTU FEL Unveils Open 32-Bit RISC-V Processor with Hardware Encryption",
       perex: "The open RISC-V architecture is experiencing a global boom. A joint team from the Digital Design and Microelectronics departments has designed a chip featuring a built-in post-quantum cryptographic core and ultra-low sleep power.",
@@ -299,6 +311,7 @@ Fotonické integrované obvody (Photonic Integrated Circuits – PIC) nahrazují
       packageType: "Optical Co-Packaged",
     },
     tags: ["Fotonika", "Kvantové čipy", "Optické sítě", "6G", "PhotonDelta"],
+    audience: ["researchers", "media"],
     en: {
       title: "Light Instead of Electrons: Photonic Integrated Circuits (PIC) Accelerate Optical Data Interconnects",
       perex: "The Department of Radioelectronics and optoelectronics teams at CTU FEL are developing silicon photonics for next-generation 6G networks and optical server interconnects in AI data centers.",
@@ -345,6 +358,7 @@ Kurz je určen studentům bakalářského i magisterského studia programu Elekt
       department: "ČVUT FEL – Katedra mikroelektroniky",
     },
     tags: ["Letní škola", "Vzdělávání", "Čisté prostory", "Přihlášky"],
+    audience: ["students"],
     en: {
       title: "CTU FEL Summer School of Semiconductor Technologies 2027: Applications Open Until March 31",
       perex: "An intensive one-week course at the Charles Square campus guides students through the entire workflow from IC design to cleanroom wafer characterization. Capacity is limited to 24 participants.",
@@ -394,6 +408,7 @@ Prohlídky probíhají v hodinových blocích, vstup do čistých prostor je pou
       department: "ČVUT FEL – Katedra mikroelektroniky",
     },
     tags: ["Den otevřených dveří", "Čisté prostory", "Karlovo náměstí", "Uchazeči"],
+    audience: ["students", "public"],
     en: {
       title: "CTU FEL Open Days: Guided Tours of the KN:E Cleanrooms and Microelectronics Laboratories",
       perex: "Prospective students and members of the public can explore the ISO 6 cleanrooms, UV lithography mask aligner, and semiconductor measurement setups at the Charles Square campus.",
@@ -443,6 +458,7 @@ Přihlášky se podávají elektronicky přes studijní oddělení, součástí 
       department: "ČVUT FEL – Program Elektronika a komunikace",
     },
     tags: ["Stipendia", "onsemi", "EIS", "Podpora studentů"],
+    audience: ["students", "partners"],
     en: {
       title: "onsemi Scholarship Programme for EIS Master's Students: Up to CZK 20,000 per Month",
       perex: "onsemi is expanding its financial support for students enrolled in the Electronics and Integrated Systems Master's programme, combining monthly stipends with R&D projects and internships in Rožnov.",
@@ -491,6 +507,7 @@ Uchazeči mohou doložit výsledky bakalářské práce, odborné stáže nebo �
       department: "ČVUT FEL – Katedra mikroelektroniky",
     },
     tags: ["Přijímací řízení", "EIS", "Studium", "Magisterský program"],
+    audience: ["students"],
     en: {
       title: "Admissions Open for the EIS Master's Programme for Academic Year 2027/2028",
       perex: "The Electronics and Integrated Systems programme is accepting applications until April 30. The admission process includes an interview focused on electronics fundamentals and motivation for microelectronics.",
@@ -539,6 +556,7 @@ Stáže jsou vhodné pro studenty od třetího ročníku bakalářského studia.
       department: "ČVUT FEL – Program Elektronika a komunikace",
     },
     tags: ["Stáže", "Čisté prostory", "Bakalářské studium", "Laboratoře"],
+    audience: ["students", "researchers"],
     en: {
       title: "Summer Student Internships in KN:E Cleanrooms: Twelve Positions for Bachelor's and Master's Students",
       perex: "The Department of Microelectronics is offering paid summer internships at its Charles Square laboratories. Students will join active sensor fabrication and semiconductor characterization projects.",
@@ -585,6 +603,7 @@ Konference pokrývá SiC a GaN struktury, návrh výkonových integrovaných obv
       department: "ČVUT FEL – Katedra mikroelektroniky",
     },
     tags: ["Konference", "IEEE ISPSD", "Power Devices", "Výzkum"],
+    audience: ["researchers", "partners", "media"],
     en: {
       title: "CTU FEL Hosts IEEE ISPSD 2027 Conference in Prague: Call for Papers Open Until January 15",
       perex: "Prague will host the premier global conference on power semiconductor devices and integrated circuits. The faculty is leading the organization and invites research teams to submit abstracts.",
@@ -720,3 +739,524 @@ export const MOCK_POLL_DATA: PollData = {
     { id: "opt-4", text: "Diamant & ultra-wide bandgap materiály", votes: 17 },
   ],
 };
+
+/* ------------------------------------------------------------------ */
+/* Rozšířené entity portálu podle drátového modelu (PLAN-ROZSIRENI.md)  */
+/* ------------------------------------------------------------------ */
+
+export const MOCK_EVENTS: PortalEvent[] = [
+  {
+    id: "event-1",
+    slug: "den-otevrenych-dveri-fel-listopad-2026",
+    type: "event",
+    title: "Den otevřených dveří FEL: Čisté prostory a měřicí komory",
+    perex: "Exkurze do zázemí Katedry mikroelektroniky, ukázky litografie a měření na waferové úrovni. Seznámení s programem Elektronika a komunikace.",
+    location: "FEL ČVUT, Karlovo náměstí 13, Praha 2",
+    startsAt: "2026-11-06",
+    imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Studenti v čistých prostorách při exkurzi",
+    audience: ["students", "public"],
+    registrationUrl: "https://ek.fel.cvut.cz/",
+    en: {
+      title: "FEL Open House: Cleanrooms and Measurement Chambers",
+      perex: "A tour of the Department of Microelectronics facilities, lithography demos and wafer-level measurements. Introduction to the Electronics and Communications programme.",
+      location: "CTU FEL, Karlovo náměstí 13, Prague 2",
+      imageAlt: "Students touring the cleanroom facilities",
+    },
+  },
+  {
+    id: "event-2",
+    slug: "konference-ceska-polovodicova-strategie-2026",
+    type: "conference",
+    title: "Konference Česká polovodičová strategie 2026",
+    perex: "Výroční konference k naplňování Národní polovodičové strategie: investice, vzdělávání a propojení průmyslu s akademií. Pořádá FEL ČVUT společně s MPO.",
+    location: "Bethlehem Chapel, Betlémské náměstí, Praha 1",
+    startsAt: "2026-11-19",
+    endsAt: "2026-11-20",
+    imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Konferenční sál s publikem",
+    audience: ["researchers", "partners", "media"],
+    registrationUrl: "https://ek.fel.cvut.cz/",
+    en: {
+      title: "Czech Semiconductor Strategy 2026 Conference",
+      perex: "Annual conference on delivering the National Semiconductor Strategy: investment, education and industry–academia collaboration. Organised by CTU FEL together with the Ministry of Industry and Trade.",
+      location: "Bethlehem Chapel, Betlémské náměstí, Prague 1",
+      imageAlt: "Conference hall with audience",
+    },
+  },
+  {
+    id: "event-3",
+    slug: "letni-skola-navrhu-cipu-2027",
+    type: "summer-school",
+    title: "Letní škola návrhu čipů 2027",
+    perex: "Týdenní intenzivní kurz návrhu integrovaných obvodů: od RTL kódu v SystemVerilogu přes syntézu až po fyzický layout v Cadence Virtuoso.",
+    location: "FEL ČVUT, Dejvice, Praha 6",
+    startsAt: "2027-07-05",
+    endsAt: "2027-07-09",
+    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Křemíkový wafer na podložce",
+    audience: ["students"],
+    registrationUrl: "https://ek.fel.cvut.cz/",
+    en: {
+      title: "Chip Design Summer School 2027",
+      perex: "A week-long intensive IC design course: from SystemVerilog RTL through synthesis to physical layout in Cadence Virtuoso.",
+      location: "CTU FEL, Dejvice, Prague 6",
+      imageAlt: "Silicon wafer on a chuck",
+    },
+  },
+  {
+    id: "event-4",
+    slug: "prednaska-onsemi-spolehlivost-sic-mosfet",
+    type: "event",
+    title: "Přednáška inženýrů onsemi: Spolehlivost SiC MOSFETů pro automotive",
+    perex: "Praktická přednáška s ukázkami reálných měření spolehlivosti výkonových SiC tranzistorů přímo z provozu v Rožnově pod Radhoštěm.",
+    location: "Zengerova posluchárna KN:E-107, Karlovo náměstí",
+    startsAt: "2026-12-03",
+    audience: ["students", "researchers"],
+    en: {
+      title: "onsemi Engineers Lecture: SiC MOSFET Reliability for Automotive",
+      perex: "A hands-on lecture with real reliability measurements of power SiC transistors straight from the Rožnov fab.",
+      location: "Zenger Lecture Hall KN:E-107, Charles Square",
+    },
+  },
+  {
+    id: "event-5",
+    slug: "workshop-gaN-vykonove-menice-2027",
+    type: "event",
+    title: "Workshop: GaN výkonové měniče v praxi",
+    perex: "Celodenní praktický workshop návrhu výkonových měničů s GaN tranzistory – měření přepínacích ztrát a EMC v laboratoři výkonové elektroniky.",
+    location: "Laboratoř výkonové elektroniky, FEL ČVUT Dejvice",
+    startsAt: "2027-02-12",
+    audience: ["researchers", "partners"],
+    registrationUrl: "https://ek.fel.cvut.cz/",
+    en: {
+      title: "Workshop: GaN Power Converters in Practice",
+      perex: "A full-day hands-on workshop on designing GaN power converters – switching loss and EMC measurements in the power electronics lab.",
+      location: "Power Electronics Laboratory, CTU FEL Dejvice",
+    },
+  },
+  {
+    id: "event-6",
+    slug: "letni-skola-polovodicovych-technologii-2027",
+    type: "summer-school",
+    title: "Letní škola polovodičových technologií 2027",
+    perex: "Úvod do technologií výroby čipů: pěstování krystalů, litografie, leptání a difúze. Praktické bloky v čistých prostorách KN:E.",
+    location: "Čisté prostory KN:E, Karlovo náměstí, Praha 2",
+    startsAt: "2027-08-23",
+    endsAt: "2027-08-27",
+    audience: ["students", "public"],
+    registrationUrl: "https://ek.fel.cvut.cz/",
+    en: {
+      title: "Semiconductor Technology Summer School 2027",
+      perex: "An introduction to chip manufacturing: crystal growth, lithography, etching and diffusion. Hands-on sessions in the KN:E cleanrooms.",
+      location: "KN:E Cleanrooms, Charles Square, Prague 2",
+    },
+  },
+];
+
+export const MOCK_PROJECTS: Project[] = [
+  {
+    id: "proj-1",
+    slug: "sic-vykonove-moduly-pro-trakci",
+    title: "SiC výkonové moduly pro trakční měniče",
+    description: `Výzkum a vývoj výkonových modulů na bázi karbidu křemíku pro trakční měniče elektromobilů a železniční trakce. Projekt řeší tepelné managementy modulů, spolehlivost pájených a sinterních spojů a pokročilé metody měření ztrát v reálném provozu.
+
+### Cíle projektu
+- Návrh a ověření modulu 1200 V / 400 A s nízkou parazitní indukčností.
+- Zrychlené životní testy (power cycling) a modelování degradace.
+- Přenos know-how do výuky magisterského programu EIS.`,
+    status: "running",
+    unit: "kme",
+    contact: { name: "prof. Ing. Jiří Vobecký, CSc.", email: "vobecky@fel.cvut.cz", department: "ČVUT FEL – Katedra mikroelektroniky" },
+    outputs: [
+      "Vobecký, J. et al.: Thermal Design of SiC Power Modules for Traction Applications, IEEE Transactions on Power Electronics, 2026.",
+      "Vzorek modulu 1200 V / 400 A pro laboratorní ověření.",
+    ],
+    imageUrl: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Výkonový polovodičový modul na chladiči",
+    startsAt: "2025-01-01",
+    endsAt: "2027-12-31",
+    en: {
+      title: "SiC Power Modules for Traction Converters",
+      description: `Research and development of silicon carbide power modules for traction converters in electric vehicles and rail traction. The project addresses module thermal management, reliability of soldered and sintered joints, and advanced loss measurement methods under real operating conditions.
+
+### Project Goals
+- Design and verification of a 1200 V / 400 A module with low parasitic inductance.
+- Accelerated lifetime testing (power cycling) and degradation modelling.
+- Transfer of know-how into the EIS Master's programme.`,
+      outputs: [
+        "Vobecký, J. et al.: Thermal Design of SiC Power Modules for Traction Applications, IEEE Transactions on Power Electronics, 2026.",
+        "1200 V / 400 A module sample for laboratory verification.",
+      ],
+      imageAlt: "Power semiconductor module on a heatsink",
+    },
+  },
+  {
+    id: "proj-2",
+    slug: "spolecna-laborator-onsemi-fel",
+    title: "Společná výzkumná laboratoř onsemi – FEL ČVUT",
+    description: `Vznik společné laboratoře výkonových polovodičových struktur na Karlově náměstí v rámci strategického partnerství s onsemi. Laboratoř umožní studentům i výzkumníkům pracovat na reálných výrobních procesech SiC technologie.
+
+Laboratoř bude sloužit zároveň jako výukové zázemí pro předměty polovodičových technologií a jako základna pro společné diplomové práce a stáže.`,
+    status: "preparation",
+    unit: "kme",
+    contact: { name: "Ing. Tomáš Horák, Ph.D.", email: "horak@fel.cvut.cz", department: "ČVUT FEL – Katedra mikroelektroniky" },
+    outputs: ["Memorandum o spolupráci podepsáno 10/2026.", "Projektová dokumentace laboratoře KN:E-3."],
+    imageUrl: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Vybavení výzkumné laboratoře",
+    startsAt: "2026-10-01",
+    en: {
+      title: "Joint onsemi – CTU FEL Research Laboratory",
+      description: `Establishment of a joint power semiconductor structures laboratory at Charles Square within the strategic partnership with onsemi. The lab will let students and researchers work on real SiC manufacturing processes.
+
+The lab will also serve as a teaching facility for semiconductor technology courses and as a base for joint theses and internships.`,
+      outputs: ["Memorandum of cooperation signed 10/2026.", "Design documentation of the KN:E-3 laboratory."],
+      imageAlt: "Research laboratory equipment",
+    },
+  },
+  {
+    id: "proj-3",
+    slug: "kvantove-fotonické-cipy-fjfi",
+    title: "Kvantové fotonické čipy pro zabezpečenou komunikaci",
+    description: `Mezifakultní projekt FEL a FJFI zaměřený na návrh integrovaných fotonických obvodů pro kvantové distribuce klíčů (QKD). Řeší se návrh vlnovodů, jednofotonových detektorů a integrace na platformě SiN.
+
+Projekt navazuje na evropskou iniciativu EuroQCI a připravuje český uzel kvantové komunikační infrastruktury.`,
+    status: "running",
+    unit: "fjfi",
+    contact: { name: "doc. Ing. Lenka Novotná, Ph.D.", email: "novotna@fjfi.cvut.cz", department: "ČVUT FJFI – Katedra fyziky" },
+    outputs: ["Prototyp fotonického čipu SiN pro QKD.", "2 publikace v Optics Express (2025, 2026)."],
+    startsAt: "2024-09-01",
+    endsAt: "2026-08-31",
+    en: {
+      title: "Quantum Photonic Chips for Secure Communication",
+      description: `A joint project of FEL and FNSPE focused on the design of integrated photonic circuits for quantum key distribution (QKD). The work covers waveguide design, single-photon detectors and integration on the SiN platform.
+
+The project follows the EuroQCI initiative and prepares the Czech node of the quantum communication infrastructure.`,
+      outputs: ["SiN photonic chip prototype for QKD.", "2 publications in Optics Express (2025, 2026)."],
+    },
+  },
+  {
+    id: "proj-4",
+    slug: "senzory-pro-industry-40",
+    title: "Vestavné senzorové uzly pro Industry 4.0",
+    description: `Vývoj nízkopříkonových senzorických uzlů s vlastním ASIC front-endem pro monitorování strojů v průmyslových provozech. Uzel kombinuje měření vibrací, teploty a proudu s bezdrátovým přenosem (BLE / IO-Link).
+
+Projekt je řešen ve spolupráci s průmyslovými partnery a výsledky jsou ověřovány v reálném provozu.`,
+    status: "completed",
+    unit: "fel",
+    contact: { name: "Ing. Petr Malý, Ph.D.", email: "maly@fel.cvut.cz", department: "ČVUT FEL – Katedra mikroelektroniky" },
+    outputs: ["Funkční vzorek senzorického uzlu (3. revize).", "3 diplomové práce obhájené nad tématem projektu."],
+    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Deska plošného spoje se senzorickým uzlem",
+    startsAt: "2023-02-01",
+    endsAt: "2025-12-31",
+    en: {
+      title: "Embedded Sensor Nodes for Industry 4.0",
+      description: `Development of low-power sensor nodes with a custom ASIC front-end for machine monitoring in industrial plants. The node combines vibration, temperature and current sensing with wireless transmission (BLE / IO-Link).
+
+The project was carried out with industrial partners and validated in a real production environment.`,
+      outputs: ["Working sensor node sample (3rd revision).", "3 Master's theses defended on project topics."],
+      imageAlt: "PCB with the sensor node",
+    },
+  },
+  {
+    id: "proj-5",
+    slug: "diamantove-detektory-fd",
+    title: "Diamantové detektory ionizujícího záření",
+    description: `Projekt Fakulty dopravní a FEL zaměřený na detektory z chemicky vytvářeného (CVD) diamantu pro měření ionizujícího záření v náročných prostředích – od jaderných zařízení po kosmické aplikace.
+
+Řeší se příprava elektrod, nábojový transport a čtecí elektronika s nízkým šumem.`,
+    status: "running",
+    unit: "fd",
+    contact: { name: "Ing. Jana Křížová, Ph.D.", email: "krizova@fd.cvut.cz", department: "ČVUT FD – Ústav bezpečnosti" },
+    outputs: ["Detektor s rozlišením < 1 % pro alfa spektroskopii.", "Společná publikace ve Journal of Instrumentation, 2026."],
+    startsAt: "2025-06-01",
+    endsAt: "2028-05-31",
+    en: {
+      title: "Diamond Detectors of Ionizing Radiation",
+      description: `A project of the Faculty of Transportation Sciences and FEL focused on CVD diamond detectors for ionizing radiation measurement in demanding environments – from nuclear facilities to space applications.
+
+The work covers electrode preparation, charge transport and low-noise readout electronics.`,
+      outputs: ["Detector with < 1 % resolution for alpha spectroscopy.", "Joint publication in Journal of Instrumentation, 2026."],
+    },
+  },
+  {
+    id: "proj-6",
+    slug: "eda-flow-pro-studenty-oss",
+    title: "Otevřené EDA flow pro výuku návrhu čipů",
+    description: `Projekt připravuje kompletní open-source návrhové flow (Yosys, OpenROAD, Magic, SKY130 PDK) pro výuku návrhu integrovaných obvodů. Cílem je umožnit studentům navrhnout a odeslat k výrobě vlastní čip bez komerčních licencí.
+
+Součástí je sada laboratorních zadání a předpřipravených šablon pro rychlý start.`,
+    status: "preparation",
+    unit: "external",
+    contact: { name: "Ing. Martin Svoboda", email: "svoboda@fel.cvut.cz", department: "ČVUT FEL – Katedra mikroelektroniky" },
+    outputs: ["Repozitář laboratorních zadání na GitLabu FEL.", "Pilotní běh v předmětu Návrh integrovaných obvodů (ZS 2027)."],
+    startsAt: "2026-09-01",
+    en: {
+      title: "Open EDA Flow for Chip Design Education",
+      description: `This project prepares a complete open-source design flow (Yosys, OpenROAD, Magic, SKY130 PDK) for teaching integrated circuit design. The goal is to let students design and tape out their own chip without commercial licences.
+
+It includes a set of lab assignments and ready-made templates for a quick start.`,
+      outputs: ["Lab assignment repository on the FEL GitLab.", "Pilot run in the IC Design course (winter 2027)."],
+    },
+  },
+];
+
+export const MOCK_PROJECT_CALLS: ProjectCall[] = [
+  {
+    id: "call-1",
+    slug: "vyzva-studentske-granty-polovodice-2027",
+    title: "Studentské granty Polovodiče 2027",
+    description: `Výzva pro studenty bakalářského a magisterského studia k podání vlastních výzkumných projektů v oblasti elektroniky, mikroelektroniky a polovodičových materiálů. Podpořené projekty získají finanční příspěvek a zázemí laboratoří Katedry mikroelektroniky.`,
+    audience: ["students"],
+    conditions: [
+      "Student Bc. nebo Mgr. studia na ČVUT (jakékoliv fakulty).",
+      "Projekt vedený akademickým pracovníkem FEL.",
+      "Maximální rozpočet 80 000 Kč na projekt.",
+      "Prezentace výsledků na studentské konferenci.",
+    ],
+    deadline: "2026-12-15",
+    contact: { name: "Ing. Tomáš Horák, Ph.D.", email: "horak@fel.cvut.cz", department: "ČVUT FEL – Katedra mikroelektroniky" },
+    unit: "fel",
+    en: {
+      title: "Semiconductors Student Grants 2027",
+      description: `A call for Bachelor's and Master's students to submit their own research projects in electronics, microelectronics and semiconductor materials. Supported projects receive funding and access to the Department of Microelectronics laboratories.`,
+      conditions: [
+        "Bachelor's or Master's student at any CTU faculty.",
+        "Project supervised by a FEL academic staff member.",
+        "Maximum budget of CZK 80,000 per project.",
+        "Results presented at the student conference.",
+      ],
+    },
+  },
+  {
+    id: "call-2",
+    slug: "vyzva-spoluprace-s-prumyslem-staze",
+    title: "Stáže v průmyslových partnerech 2027",
+    description: `Program placených stáží u průmyslových partnerů portálu (onsemi, STMicroelectronics, ASML) pro studenty magisterského studia. Stáž trvá 3–6 měsíců a může navázat na diplomovou práci.`,
+    audience: ["students", "researchers"],
+    conditions: [
+      "Student Mgr. studia programu EK nebo EIS.",
+      "Průměr známek do 2,0.",
+      "Motivační dopis a doporučení vedoucího katedry.",
+    ],
+    deadline: "2027-01-31",
+    contact: { name: "Ing. Petra Svobodová", email: "svobodova@fel.cvut.cz", department: "ČVUT FEL – Oddělení vnějších vztahů" },
+    unit: "kme",
+    en: {
+      title: "Industry Partner Internships 2027",
+      description: `A paid internship programme with the portal's industrial partners (onsemi, STMicroelectronics, ASML) for Master's students. The internship lasts 3–6 months and can lead into a Master's thesis.`,
+      conditions: [
+        "Master's student in the EK or EIS programme.",
+        "Grade average up to 2.0.",
+        "Motivation letter and a recommendation from the department head.",
+      ],
+    },
+  },
+  {
+    id: "call-3",
+    slug: "vyzva-spolecne-projekty-fel-prumysl-2027",
+    title: "Společné výzkumné projekty FEL – průmysl 2027",
+    description: `Výzva pro výzkumné týmy a firmy k podávání návrhů společných aplikovaných projektů v oblasti polovodičů, výkonové elektroniky a vestavných systémů. Výzva je spolufinancována z programu podpory aplikovaného výzkumu.`,
+    audience: ["researchers", "partners"],
+    conditions: [
+      "Konzorcium minimálně jedné fakulty ČVUT a jednoho podniku.",
+      "Podíl aplikovaného výstupu (prototyp, validace v provozu).",
+      "Trvání projektu 12–36 měsíců.",
+    ],
+    deadline: "2027-03-15",
+    contact: { name: "prof. Ing. Jiří Vobecký, CSc.", email: "vobecky@fel.cvut.cz", department: "ČVUT FEL – Katedra mikroelektroniky" },
+    unit: "external",
+    en: {
+      title: "Joint FEL – Industry Research Projects 2027",
+      description: `A call for research teams and companies to submit joint applied research proposals in semiconductors, power electronics and embedded systems. The call is co-funded from the applied research support programme.`,
+      conditions: [
+        "A consortium of at least one CTU faculty and one company.",
+        "An applied output (prototype, validation in operation).",
+        "Project duration of 12–36 months.",
+      ],
+    },
+  },
+];
+
+export const MOCK_PROFILES: Profile[] = [
+  {
+    id: "prof-1",
+    slug: "jiri-vobecky",
+    name: "prof. Ing. Jiří Vobecký, CSc.",
+    title: "Vedoucí Katedry mikroelektroniky a průkopník výkonových polovodičů",
+    content: `Profesor Jiří Vobecký působí na Katedře mikroelektroniky FEL ČVUT více než třicet let. Zabývá se fyzikou, návrhem a spolehlivostí výkonových polovodičových součástí – od diod a tyristorů po moderní SiC MOSFETy.
+
+Pod jeho vedením vznikla řada spoluprací s evropskými výrobci polovodičů a katedra se stala uznávaným centrem výzkumu výkonových struktur. Je autorem více než stovky odborných publikací a několika patentů.
+
+### Role na portálu
+Jako garant obsahu dohlíží na odbornou správnost technologických analýz a zastřešuje strategická témata národní polovodičové politiky.`,
+    publishedAt: "20. 09. 2026",
+    photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80",
+    photoAlt: "Portrét profesora v laboratoři",
+    en: {
+      title: "Head of the Department of Microelectronics and Power Semiconductor Pioneer",
+      content: `Professor Jiří Vobecký has served at the Department of Microelectronics at CTU FEL for over thirty years. He focuses on the physics, design and reliability of power semiconductor devices – from diodes and thyristors to modern SiC MOSFETs.
+
+Under his leadership, the department has built numerous collaborations with European semiconductor manufacturers and become a recognised centre of power device research. He has authored over a hundred scientific publications and several patents.
+
+### Role on the Portal
+As content guarantor he oversees the technical accuracy of technology analyses and covers strategic topics of national semiconductor policy.`,
+      photoAlt: "Portrait of the professor in the laboratory",
+    },
+  },
+  {
+    id: "prof-2",
+    slug: "tomas-horak",
+    name: "Ing. Tomáš Horák, Ph.D.",
+    title: "Odborný asistent a vedoucí výuky návrhu ASIC",
+    content: `Tomáš Horák vede na Katedře mikroelektroniky laboratorní výuku návrhu zákaznických integrovaných obvodů. Studentům zprostředkovává kompletní návrhové flow od RTL kódu po fyzický layout v průmyslových nástrojích Cadence a Synopsys.
+
+Ve výzkumu se věnuje nízkopříkonovým digitálním architekturám a návrhu pro radiačně odolné aplikace.`,
+    publishedAt: "27. 09. 2026",
+    photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
+    photoAlt: "Portrét odborného asistenta",
+    en: {
+      title: "Assistant Professor and Head of ASIC Design Education",
+      content: `Tomáš Horák leads the hands-on laboratory courses in custom integrated circuit design at the Department of Microelectronics. He guides students through the complete design flow from RTL code to physical layout in industrial Cadence and Synopsys tools.
+
+His research focuses on low-power digital architectures and design for radiation-hardened applications.`,
+      photoAlt: "Portrait of the assistant professor",
+    },
+  },
+  {
+    id: "prof-3",
+    slug: "lenka-novotna",
+    name: "doc. Ing. Lenka Novotná, Ph.D.",
+    title: "Vedoucí výzkumu kvantových fotonických čipů",
+    content: `Docentka Lenka Novotná působí na Fakultě jaderné a fyzikálně inženýrské ČVUT a vede mezifakultní tým kvantové fotoniky. Její skupina navrhuje integrované fotonické obvody pro kvantovou distribuci klíčů na platformě nitridu křemíku.
+
+Je členkou pracovní skupiny evropské iniciativy EuroQCI a odbornou garantkou několika evropských projektů.`,
+    publishedAt: "04. 10. 2026",
+    en: {
+      title: "Quantum Photonic Chip Research Lead",
+      content: `Associate Professor Lenka Novotná works at the Faculty of Nuclear Sciences and Physical Engineering at CTU and leads the cross-faculty quantum photonics team. Her group designs integrated photonic circuits for quantum key distribution on the silicon nitride platform.
+
+She is a member of the EuroQCI initiative working group and the scientific guarantor of several European projects.`,
+    },
+  },
+  {
+    id: "prof-4",
+    slug: "petra-svobodova",
+    name: "Ing. Petra Svobodová",
+    title: "Koordinátorka spolupráce s průmyslem a stáží",
+    content: `Petra Svobodová řídí na FEL ČVUT program spolupráce s průmyslovými partnery – od smluvního zajištění společných laboratoří přes diplomové práce zadávané firmami až po placené studentské stáže.
+
+Pro studenty je prvním kontaktem při hledání stáže či tématu závěrečné práce v polovodičových firmách.`,
+    publishedAt: "11. 10. 2026",
+    photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
+    photoAlt: "Portrét koordinátorky",
+    en: {
+      title: "Industry Cooperation and Internship Coordinator",
+      content: `Petra Svobodová manages the industry cooperation programme at CTU FEL – from contracting joint laboratories through company-assigned theses to paid student internships.
+
+She is the first point of contact for students looking for an internship or a thesis topic in semiconductor companies.`,
+      photoAlt: "Portrait of the coordinator",
+    },
+  },
+];
+
+export const MOCK_PARTNERS: Partner[] = [
+  { id: "partner-1", name: "onsemi", url: "https://www.onsemi.com/" },
+  { id: "partner-2", name: "STMicroelectronics", url: "https://www.st.com/" },
+  { id: "partner-3", name: "ASML", url: "https://www.asml.com/" },
+  { id: "partner-4", name: "Bosch", url: "https://www.bosch.com/" },
+  { id: "partner-5", name: "Škoda Auto", url: "https://www.skoda-auto.cz/" },
+  { id: "partner-6", name: "Codasip", url: "https://codasip.com/" },
+];
+
+export const MOCK_OPPORTUNITIES: Opportunity[] = [
+  {
+    id: "opp-1",
+    title: "Stáže v onsemi Rožnov pod Radhoštěm",
+    description: "Placené letní stáže v design centru i výrobě SiC čipů. Náplň lze propojit s diplomovou prací.",
+    url: "https://ek.fel.cvut.cz/",
+    en: {
+      title: "Internships at onsemi Rožnov pod Radhoštěm",
+      description: "Paid summer internships in the SiC chip design centre and fab. Can be combined with a Master's thesis.",
+    },
+  },
+  {
+    id: "opp-2",
+    title: "Stipendia programu EIS",
+    description: "Motivační stipendia pro studenty magisterského programu Elektronika a integrované systémy od průmyslových partnerů.",
+    url: "https://ek.fel.cvut.cz/",
+    en: {
+      title: "EIS Programme Scholarships",
+      description: "Motivation scholarships for students of the Electronics and Integrated Systems Master's programme, funded by industrial partners.",
+    },
+  },
+  {
+    id: "opp-3",
+    title: "Semináře Katedry mikroelektroniky",
+    description: "Pravidelné odborné semináře s hosty z průmyslu i akademie. Otevřené studentům i veřejnosti.",
+    url: "https://ek.fel.cvut.cz/",
+    en: {
+      title: "Department of Microelectronics Seminars",
+      description: "Regular expert seminars with guests from industry and academia. Open to students and the public.",
+    },
+  },
+  {
+    id: "opp-4",
+    title: "Diplomové práce zadané firmami",
+    description: "Témata závěrečných prací přímo od polovodičových firem – reálné problémy, data i mentoring z praxe.",
+    url: "https://ek.fel.cvut.cz/",
+    en: {
+      title: "Company-Assigned Theses",
+      description: "Thesis topics directly from semiconductor companies – real problems, real data and industry mentoring.",
+    },
+  },
+];
+
+export const MOCK_FAQ: FaqItem[] = [
+  {
+    id: "faq-1",
+    question: "Jak se přihlásím do programu Elektronika a komunikace?",
+    answer: "Přihlášku podáváte elektronicky přes přihlašovací portál ČVUT do konce března. Program EK nepřijímá na základě talentových zkoušek – rozhoduje výsledek přijímacího řízení z matematiky a fyziky nebo průměr známek.",
+    en: {
+      question: "How do I apply for the Electronics and Communications programme?",
+      answer: "You apply online through the CTU admission portal by the end of March. There are no talent exams – admission is based on the mathematics and physics entrance exam or your grade average.",
+    },
+  },
+  {
+    id: "faq-2",
+    question: "Můžu se jako student účastnit výzkumu už v bakalářském studiu?",
+    answer: "Ano. Katedra mikroelektroniky nabízí studentské granty, zapojení do výzkumných týmů i práci v čistých prostorách od druhého ročníku. Kontaktujte vedoucího příslušné laboratoře nebo koordinátora stáží.",
+    en: {
+      question: "Can I take part in research as a Bachelor's student?",
+      answer: "Yes. The Department of Microelectronics offers student grants, research team placements and cleanroom work from the second year. Contact the relevant lab head or the internship coordinator.",
+    },
+  },
+  {
+    id: "faq-3",
+    question: "Jsou letní školy zpoplatněné?",
+    answer: "Letní školy pořádané fakultou jsou pro studenty ČVUT bezplatné. Pro externí účastníky je účastnický poplatek uveden vždy u konkrétní akce včetně informace o stipendiích.",
+    en: {
+      question: "Are the summer schools paid?",
+      answer: "Faculty-organised summer schools are free for CTU students. External participants pay a fee listed with each event, including scholarship information.",
+    },
+  },
+  {
+    id: "faq-4",
+    question: "Kde najdu témata diplomových prací z praxe?",
+    answer: "Aktuální témata zadaná průmyslovými partnery jsou v sekci Vzdělávání → Příležitosti a na nástěnkách katedry. Téma si lze domluvit i individuálně s koordinátorkou spolupráce s průmyslem.",
+    en: {
+      question: "Where can I find industry thesis topics?",
+      answer: "Current topics assigned by industrial partners are listed under Education → Opportunities and on the department notice boards. A topic can also be arranged individually with the industry cooperation coordinator.",
+    },
+  },
+  {
+    id: "faq-5",
+    question: "Mohu studovat program v angličtině?",
+    answer: "Ano, magisterský program Electronics and Integrated Systems (EIS) je vyučován plně v angličtině a je otevřený i zahraničním studentům. Bakalářský program probíhá primárně v češtině.",
+    en: {
+      question: "Can I study the programme in English?",
+      answer: "Yes, the Electronics and Integrated Systems (EIS) Master's programme is taught fully in English and is open to international students. The Bachelor's programme is taught primarily in Czech.",
+    },
+  },
+];

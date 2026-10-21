@@ -1,6 +1,50 @@
 # Implementační plán: Polovodiče – Informační portál pro elektroniku a polovodiče ČVUT FEL (Program EK)
 
-## Aktuální změna: Fakulta jako hlavní sdělení + zpevnění layoutu homepage
+> **Vedení dokumentu:** V `PLAN.md` je vždy právě **jedna** „Aktuální změna“. Po dokončení se přejmenuje na „Dokončená změna“ a nová aktivní změna se přidá nad ni. Dokončené sekce jsou historické; pokud se rozcházejí s `rules/`, platí aktuální `rules/`.
+
+## Aktuální změna: Interní značky cílových skupin u zpráv a podstránky `/pro-koho/[audience]` jako sekce zpráv
+
+Každá zpráva (`Article`) nese povinnou interní značku `audience: [Audience, ...Audience[]]`. Karty rozcestníku na homepage (*Studenti*, *Výzkumníci*, *Veřejnost*, *Partneři*, *Média*) otevírají podstránku `/pro-koho/[audience]`, která je **stejnou sekcí jako archiv zpráv** – obsahuje sub-menu všech pěti skupin, vyhledávání a dvě sekce archivu (**Všeobecné informace**, **Informace o fakultě**) a zobrazuje výhradně články s přiřazenou značkou dané skupiny.
+
+- Specifikace: `rules/layout.md` §2.10, §2.18; `rules/technologie.md` §3.1, §8, §10
+
+### Akceptační kritéria
+
+1. `Article` v `types/portal.ts` obsahuje povinné pole `audience: [Audience, ...Audience[]]`; každý článek v `data/mock-data.ts` má alespoň jednu cílovou skupinu.
+2. Existuje statická routa `/pro-koho/[audience]` s `generateStaticParams()` pro všech 5 českých URL slugů (`studenti`, `vyzkumnici`, `verejnost`, `partneri`, `media`).
+3. Podstránka má záhlaví s ikonou skupiny, H1 („Pro studenty“ atd.) a popisem zaměření.
+4. Pod záhlavím je horizontální sub-menu všech 5 cílových skupin s aktivním stavem (akcentní písmo + spodní linka, bez rámečků).
+5. Výpis používá architekturu `/zpravy` – vyhledávání, počítadlo, sekce Všeobecné informace a Informace o fakultě, 3sloupcová mřížka `ArticleCard`.
+6. Filtrování probíhá nejprve podle značky `audience`, poté podle hledaného dotazu; značka je interní a na kartě ani v detailu článku se nezobrazuje jako odznak.
+7. Rozcestník cílových skupin na homepage (`AudienceGateway.tsx`) odkazuje na podstránky `/pro-koho/<slug>`.
+8. Všechny texty jsou plně bilingvní (CZ / EN) a statický export zůstává funkční.
+9. Sub-menu cílů má `aria-current` a `aria-label`; na mobilu se posouvá uvnitř vlastního pruhu a nezpůsobuje horizontální scroll stránky.
+
+## Dokončená změna: Sjednocení typografie karet s novinkami – odstranění rámečkových značek a odznaků (NO BOXED BADGES)
+
+Všechny sekce portálu (Akce, Projekty, Vzdělávání, O nás) se plně sjednocují s čistým novinářským vizuálem článků (`ArticleCard`). Z karet se odstraňují veškeré ohraničené badge krabičky, rámečkové štítky a barevné chipy (`[UDÁLOST]`, `[KONFERENCE]`, `[PROBÍHÁ]`, `[STUDENTI]`). Metadata se zapisují výhradně jako čistý jednořádkový text `text-[11px] font-mono text-neutral-400` s tečkovým oddělovačem `•` a volitelným jemným tónováním písma bez ohraničení či podkladů.
+
+- Specifikace: `rules/layout.md` §2.11, §2.14, §2.16; `rules/theme.md` §10
+## Dokončená změna: Rozšíření portálu podle drátového modelu
+
+Portál byl kompletně rozšířen z jednostránkového deníku na plnohodnotný web s pěti hlavními sekcemi podle `analyza-dratoveho-modelu-webu.md` a `PLAN-ROZSIRENI.md` (Novinky, Akce, Projekty, Vzdělávání, O nás) s plným zachováním design systému, typografie i barevné varianty Green Silicon.
+
+- Specifikace v rules: `rules/layout.md` (§1, §2.1, §2.6, §2.9–§2.17), `rules/technologie.md` (§3, §10), `rules/theme.md` (§10)
+- Detailní koncepce a fázování: `PLAN-ROZSIRENI.md`
+### Akceptační kritéria rozšíření
+
+1. **Homepage:** obsahuje všech 6 sekcí v přesném pořadí dle dekonstrukce: `#informace-tydne` (8:4 split, cyklovač, rotující widget fakulty) → `#pro-koho` (5 karet: studenti, výzkumníci, veřejnost, partneři, média) → `#ostatni-novinky` (3×1 + dropdown filtr rubrik) → `#nadchazejici-akce` (1–2 nejbližší akce + odkaz do archivu) → `#informace-o-fakulte` (2×2 grid zpráv z fakulty) → `#newsletter` (mockup formulář s lokálním potvrzením).
+2. **Navigace v Navbaru:** na desktopu (`>= md`) obsahuje textové odkazy na 5 hlavních sekcí: *Novinky* (`/zpravy`), *Akce* (`/akce`), *Projekty* (`/projekty`), *Vzdělávání* (`/vzdelavani`), *O nás* (`/o-nas`) s aktivním stavem a hover akcentem; na mobilu se zobrazuje hamburger menu s vertikálním panelem odkazů.
+3. **Patička:** rozšířena o 3sloupcový layout s kompletní navigací sekcí, kontaktním blokem Katedry mikroelektroniky FEL ČVUT a sociálními sítěmi fakulty; plně respektuje light i dark režim.
+4. **Stránka Akce (`/akce`):** obsahuje H1, dropdown filtr typu akce (Vše / Událost / Konference / Letní škola) s počty položek, mřížku karet akcí s datem od–do, místem, čistým textem typu a cílových skupin (bez rámečkových odznaků) a volitelným odkazem na registraci.
+5. **Stránka Projekty (`/projekty`):** obsahuje H1, dropdown filtr součástí dle jednotného číselníku `FacultyUnit` (FEL, Katedra mikroelektroniky, FJFI, Fakulta dopravní, Externí), mřížku projektů s čistým textem stavu (příprava, probíhá, dokončen) bez badge boxů a samostatnou sekci projektových výzev s termíny (deadlines) a cílovými skupinami.
+6. **Detail projektu a výzvy (`/projekty/[slug]`):** společná staticky generovaná podstránka zobrazující popis, podmínky výzvy či výstupy projektu, kontaktní osobu s e-mailem a zpětný odkaz na přehled.
+7. **Stránka Vzdělávání (`/vzdelavani`):** obsahuje 4 bloky v přesném pořadí: Studijní program (představení EK a EIS s odkazem), Příležitosti (stáže, stipendia, semináře), Letní školy (sdílená entita Akce typu `summer-school`) a interaktivní FAQ akordeon.
+8. **Stránka O nás (`/o-nas`):** obsahuje blok Kontakty s údaji pro veřejnost i média, mřížku klíčových průmyslových partnerů s proklikem a interaktivní Časovou osu historie s dropdown filtrem typu záznamu (události, projekty, medailonky, články).
+9. **Medailonky (`/zpravy/medailonky` a `[slug]`):** přehled medailonků osobností výzkumu a výuky s čtvercovými portréty (či iniciálovými placeholdery) a plný detail s markdown formátováním. V záhlaví archivu `/zpravy` je přímý odkaz na medailonky.
+10. **Lokalizace a data:** všechny nové entity, komponenty, rozhraní i stránky mají 100% bilingvní podporu CZ / EN; přepínač jazyka v navbaru přepíná rozhraní i obsah napříč celým webem.
+11. **Statický export a Zero Bloat:** veškeré nové dynamické routy (`[slug]`) implementují `generateStaticParams`, kód neobsahuje externí síťové požadavky a build probíhá čistě bez chyb.
+## Dokončená změna: Fakulta jako hlavní sdělení + zpevnění layoutu homepage
 
 Sekce „Informace o fakultě“ se stává nejvýraznějším prvkem portálu. V hero sekci z ní zůstává **jeden rotující** blok, plná sekce se mění na **2 × 2 grid** s větší typografií a animovaným vstupem. Zároveň se zpevňuje layout: obě strany hero sekce končí ve stejné lince, filtry rubrik drží jednu linku za všech šířek, odpadá redundantní CTA i datumový blok v bočním sloupci a články bez fotografie dostávají vlastní šablonu.
 
@@ -24,12 +68,12 @@ Sekce „Informace o fakultě“ se stává nejvýraznějším prvkem portálu. 
 12. `Article.imageUrl`/`imageAlt` jsou volitelné a každý náhled článku bez obrázku vykreslí šablonu `article-media-placeholder`; žádné rozbité `<img>`.
 13. Animace respektují `prefers-reduced-motion: reduce`.
 14. Popis portálu v patičce a i18n je aktualizován na „Informační deník Fakulty elektrotechnické ČVUT v Praze. Přinášíme nové informace z oblasti elektroniky a zprávy ohledně fakulty.“.
-15. V patičce je logo zobrazeno výhradně jako čistý text POLOVODIČE bez ikony, navigace obsahuje sekce (*Ostatní novinky* `/#ostatni-novinky`, *Informace o fakultě* `https://ek.fel.cvut.cz/`), *Archiv všech zpráv* (`/zpravy`) a *Zpět nahoru* (podstránky `/udalosti` a `/servis` jsou odstraněny) a odkaz na ochranu osobních údajů směřuje na `https://fel.cvut.cz/cs/ochrana-osobnich-udaju` s textem „Ochrana osobních údajů“.
-16. Při přepnutí do anglického režimu (`EN`) se kompletně přeloží celé uživatelské rozhraní i všech 12 článků (nadpis, perex, celý obsah článku, kategorie, oddělení autora, tagy) na hlavní stránce, v archivu, ve vyhledávání i v detailu článku.
+15. V patičce je logo zobrazeno výhradně jako čistý text POLOVODIČE bez ikony, navigace obsahuje všech 5 sekcí (*Novinky* `/zpravy`, *Akce* `/akce`, *Projekty* `/projekty`, *Vzdělávání* `/vzdelavani`, *O nás* `/o-nas`), *Informace o fakultě* (`https://ek.fel.cvut.cz/`) a *Zpět nahoru* (podstránky `/udalosti` a `/servis` byly odstraněny) a odkaz na ochranu osobních údajů směřuje na `https://fel.cvut.cz/cs/ochrana-osobnich-udaju` s textem „Ochrana osobních údajů“.
+16. Při přepnutí do anglického režimu (`EN`) se kompletně přeloží celé uživatelské rozhraní i všechny články (nadpis, perex, celý obsah článku, kategorie, oddělení autora, tagy) na hlavní stránce, v archivu, ve vyhledávání i v detailu článku.
 17. Patička plně respektuje přepínání světlého a tmavého režimu (ve světlém režimu čistý bílý podklad, jemné neutrální linky a tmavé písmo, v tmavém režimu hluboký navy podklad se světlým písmem).
 18. Metadata portálu (v layoutu i v manifestu) jsou zkrácena na hlavní nadpis „Polovodiče“ a popis „Informační deník ze světa elektroniky“ s pomlčkou (-) jako oddělovačem místo dvojitého lomítka (//).
 
-## Aktuální změna: Sekce „Informace o fakultě“ a zkrácení mřížky novinek
+## Dokončená změna: Sekce „Informace o fakultě“ a zkrácení mřížky novinek
 
 Placeholder „Šablona pro další sekci“ je nahrazen redakční sekcí **„Informace o fakultě“** s nejdůležitějšími zprávami fakulty (letní škola, dny otevřených dveří, přijímací řízení, stáže, stipendia, konference). Mřížka „Ostatní novinky“ je zkrácena na **3 × 1** karty a doplněna šipkou do celého archivu, aby návštěvník nemusel dlouho scrollovat. Sekce fakulty je na stránce **zdvojená**: plná sekce pod novinkami a kompaktní widget se 3 položkami v bočním sloupci hned pod cyklovačem „Další články“.
 
@@ -38,7 +82,9 @@ Placeholder „Šablona pro další sekci“ je nahrazen redakční sekcí **„
 - Datová vrstva a nové API funkce: `rules/technologie.md` §8
 - Data zpráv fakulty: `data/mock-data.ts` (kategorie `academic`)
 
-### Akceptační kritéria
+### Akceptační kritéria (historická)
+
+> Tato kritéria platila pro původní verzi sekce „Informace o fakultě“. Nahradila je změna „Fakulta jako hlavní sdělení + zpevnění layoutu homepage“ výše; aktuálně platí `rules/layout.md` §2.3 a §2.5 (2 × 2 grid se 4 položkami, widget s 1 rotující zprávou, žádné CTA pod mřížkou).
 
 1. Na hlavní stránce existuje sekce s `id="informace-o-fakulte"` s nadpisem **„Informace o fakultě“** a podtitulem **„Nejdůležitější zprávy z Fakulty elektrotechnické ČVUT“**, obsahující až 6 zpráv fakulty ve dvou sloupcích na desktopu.
 2. Stejný obsah je podruhé v bočním sloupci jako widget se 3 položkami umístěný **pod** cyklovačem „Další články“; obě instance mají identické pořadí.
@@ -50,7 +96,7 @@ Placeholder „Šablona pro další sekci“ je nahrazen redakční sekcí **„
 8. Archiv `/zpravy` umí filtrovat rubriku `academic`.
 9. Zprávy fakulty mají funkční statické detaily na `/zpravy/<slug>` (build projde, protože `generateStaticParams` je odvozen z `getArticles()`).
 
-## Aktuální změna: Ikonový systém portálu (favicon, touch ikony, PWA manifest)
+## Dokončená změna: Ikonový systém portálu (favicon, touch ikony, PWA manifest)
 
 Portál dostává kompletní sadu ikon prohlížeče a operačních systémů postavenou na **oficiálním znaku ČVUT FEL** – heraldickém lvu v rámované čtvercové značce vyříznutém z `public/felcvut-logo-blue.svg` (viewBox `0 0 215 64`, používá se čtvercová část `0 0 64 64`). Znak je v oficiálním navy `#080B38` na plné bílé dlaždici `#ffffff`. Ikony jsou statické soubory v `public/icons/` a deklarují se datově v `app/layout.tsx`.
 
@@ -68,7 +114,7 @@ Portál dostává kompletní sadu ikon prohlížeče a operačních systémů po
 6. `public/_headers` cachuje cestu `/icons/*`.
 7. Ikony jsou dostupné po statickém exportu na cestách `/icons/...` bez nutnosti serverové logiky.
 
-## Aktuální změna: příbuzná barevná identita
+## Dokončená změna: příbuzná barevná identita
 
 Polovodiče zůstávají ve vizuální rodině ČVUT FEL, ale nesmí působit jako kopie hlavního fakultního webu. Katalog obsahuje 10 barevných variant s viditelnou odchylkou až přibližně 20 % od referenčních FEL tokenů. Varianty zachovávají navy základ, elektrickou modř, cyan akcent, IBM Plex Sans/Mono a vysoký kontrast.
 
@@ -78,18 +124,18 @@ Polovodiče zůstávají ve vizuální rodině ČVUT FEL, ale nesmí působit ja
 - Vybraná varianta: **09 – Green Silicon**; její přesné tokeny jsou zdrojem pravdy pro runtime motiv.
 - Ostatní varianty zůstanou v katalogu jako archiv návrhů.
 
-## Původní projektový kontext
-
-Cílem projektu je vytvořit moderní informační portál **Polovodiče** zastřešený programem **Elektronika a komunikace (EK)** Fakulty elektrotechnické ČVUT v Praze. Portál slouží jako informační uzel pro elektroniku, mikroelektroniku, polovodiče, výzkum, studium a související technologický ekosystém.
-
-## Akceptační kritéria této změny
+### Akceptační kritéria variant
 
 1. Katalog obsahuje 10 variant `01–10`.
 2. Každá varianta má light/dark náhled a přesné tokeny.
 3. Žádná varianta neopouští barevnou rodinu FEL/ČVUT.
 4. Runtime se otevírá v tmavém režimu; light mode zůstává dostupný přes přepínač motivu.
 
-## Aktuální změna: čistý HTML katalog a debugger-friendly zdroj
+## Původní projektový kontext
+
+Cílem projektu je vytvořit moderní informační portál **Polovodiče** zastřešený programem **Elektronika a komunikace (EK)** Fakulty elektrotechnické ČVUT v Praze. Portál slouží jako informační uzel pro elektroniku, mikroelektroniku, polovodiče, výzkum, studium a související technologický ekosystém.
+
+## Dokončená změna: čistý HTML katalog a debugger-friendly zdroj
 
 - `lightning-grids.html` zůstává samostatný katalog bez serveru a bez externího runtime skriptu.
 - Zdroj musí mít sémantické HTML, pojmenovaná data variant, oddělené bloky `DATA`, `DOM`, `RENDER`, `EVENTS` a jediný čitelně formátovaný inline script.
@@ -97,14 +143,16 @@ Cílem projektu je vytvořit moderní informační portál **Polovodiče** zast�
 
 ## Lokalizace
 
+- Zdroj pravdy pro jazykové chování je `rules/layout.md` §8 a `rules/technologie.md` §3.2 a §7.
+- Přepínač jazyka mění veškeré UI i obsah článků; metadata (`<title>`, `description`) zůstávají česky, protože statický export neumožňuje měnit metadata podle klientského přepínače.
 
 ## Mobilní UI
 
-Mobilní zobrazení je mobile-first: bez horizontálního scrollu, s jednosloupcovým layoutem, dotykovými ovládacími prvky minimálně 36px vysokými, sbaleným vyhledáváním a responsivním navbar/footer layoutem.
+Mobilní zobrazení je mobile-first: bez horizontálního scrollu, s jednosloupcovým layoutem, dotykovými ovládacími prvky minimálně 36px vysokými, sbaleným vyhledáváním a responsivním navbar/footer layoutem. Jediná výjimka je sub-menu cílových skupin na `/pro-koho/[audience]`, které se na `< 640px` posouvá uvnitř vlastního pruhu a nesmí způsobit horizontální scroll stránky.
 
 Mobilní hlavička zobrazuje logo ČVUT FEL, název „POLOVODIČE“, podtitul „Informační deník ze světa elektroniky“, ikonové vyhledávání a dostupné přepínače jazyka a motivu. V otevřeném vyhledávání se na mobilu skrývají pouze klávesové nápovědy `ESC`, šipek a `↵`.
 
-## Aktuální změna: nasazení na Cloudflare Pages
+## Dokončená změna: nasazení na Cloudflare Pages
 
 - Cíl: veřejně dostupný mockup na Cloudflare Pages pod názvem projektu **`polovodice-mockup`**.
 - Režim: statický export Next.js (`output: "export"`), výstup v `out/`.
@@ -115,7 +163,7 @@ Mobilní hlavička zobrazuje logo ČVUT FEL, název „POLOVODIČE“, podtitul 
 
 1. `bun run build` dokončí statický export bez chyb a vytvoří `out/`.
 2. Projekt `polovodice-mockup` existuje na Cloudflare Pages a produkční URL je `https://polovodice-mockup.pages.dev`.
-3. Všechny routy (`/`, `/zpravy`, `/zpravy/[slug]`, `/udalosti`, `/servis`) vrací `200`.
+3. Všechny staticky generované routy (`/`, `/zpravy`, `/zpravy/[slug]`, `/akce`, `/projekty`, `/projekty/[slug]`, `/vzdelavani`, `/o-nas`, `/zpravy/medailonky`, `/zpravy/medailonky/[slug]`, `/pro-koho/[audience]`) vrací `200`.
 4. Neexistující cesta vrací `404` přes `out/404.html`.
 5. `DEPLOY.md` obsahuje ověřený postup včetně vytvoření projektu přes `--force`.
 
@@ -123,9 +171,9 @@ Mobilní hlavička zobrazuje logo ČVUT FEL, název „POLOVODIČE“, podtitul 
 
 - Ověřeno per oficiální dokumentaci Cloudflare: statický Next.js export na Pages je dokumentovaná cesta (`pages_build_output_dir` v `wrangler.toml`).
 - Deployment `07b7bdc0-5376-489e-8e3c-1fed38155a34` (Production, branch `main`) proběhl úspěšně 5. 10. 2026 přes `bun run deploy`.
-- Uploadnuto 134 souborů (21 nových, 113 z cache); produkční URL `https://polovodice-mockup.pages.dev` vrací `200` na všech routách, neexistující cesta vrací `404`.
+- Uploadnuto 134 souborů (21 nových, 113 z cache); produkční URL `https://polovodice-mockup.pages.dev` vracela v době nasazení `200` na tehdejších routách, neexistující cesta vrací `404`.
 - Wrangler při zakládání projektu přepsal `package.json` a přidal `@opennextjs/cloudflare`; stav byl vyčištěn a do kořene přidán `wrangler.toml`, který další delegaci na Workers brání.
 
-## Předchozí oprava sestavení
+## Dokončená oprava sestavení
 
 Po posledním pádu `bun run build` byla lokalizována konkrétní chyba v `components/ui/CommandMenu.tsx`: jeden nadbytečný uzavírací `</div>` na konci dialogu způsobil syntaktickou chybu `Unterminated regexp literal`. Oprava se omezuje na odstranění tohoto elementu.

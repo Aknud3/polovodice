@@ -130,6 +130,20 @@ Kopie `favicon.ico` leží navíc v kořeni `public/favicon.ico`, aby implicitn�
 
 ## 9. Stylování patičky pro světlý a tmavý režim
 
-+- Patička portálu MUSÍ plně respektovat přepínač motivů a nesmí zůstávat natvrdo tmavá ve světlém režimu:
-+-   **Tmavý režim (Dark mode):** podklad `dark:bg-[#050724]`, linky `dark:border-white/10`, nadpisy `dark:text-white`, text `dark:text-neutral-300` a `dark:text-neutral-400`, hover akcent `dark:hover:text-fel-cyan`.
-+-   **Světlý režim (Light mode):** podklad `bg-white`, linky `border-neutral-200`, nadpisy `text-neutral-900`, text `text-neutral-600` a `text-neutral-500`, hover akcent `hover:text-fel-blue`.
+- Patička portálu MUSÍ plně respektovat přepínač motivů a nesmí zůstávat natvrdo tmavá ve světlém režimu:
+- **Tmavý režim (Dark mode):** podklad `dark:bg-[#050724]`, linky `dark:border-white/10`, nadpisy `dark:text-white`, text `dark:text-neutral-300` a `dark:text-neutral-400`, hover akcent `dark:hover:text-fel-cyan`.
+- **Světlý režim (Light mode):** podklad `bg-white`, linky `border-neutral-200`, nadpisy `text-neutral-900`, text `text-neutral-600` a `text-neutral-500`, hover akcent `hover:text-fel-blue`.
+
+---
+
+## 10. Striktní pravidlo NO FLAGS / NO BOXED BADGES na celém webu
+
+Všechny sekce a karty portálu (novinky, akce, projekty, výzvy, medailonky i časová osa) přísně dodržují jednotný princip **čisté novinářské typografie bez rámečkových značek a barevných odznaků**:
+- **Žádné rámečkové štítky („značky“):** Je přísně zakázáno používat ohraničené pilulky, rámečkové štítky či barevné badge boxy (`border`, `rounded-sm`, `bg-...`) pro typy akcí, stavy projektů, označení výzev, cílové skupiny ani položky časové osy.
+- **Sjednocení s novinkami:** Veškerá doplňková metadata (datum, typ, místo, stav, součást, cílová skupina) se zobrazují výhradně jako **čistý jednořádkový text** v technickém písmu `text-[11px] font-mono text-neutral-400 dark:text-neutral-500` s tečkovým oddělovačem `•`, přesně podle vzoru z karet článků (`ArticleCard`):
+  - Akce: `datum od–do • typ akce • místo` (např. `06. 11. 2026 • Den otevřených dveří • Karlovo náměstí`).
+  - Projekt: `součást • stav projektu` (např. `Katedra mikroelektroniky • Probíhá`), kde stav má pouze čistou barvu písma bez jakéhokoliv rámečku či podkladu (probíhá: `text-[#2856cb] dark:text-[#3beeb1]`, příprava: `text-[#0879bb] dark:text-[#27d0d0]`, dokončen: neutrální `text-neutral-500`).
+  - Projektová výzva: `Projektová výzva • Deadline: DD. MM. YYYY` (termín po lhůtě čistým textem `text-[#e34c55]`).
+  - Cílové skupiny: uvádí se jako čistý text oddělený čárkami v patičce karty, nikoliv v samostatných rámečkových krabičkách.
+  - Časová osa historie: `datum • typ záznamu` jako čistý text bez ohraničených odznaků.
+- **Navigační sub-menu (výjimka z metadata pravidel):** horizontální přepínač cílových skupin na `/pro-koho/[audience]` je čisté textové menu v `text-xs sm:text-sm font-mono`, aktivní položka `text-[#0065bd] dark:text-fel-cyan` se spodní linkou `border-b-2`, neaktivní `text-neutral-500 dark:text-neutral-400`. Nepoužívá rámečky, pilulky ani podklad.

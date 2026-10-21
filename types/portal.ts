@@ -65,6 +65,8 @@ export interface Article {
   featured?: boolean;            // Hlavní otvírák portálu (Hero)
   specs?: SemiconductorSpecs;    // Technická specifikace pro Key Takeaway box
   tags: string[];
+  /** Interní značka cílových skupin; zdroj pro podstránky /pro-koho/[audience]. */
+  audience: [Audience, ...Audience[]];
   en?: ArticleTranslation;
 }
 
@@ -77,6 +79,147 @@ export type FacultyNewsItem = Pick<
   Article,
   "id" | "slug" | "title" | "perex" | "publishedAt" | "categoryLabel" | "en"
 >;
+
+/* ------------------------------------------------------------------ */
+/* Rozšířené entity portálu podle drátového modelu                      */
+/* (rules/technologie.md §10, PLAN-ROZSIRENI.md)                        */
+/* ------------------------------------------------------------------ */
+
+/** Cílové skupiny portálu – zároveň hodnoty rozcestníku a filtrů akcí/výzev. */
+export type Audience = "students" | "researchers" | "public" | "partners" | "media";
+
+/** Typ akce; letní škola je sdílená mezi sekcemi Akce a Vzdělávání. */
+export type EventType = "event" | "conference" | "summer-school";
+
+/** Stav projektu. */
+export type ProjectStatus = "preparation" | "running" | "completed";
+
+/** Dočasný placeholder číselníku fakult/součástí (finální sjednocení = otevřený bod). */
+export type FacultyUnit = "fel" | "kme" | "fjfi" | "fd" | "external";
+
+export interface ContactPerson {
+  name: string;
+  email: string;
+  department: string;
+}
+
+export interface PortalEventTranslation {
+  title: string;
+  perex: string;
+  location: string;
+  imageAlt?: string;
+}
+
+export interface PortalEvent {
+  id: string;
+  slug: string;
+  type: EventType;
+  title: string;
+  perex: string;
+  location: string;
+  startsAt: string;              // ISO "2026-11-12" – zdroj pro řazení i formátování
+  endsAt?: string;               // ISO
+  imageUrl?: string;
+  imageAlt?: string;
+  audience: Audience[];
+  registrationUrl?: string;
+  en?: PortalEventTranslation;
+}
+
+export interface ProjectTranslation {
+  title: string;
+  description: string;
+  outputs?: string[];
+  imageAlt?: string;
+}
+
+export interface Project {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  status: ProjectStatus;
+  unit: FacultyUnit;
+  contact: ContactPerson;
+  outputs: string[];
+  imageUrl?: string;
+  imageAlt?: string;
+  startsAt?: string;             // ISO
+  endsAt?: string;               // ISO
+  en?: ProjectTranslation;
+}
+
+export interface ProjectCallTranslation {
+  title: string;
+  description: string;
+  conditions?: string[];
+  imageAlt?: string;
+}
+
+export interface ProjectCall {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  audience: Audience[];
+  conditions: string[];
+  deadline: string;              // ISO
+  contact: ContactPerson;
+  unit: FacultyUnit;
+  imageUrl?: string;
+  imageAlt?: string;
+  en?: ProjectCallTranslation;
+}
+
+/** Medailonek osoby (sekce Novinky). */
+export interface Profile {
+  id: string;
+  slug: string;
+  name: string;
+  title: string;                 // Název medailonku
+  content: string;               // Markdown text
+  publishedAt: string;           // Formát např. "05. 10. 2026"
+  photoUrl?: string;
+  photoAlt?: string;
+  en?: {
+    title: string;
+    content: string;
+    photoAlt?: string;
+  };
+}
+
+export interface Partner {
+  id: string;
+  name: string;
+  url: string;
+}
+
+/** Jednotná položka časové osy Historie (agregace entit). */
+export interface TimelineItem {
+  kind: "event" | "project" | "profile" | "article";
+  id: string;
+  title: string;
+  date: string;                  // Zobrazované datum
+  sortDate: string;              // ISO pro řazení
+  href: string;
+}
+
+/** Položka příležitostí ve Vzdělávání (stáže, stipendia, semináře). */
+export interface Opportunity {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  en?: { title: string; description: string };
+}
+
+/** Položka FAQ ve Vzdělávání. */
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+  en?: { question: string; answer: string };
+}
 
 export interface StorystreamItem {
   id: string;

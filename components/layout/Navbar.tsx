@@ -2,14 +2,25 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Search, Menu, X } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { CommandMenu } from "@/components/ui/CommandMenu";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
+const NAV_LINKS = [
+  { href: "/zpravy", key: "navNews" },
+  { href: "/akce", key: "navEvents" },
+  { href: "/projekty", key: "navProjects" },
+  { href: "/vzdelavani", key: "navEducation" },
+  { href: "/o-nas", key: "navAbout" },
+] as const;
+
 export function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
+  const pathname = usePathname();
 
   useEffect(() => {
     function handleCustomOpen() {
@@ -18,6 +29,15 @@ export function Navbar() {
     window.addEventListener("open-command-menu", handleCustomOpen);
     return () => window.removeEventListener("open-command-menu", handleCustomOpen);
   }, []);
+
+  // Změna routy zavře mobilní navigační panel
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  function isActive(href: string): boolean {
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
 
   return (
     <>
@@ -57,6 +77,23 @@ export function Navbar() {
               </span>
             </span>
           </Link>
+
+          {/* Střed: Hlavní navigace sekcí (desktop) */}
+          <div className="hidden md:flex items-center gap-1 lg:gap-2 shrink-0">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`px-2 lg:px-3 py-1.5 rounded-sm text-xs lg:text-sm font-mono transition-colors ${
+                  isActive(link.href)
+                    ? "text-[#0065bd] dark:text-fel-cyan font-semibold"
+                    : "text-neutral-600 dark:text-neutral-300 hover:text-[#0065bd] dark:hover:text-fel-cyan"
+                }`}
+              >
+                {t(link.key)}
+              </Link>
+            ))}
+          </div>
 
           {/* Vpravo: Jednoduché hledání (bez ⌘K) + CZ/EN přepínač + Theme switcher */}
           <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
@@ -104,8 +141,40 @@ export function Navbar() {
             <div>
               <ThemeToggle />
             </div>
+
+            {/* Hamburger: mobilní navigace sekcí */}
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen((open) => !open)}
+              className="md:hidden focus-ring flex items-center justify-center w-10 h-10 rounded-sm border border-neutral-200 dark:border-neutral-700 bg-neutral-100/80 dark:bg-neutral-900/60 text-neutral-600 dark:text-neutral-300 hover:border-fel-blue dark:hover:border-fel-cyan transition-colors"
+              aria-label={isMenuOpen ? t("menuClose") : t("menuOpen")}
+              aria-expanded={isMenuOpen}
+            >
+              {isMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobilní navigační panel sekcí */}
+        {isMenuOpen && (
+          <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#080B38]">
+            <div className="max-w-[1320px] mx-auto px-4 py-2 flex flex-col">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`py-3 text-sm font-mono border-b border-neutral-100 dark:border-neutral-800/80 last:border-b-0 transition-colors ${
+                    isActive(link.href)
+                      ? "text-[#0065bd] dark:text-fel-cyan font-semibold"
+                      : "text-neutral-700 dark:text-neutral-300"
+                  }`}
+                >
+                  {t(link.key)}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Vyhledávací dialog */}

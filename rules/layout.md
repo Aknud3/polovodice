@@ -11,7 +11,7 @@ Na základě dekonstrukce analyzovaných portálů je architektura stránek port
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────────────┐
-│ 1. MINIMALISTICKÝ NAVBAR (Logo ČVUT FEL • POLOVODIČE • Informační deník elektroniky) │
+│ 1. NAVBAR (Logo ČVUT FEL • POLOVODIČE • středové odkazy na 5 sekcí • hledání)      │
 ├───────────────────────────────────────────────────────────────────────────────────┤
 │ 2. HLAVNÍ GRID (8 : 4 SPLIT, spodní hrana sloupce B lícuje se sloupcem A)           │
 │  ┌───────────────────────────────────────────────┬──────────────────────────────┐ │
@@ -23,27 +23,36 @@ Na základě dekonstrukce analyzovaných portálů je architektura stránek port
 │  │  Spodní hrana lícuje s pravým sloupcem        │  Spodní hrana lícuje s hero  │ │
 │  └───────────────────────────────────────────────┴──────────────────────────────┘ │
 ├───────────────────────────────────────────────────────────────────────────────────┤
-│ 3. OSTATNÍ NOVINKY (Univerzální rozbalovací menu rubrik + 3×1 karty, bez CTA)      │
+│ 3. ROZCESTNÍK CÍLOVÝCH SKUPIN (5 karet: studenti, výzkumníci, veřejnost,           │
+│    partneři, média)                                                                 │
 ├───────────────────────────────────────────────────────────────────────────────────┤
-│ 4. INFORMACE O FAKULTĚ (2×2 grid, nejdůležitější zprávy fakulty, animovaný vstup;  │
+│ 4. OSTATNÍ NOVINKY (Univerzální rozbalovací menu rubrik + 3×1 karty, bez CTA)      │
+├───────────────────────────────────────────────────────────────────────────────────┤
+│ 5. NADCHÁZEJÍCÍ AKCE (1–2 nejbližší akce + odkaz na /akce)                          │
+├───────────────────────────────────────────────────────────────────────────────────┤
+│ 6. INFORMACE O FAKULTĚ (2×2 grid, nejdůležitější zprávy fakulty, animovaný vstup;  │
 │    jde o druhou instanci widgetu ze sekce 2B)                                     │
 ├───────────────────────────────────────────────────────────────────────────────────┤
-│ 5. ZJEDNODUŠENÁ PATIČKA (Info o portálu, kotvy na sekce, copyright ČVUT FEL)      │
+│ 7. NEWSLETTER (přihlašovací blok, mockup formulář s lokálním potvrzením)            │
 ├───────────────────────────────────────────────────────────────────────────────────┤
-│ 6. COOKIE LIŠTA (Vercel-style decentní lišta pro souhlas s cookies)                │
+│ 8. PATIČKA (Info o portálu, navigace sekcí, kontakt, sociální sítě, copyright)     │
+├───────────────────────────────────────────────────────────────────────────────────┤
+│ 9. COOKIE LIŠTA (Vercel-style decentní lišta pro souhlas s cookies)                │
 └───────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+Samostatné stránky webu (hierarchie podle drátového modelu): `/zpravy` (Novinky vč. `/zpravy/medailonky`), `/pro-koho/[audience]` (podstránky cílových skupin jako sekce zpráv), `/akce`, `/projekty` (vč. `/projekty/[slug]`), `/vzdelavani`, `/o-nas`.
 
 ---
 
 ## 2. Přehled povinných technických prvků (Required Technical Elements)
 
-Následujících 14 technických prvků představuje průnik nejlepších praktik analyzovaných portálů a tvoří jádro informačního systému **Polovodiče**:
+Následujících 18 technických prvků představuje průnik nejlepších praktik analyzovaných portálů a tvoří jádro informačního systému **Polovodiče**:
 
 ### 2.1 Prvek 1: Minimalistická navigace (Clean Header – Zero Bloat)
 - **Koncepce:**
   - Odstraněn duplicitní horní ekosystémový bar i běžící lišta aktualit („ŽIVĚ / BLESKOVKY“) pro maximální odlehčení HTML a nulový JavaScriptový bloat.
-  - Odstraněny středové navigační odkazy („Aktuality“, „Čipy & ASIC“ atd.) – navigace se děje přirozeně přes vyhledávání a Topic Hubs přímo v obsahu.
+  - **Středové navigační odkazy na hlavní sekce (nové podle drátového modelu):** desktopový navbar nese textové odkazy na 5 hlavních sekcí – **Novinky** (`/zpravy`), **Akce** (`/akce`), **Projekty** (`/projekty`), **Vzdělávání** (`/vzdelavani`), **O nás** (`/o-nas`). Odkazy jsou drobné (`text-xs sm:text-sm`, `font-mono` nebo čistý sans), s hover akcentem dle motivu; aktivní routa je zvýrazněná akcentní barvou. Na mobilu (`< 768px`) se středové odkazy skryjí a navigaci řeší **hamburger tlačítko** (40 × 40 px) s rozbalovacím panelem pod navbar obsahujícím stejných 5 odkazů v jednom sloupci.
   - Žádná modrá kostka: na levé straně se nachází výhradně **oficiální logo ČVUT FEL**, název **POLOVODIČE** a podtitul **„Informační deník ze světa elektroniky“**.
 - **Vizuál a komponenty:**
   - Výška: **64px**, `position: sticky; top: 0; z-index: 50;` s jemným rozostřením (`bg-background/90 backdrop-blur-md border-b border-border`).
@@ -125,14 +134,11 @@ Následujících 14 technických prvků představuje průnik nejlepších prakti
 - **Koncepce:**
   - Odstraněny odkazy na centrální systémy ČVUT, kampusy i seznam kateder.
   - **Logo portálu:** Pouze **čistý text POLOVODIČE** bez ikony či modrého čtverce.
-  - Patička obsahuje:
+  - Patička obsahuje (rozšířeno podle drátového modelu):
     - Informace o projektu a Katedře mikroelektroniky FEL ČVUT.
-    - Navigace na stránce obsahuje **výhradně** sekce hlavní stránky a archiv zpráv:
-      - *Ostatní novinky* (`/#ostatni-novinky`)
-      - *Informace o fakultě* (`https://ek.fel.cvut.cz/`)
-      - *Archiv všech zpráv* (`/zpravy`)
-      - *Zpět nahoru* (`#`)
-      - Podstránky `/udalosti` (Kalendář akcí) a `/servis` (Studentský servis) i odkaz „Informace týdne“ jsou odstraněny – portál slouží jako čistá informační „hlasná trouba“ fakulty, nikoliv jako další komplexní rozcestník pro studenty.
+    - **Navigační sloupec sekcí:** *Novinky* (`/zpravy`), *Akce* (`/akce`), *Projekty* (`/projekty`), *Vzdělávání* (`/vzdelavani`), *O nás* (`/o-nas`), *Informace o fakultě* (`https://ek.fel.cvut.cz/`) a *Zpět nahoru* (`#`).
+    - **Kontaktní blok:** Katedra mikroelektroniky FEL ČVUT, Technická 2, 166 27 Praha 6, e-mail `mikroelektronika@fel.cvut.cz` (mockup hodnoty).
+    - **Sociální sítě:** řada ikonových odkazů (Facebook, Instagram, LinkedIn, YouTube) směřujících na profily fakulty `https://fel.cvut.cz` – ikony 20 px, hover akcent, `target="_blank" rel="noopener noreferrer"`.
     - Spodní řádek: Copyright ČVUT FEL a odkaz na ochranu osobních údajů směřující na `https://fel.cvut.cz/cs/ochrana-osobnich-udaju` s textem **„Ochrana osobních údajů“** (bez zkratky GDPR).
     - **Barevný režim (Light / Dark mode):** Patička plně reaguje na přepnutí motivu – ve světlém režimu má čistý podklad `bg-white` s linkami `border-neutral-200` a tmavým písmem, v tmavém režimu hluboký navy podklad `dark:bg-[#050724]` s linkami `dark:border-white/10` a světlým písmem. Zákaz natvrdo tmavé patičky ve světlém režimu.
 ### 2.7 Prvek 7: Cookie lišta (Vercel-style Cookie Banner)
@@ -151,6 +157,71 @@ Následujících 14 technických prvků představuje průnik nejlepších prakti
     2. **Informace o fakultě** – články spojené s fakultou, studiem a akcemi (`category === "academic"`).
   - Každá sekce má vlastní podnadpis s počtem článků a vlastní 3sloupcovou mřížku karet (`ArticleCard`).
   - Vyhledávací pole filtruje články v obou sekcích současně.
+- **Odkaz na Medailonky:** V záhlaví archivu je vedle nadpisu odkaz „Medailonky“ směřující na `/zpravy/medailonky` (§2.17).
+
+### 2.10 Prvek 10: Rozcestník cílových skupin (Audience Gateway)
+- **Umístění:** Homepage, mezi sekcí „Informace týdne“ a „Ostatní novinky“; `id="pro-koho"`.
+- **Obsah:** 5 karet (`grid-cols-2 sm:grid-cols-3 lg:grid-cols-5`): **Studenti, Výzkumníci, Veřejnost, Partneři, Média**. Každá karta: ikona (Lucide, 20 px), název skupiny, jednovětný popis a šipka odkazu.
+- **Cíle karet:** Studenti → `/pro-koho/studenti`, Výzkumníci → `/pro-koho/vyzkumnici`, Veřejnost → `/pro-koho/verejnost`, Partneři → `/pro-koho/partneri`, Média → `/pro-koho/media`. Každá cílová adresa je **podstránka zpráv** dle §2.18 – zobrazuje pouze články s interní značkou dané cílové skupiny.
+- **Styl:** karta `border border-border bg-surface`, hover zvednutí (`hover:-translate-y-1`) a akcent ikony/názvu `text-cvut-blue dark:text-fel-cyan`; žádné obrázky.
+
+### 2.11 Prvek 11: Nadcházející akce (Upcoming Events na homepage)
+- **Umístění:** Homepage, mezi „Ostatní novinky“ a „Informace o fakultě“; `id="nadchazejici-akce"`.
+- **Obsah:** **1–2 nejbližší akce** z `getUpcomingEvents(2)`; záhlaví s nadpisem „Nadcházející akce“ a odkazem „Všechny akce“ na `/akce`.
+- **Karta akce (čistá typografie dle vzoru novinek – NO BOXED BADGES):**
+  - **Zákaz rámečkových štítků:** Na kartě akce nesmí být žádné ohraničené pilulky, rámečkové štítky ani barevné chipy (`[UDÁLOST]`, `[Studenti]`).
+  - **Metadata:** Jednořádkový čistý text `text-[11px] font-mono text-neutral-400` s tečkovým oddělovačem `•` přesně jako u karet článků: `datum od–do • typ akce • místo` (např. `06. 11. 2026 • Den otevřených dveří • Karlovo náměstí`).
+  - **Tělo:** H3 název, 2řádkový perex.
+  - **Patička:** Čistý text cílových skupin oddělených čárkami vlevo (`text-[11px] font-mono text-neutral-400`) a volitelný textový odkaz „Registrace“ se šipkou vpravo.
+- **Prázdný stav:** „Aktuálně nejsou vypsané žádné nadcházející akce.“
+
+### 2.12 Prvek 12: Newsletter
+- **Umístění:** Poslední sekce homepage před patičkou; `id="newsletter"`.
+- **Obsah:** Panel s nadpisem „Newsletter“, krátkým popisem, polem e-mail a tlačítkem „Odebírat“.
+- **Chování (mockup):** formulář **neodesílá data** – po odeslání s platným e-mailem se lokálně zobrazí potvrzení „Děkujeme za přihlášení k odběru.“ Poskytovatel se řeší až v produkční fázi (otevřený bod v `PLAN-ROZSIRENI.md` §6).
+- **Styl:** panel `border border-border bg-surface` s levým akcentním pruhem `border-l-4 border-cvut-blue dark:border-fel-cyan`, input výšky 40 px.
+
+### 2.13 Prvek 13: Stránka Akce (`/akce`)
+- **Záhlaví:** H1 „Akce“ + podtitul; čisté, bez odznaků (stejná architektura jako archiv `/zpravy`).
+- **Filtr typu:** univerzální rozbalovací menu (dropdown) na všech zařízeních se hodnotami Vše / Událost / Konference / Letní škola (stejný komponentní vzor jako filtr rubrik v §2.4).
+- **Přehled:** mřížka karet akcí (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3`) řazená vzestupně podle data konání; karta dle §2.11. Akce bez `registrationUrl` tlačítko registrace nezobrazuje.
+- Letní školy se zde zobrazují jako akce typu `summer-school` a současně se vypisují v sekci Vzdělávání (§2.15) – jde o jeden sdílený záznam.
+
+### 2.14 Prvek 14: Stránka Projekty (`/projekty`)
+- **Záhlaví:** H1 „Projekty“ + podtitul.
+- **Filtr součástí:** dropdown „Součást:“ nad jednotným číselníkem `FacultyUnit` (Vše + jednotlivé součásti), vzor §2.4.
+- **Mřížka projektů (čistá typografie – NO BOXED BADGES):** `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`; karta: náhled 16:9 (nebo šablona bez obrázku), čistý jednořádkový text metadat `text-[11px] font-mono text-neutral-400` (`součást • stav projektu`, bez jakýchkoliv rámečkových badge boxů; stav je pouze barevně odlišeným písmem), název, 2řádkový popis, proklik na `/projekty/[slug]`.
+- **Blok Projektové výzvy:** samostatná podsekce na téže stránce; karta výzvy: čistá jednořádková metadata `Výzva • Deadline: DD. MM. YYYY` (bez rámečkových štítků), název, 2řádkový popis, cílové skupiny jako čistý text v patičce karty, proklik na detail `/projekty/[slug]`.
+- **Detail `/projekty/[slug]`:** společná routa pro projekt i výzvu. Čistá jednořádková textová hlavička (součást, stav či deadline bez rámečků), úvodní foto, název, popis, seznam „Výstupy a publikace“ či „Podmínky“, kontaktní blok. Zpět odkaz na `/projekty`.
+
+### 2.15 Prvek 15: Stránka Vzdělávání (`/vzdelavani`)
+- **Záhlaví:** H1 „Vzdělávání“ + podtitul.
+- **Bloky v pořadí:**
+  1. **Studijní program:** textový panel o programu Elektronika a komunikace (EK) s odkazem na `https://ek.fel.cvut.cz/`.
+  2. **Příležitosti:** seznam příležitostí (stáže, stipendia, semináře) jako textové karty s odkazem.
+  3. **Letní školy:** karty akcí typu `summer-school` ze sdílené entity Akce (§2.13); prázdný stav informativní.
+  4. **FAQ:** akordeon otázek a odpovědí (vlastní klientský akordeon).
+- Každý blok má vlastní podnadpis; bloky oddělené vertikálním rytmem `space-y-10 sm:space-y-14`.
+
+### 2.16 Prvek 16: Stránka O nás (`/o-nas`)
+- **Záhlaví:** H1 „O nás“ + podtitul.
+- **Bloky v pořadí:**
+  1. **Kontakty (`#kontakty`):** kontaktní blok katedry (adresa, e-mail, telefon) + kontakt pro média.
+  2. **Partneři (`#partneri`):** mřížka partnerů (`grid-cols-2 sm:grid-cols-3 lg:grid-cols-6`), každý partner jako textové jméno s odkazem na web.
+  3. **Historie:** časová osa – vertikální seznam `TimelineItem` s **filtrem typu obsahu**: Vše / Události / Projekty / Medailonky / Články (dropdown vzor §2.4). Položky řazené sestupně podle data a odkazující do příslušných detailů. Na ose se nezobrazují žádné ohraničené badge krabičky – typ záznamu a datum jsou čistý mono text `text-[11px] font-mono` oddělený `•`.
+### 2.17 Prvek 17: Medailonky (`/zpravy/medailonky`)
+- **Přehled:** H1 „Medailonky“ + podtitul; mřížka karet (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`); karta: čtvercové foto osoby (nebo placeholder s iniciálou na navy podkladu), jméno, název medailonku, mono datum, proklik na `/zpravy/medailonky/[slug]`.
+- **Detail:** foto, jméno (H1), název medailonku, datum, plný text (markdown renderer jako detail článku), zpět odkaz „Zpět na medailonky“.
+
+### 2.18 Prvek 18: Podstránky cílových skupin (`/pro-koho/[audience]`) – sekce zpráv
+- **Koncepce a účel:** Každá z pěti cílových skupin (*Studenti*, *Výzkumníci*, *Veřejnost*, *Partneři*, *Média*) má vlastní podstránku, která je **stejnou sekcí jako archiv zpráv** (`/zpravy`, §2.9) – zobrazuje výhradně články, které mají v interním poli `audience` přiřazenou danou skupinu. Nejde o agregaci akcí, projektů ani medailonků.
+- **Interní značka zprávy:** Každý `Article` MUSÍ mít vyplněné `audience: [Audience, ...Audience[]]` – tedy alespoň jednu skupinu. Značka je čistě datová: na kartách ani v detailu článku se jako samostatný odznak nezobrazuje.
+- **Adresy (URL):** `/pro-koho/studenti`, `/pro-koho/vyzkumnici`, `/pro-koho/verejnost`, `/pro-koho/partneri`, `/pro-koho/media`. Všechny routy jsou staticky exportovatelné (`generateStaticParams`); neznámý slug vede na `notFound()`.
+- **Záhlaví stránky:** ikona cílové skupiny (Lucide, 24 px, akcent `text-[#0065bd] dark:text-fel-cyan`), H1 „Pro studenty“ / „Pro výzkumníky“ / „Pro veřejnost“ / „Pro partnery“ / „Pro média“, pod ním jednovětný redakční popis zaměření z rozcestníku. Počet výsledků zobrazuje panel hledání; sekce mají vlastní počítadla článků.
+- **Sub-menu cílových skupin (povinné):** Pod záhlavím je horizontální textové menu všech 5 skupin s popiskem „Cílové skupiny:“ (na mobilu se popisek skrývá), každá položka je odkaz na svou podstránku. Aktivní skupina má `aria-current="page"`, akcentní barvu písma a spodní linku `border-b-2 border-[#0065bd] dark:border-fel-cyan`; neaktivní položky jsou `text-neutral-500 dark:text-neutral-400` s hover akcentem. Navigace má `aria-label`; žádné rámečkové pilulky ani barevné chipy. Na `< 640px` se lišta posouvá uvnitř sebe (§3.3), zbytek stránky zůstává bez horizontálního scrollu.
+- **Výpis:** stejná architektura jako `/zpravy` – vyhledávací pole s placeholderem „Hledat...“, počítadlo výsledků a dvě sekce (**Všeobecné informace** `category !== "academic"`, **Informace o fakultě** `category === "academic"`) s 3sloupcovou mřížkou `ArticleCard`. Filtruje se vždy nejprve podle aktivní cílové skupiny, teprve poté podle hledaného dotazu. Pořadí článků je shodné s archivem; podstránka ani archiv neřadí klientsky.
+- **Odkaz na Medailonky:** zůstává v záhlaví shodně s archivem.
+- **Prázdné stavy:** bez aktivního dotazu a bez článků pro skupinu se v obou sekcích zobrazí „Pro tuto cílovou skupinu zatím nejsou publikované žádné zprávy.“; pokud dotaz nic nenajde, použije se stávající „V této sekci nebyly nalezeny žádné články.“ (`emptySection`).
 ---
 
 ## 3. Mřížkový systém a responzivní chování (Grid & Breakpoints)
@@ -166,9 +237,9 @@ Následujících 14 technických prvků představuje průnik nejlepších prakti
 
 | Breakpoint | Třída Tailwindu | Šířka viewportu | Uspořádání layoutu | Chování navigace a widgetů |
 | :--- | :--- | :--- | :--- | :--- |
-| **Mobile** | Default (`< 640px`) | `320px – 639px` | 1 sloupec, karty na 100 % šířky | Hamburger menu, sbalený ticker, boční rail pod obsahem |
-| **Mobile Large** | `sm:` | `640px – 767px` | 1–2 sloupce | Rozšířený kontejner, plné zobrazení času u bleskovek |
-| **Tablet** | `md:` | `768px – 1023px` | 2 sloupce v mřížce | Horizontální topic pills, zjednodušený status bar |
+| **Mobile** | Default (`< 640px`) | `320px – 639px` | 1 sloupec, karty na 100 % šířky | Hamburger menu, vyhledávání jako ikona, boční rail pod obsahem |
+| **Mobile Large** | `sm:` | `640px – 767px` | 1–2 sloupce | Plné logo ČVUT FEL, název POLOVODIČE a podtitul v navbaru |
+| **Tablet** | `md:` | `768px – 1023px` | 2 sloupce v mřížce | Plná desktopová navigace, dropdown filtr rubrik |
 | **Desktop** | `lg:` | `1024px – 1279px` | 12sloupcový grid (8 : 4 split) | Plná desktopová navigace, sticky pravý boční panel |
 | **Wide Desktop** | `xl:` & `2xl:` | `>= 1280px` (max 1320px) | 12 sloupců s maximální hustotou | Plná šířka 1320px, boční bezpečnostní marže, maximální čitelnost |
 
@@ -180,12 +251,13 @@ Následujících 14 technických prvků představuje průnik nejlepších prakti
 - Vyhledávání zobrazuje pouze ikonu na mobilu; jazykový a theme přepínač zůstávají dostupné. V otevřeném vyhledávacím dialogu se na mobilu nezobrazují vizuální klávesové nápovědy `ESC`, šipek ani `↵`.
 - Hero a karty používají mobilní padding `p-4`, titulky mají základ `text-xl`/`text-base`; desktopové velikosti se přidávají až od `sm:`.
 - Topic filtry v sekci „Ostatní novinky“ používají univerzální **rozbalovací menu (dropdown)** na všech velikostech obrazovky (na telefonu plná šířka, na desktopu kompaktní max-w-sm).
+- Sub-menu cílových skupin na `/pro-koho/[audience]` je jediná povolená horizontálně posuvná lišta: na šířce `< 640px` se posouvá uvnitř vlastního pruhu (`overflow-x-auto`), nesmí však způsobit horizontální scroll celé stránky.
 - Footer přechází na jeden sloupec, text a právní odkazy se zalamují a nesmí vytvářet horizontální overflow.
 
 
 ## 4. Shrnutí layoutových pravidel dle Vercel UI/UX standardů
-1. **Content-First & No Clutter:** Portál funguje jako **veřejné technologické médium světové úrovně**. Obsah, polovodičová data, schémata a analýzy stojí na prvním místě; školní interní systémy (KOS, Moodle) jsou elegantně dostupné v horní liště pro studenty, ale neovlivňují čistou novinářskou tvář webu pro veřejnost.
-2. **Vercel Layout Density (4px / 8px Grid):** Veškerá vertikální i horizontální odsazení přísně dodržují násobky 4px a 8px (paddingy 16px / 24px, gutter 24px, výška navigace 64px, výška tickeru 42px).
+1. **Content-First & No Clutter:** Portál funguje jako **veřejné technologické médium světové úrovně**. Obsah, polovodičová data, schémata a analýzy stojí na prvním místě a čistá novinářská tvář webu zůstává bez interních systémových lišt.
+2. **Vercel Layout Density (4px / 8px Grid):** Veškerá vertikální i horizontální odsazení přísně dodržují násobky 4px a 8px (paddingy 16px / 24px, gutter 24px, výška navigace 64px).
 3. **Border-Driven Depth:** Vizuální hierarchie vrstev a karet je definována čistými 1px linkami (`border border-neutral-200 dark:border-neutral-800`), nikoliv rozplizlými stíny.
 4. **Keyboard-First & Command Menu (`Cmd+K`):** Návštěvníci mohou bleskově vyhledávat témata, materiály (SiC, GaN) či články pomocí klávesové zkratky `Cmd+K` / `Ctrl+K`.
 5. **Zero Cumulative Layout Shift (CLS = 0):** Všechny obrázky a widgety mají pevně vyhrazený prostor a poměry stran (16:9 u článků, čtverec u avatarů) s jemným skeleton shimmerem při načítání dat.

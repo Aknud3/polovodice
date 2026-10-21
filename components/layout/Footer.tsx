@@ -10,8 +10,9 @@ export function Footer() {
   return (
     <footer className="bg-white dark:bg-[#050724] border-t border-neutral-200 dark:border-white/10 text-neutral-600 dark:text-neutral-300 text-sm font-sans pt-10 sm:pt-12 pb-8 transition-colors overflow-hidden">
       <div className="w-full max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 pb-8 border-b border-neutral-200 dark:border-white/10">
-          <div className="space-y-3 max-w-md min-w-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 pb-8 border-b border-neutral-200 dark:border-white/10">
+          {/* 1. O portálu & Garance */}
+          <div className="space-y-3 max-w-sm min-w-0">
             <span className="font-bold text-lg text-neutral-900 dark:text-white tracking-tight block">
               POLOVODIČE
             </span>
@@ -23,17 +24,35 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="space-y-3 md:justify-self-end min-w-0">
+          {/* 2. Navigace sekcí */}
+          <div className="space-y-3 min-w-0">
             <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-900 dark:text-white">
               {t("pageNavigation")}
             </h4>
             <ul className="space-y-2 text-xs font-mono text-neutral-600 dark:text-neutral-400">
               <li>
-                <Link
-                  href="/#ostatni-novinky"
-                  className="hover:text-fel-blue dark:hover:text-fel-cyan transition-colors"
-                >
-                  → {t("sectionNews")}
+                <Link href="/zpravy" className="hover:text-fel-blue dark:hover:text-fel-cyan transition-colors">
+                  → {t("navNews")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/akce" className="hover:text-fel-blue dark:hover:text-fel-cyan transition-colors">
+                  → {t("navEvents")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/projekty" className="hover:text-fel-blue dark:hover:text-fel-cyan transition-colors">
+                  → {t("navProjects")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/vzdelavani" className="hover:text-fel-blue dark:hover:text-fel-cyan transition-colors">
+                  → {t("navEducation")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/o-nas" className="hover:text-fel-blue dark:hover:text-fel-cyan transition-colors">
+                  → {t("navAbout")}
                 </Link>
               </li>
               <li>
@@ -47,14 +66,6 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <Link
-                  href="/zpravy"
-                  className="hover:text-fel-blue dark:hover:text-fel-cyan transition-colors"
-                >
-                  → {t("allNewsArchive")}
-                </Link>
-              </li>
-              <li>
                 <a
                   href="#"
                   className="hover:text-neutral-900 dark:hover:text-white transition-colors flex items-center gap-1 pt-1 text-fel-blue dark:text-fel-cyan"
@@ -64,6 +75,73 @@ export function Footer() {
                 </a>
               </li>
             </ul>
+          </div>
+
+          {/* 3. Kontakt a sociální sítě */}
+          <div className="space-y-3 min-w-0">
+            <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-900 dark:text-white">
+              {t("footerContact")}
+            </h4>
+            <div className="space-y-1.5 text-xs text-neutral-600 dark:text-neutral-400">
+              <p className="font-semibold text-neutral-900 dark:text-neutral-200">{t("contactDepartment")}</p>
+              <p>{t("contactAddress")}</p>
+              <p>
+                <a
+                  href="mailto:mikroelektronika@fel.cvut.cz"
+                  className="text-fel-blue dark:text-fel-cyan hover:underline"
+                >
+                  {t("contactEmail")}
+                </a>
+              </p>
+              <p>{t("contactPhone")}</p>
+            </div>
+
+            <div className="pt-2">
+              <span className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 block mb-2">
+                {t("footerSocial")}
+              </span>
+              <div className="flex items-center gap-3 text-xs font-mono">
+                <a
+                  href="https://facebook.com/fel.cvut"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-neutral-600 dark:text-neutral-400 hover:text-fel-blue dark:hover:text-fel-cyan transition-colors"
+                  aria-label="Facebook FEL ČVUT"
+                >
+                  Facebook
+                </a>
+                <span>•</span>
+                <a
+                  href="https://instagram.com/fel_cvut"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-neutral-600 dark:text-neutral-400 hover:text-fel-blue dark:hover:text-fel-cyan transition-colors"
+                  aria-label="Instagram FEL ČVUT"
+                >
+                  Instagram
+                </a>
+                <span>•</span>
+                <a
+                  href="https://linkedin.com/school/fel-cvut"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-neutral-600 dark:text-neutral-400 hover:text-fel-blue dark:hover:text-fel-cyan transition-colors"
+                  aria-label="LinkedIn FEL ČVUT"
+                >
+                  LinkedIn
+                </a>
+                <span>•</span>
+                <a
+                  href="https://youtube.com/user/felcvutpraha"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-neutral-600 dark:text-neutral-400 hover:text-fel-blue dark:hover:text-fel-cyan transition-colors"
+                  aria-label="YouTube FEL ČVUT"
+                >
+                  YouTube
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -1,14 +1,24 @@
-import { getFeaturedArticle, getEditorialArticles, getFacultyNews, getCategoryCounts } from "@/lib/api";
+import {
+  getFeaturedArticle,
+  getEditorialArticles,
+  getFacultyNews,
+  getCategoryCounts,
+  getUpcomingEvents,
+} from "@/lib/api";
 import { HeroFeature } from "@/components/portal/HeroFeature";
 import { EditorialSidebar } from "@/components/portal/EditorialSidebar";
+import { AudienceGateway } from "@/components/portal/AudienceGateway";
 import { HomeFeed } from "@/components/portal/HomeFeed";
+import { UpcomingEvents } from "@/components/portal/UpcomingEvents";
 import { FacultyNewsSection } from "@/components/portal/FacultyNews";
+import { NewsletterSection } from "@/components/portal/NewsletterSection";
 
 export default async function HomePage() {
-  const [featured, editorialArticles, facultyNews] = await Promise.all([
+  const [featured, editorialArticles, facultyNews, upcomingEvents] = await Promise.all([
     getFeaturedArticle(),
     getEditorialArticles(),
     getFacultyNews(),
+    getUpcomingEvents(2),
   ]);
 
   // Vyloučíme hlavní zprávu týdne z mřížky ostatních novinek
@@ -34,11 +44,20 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 2. OSTATNÍ NOVINKY (Filtry rubrik + mřížka 3 × 1 bez flags + šipka do archivu) */}
+      {/* 2. ROZCESTNÍK CÍLOVÝCH SKUPIN (5 karet: studenti, výzkumníci, veřejnost, partneři, média) */}
+      <AudienceGateway />
+
+      {/* 3. OSTATNÍ NOVINKY (Filtry rubrik + mřížka 3 × 1 bez flags + šipka do archivu) */}
       <HomeFeed initialArticles={gridArticles} counts={counts} />
 
-      {/* 3. INFORMACE O FAKULTĚ (Nejdůležitější zprávy fakulty) */}
+      {/* 4. NADCHÁZEJÍCÍ AKCE (1–2 nejbližší akce + odkaz na /akce) */}
+      <UpcomingEvents events={upcomingEvents} />
+
+      {/* 5. INFORMACE O FAKULTĚ (Nejdůležitější zprávy fakulty) */}
       <FacultyNewsSection articles={facultyNews} />
+
+      {/* 6. NEWSLETTER (přihlašovací blok, mockup formulář s lokálním potvrzením) */}
+      <NewsletterSection />
     </div>
   );
 }

@@ -25,9 +25,9 @@ V tradičním programování se vývojáři často soustředí pouze na „pozit
 
 ### 2.1 Princip jedné odpovědnosti (Single Responsibility Principle)
 - Každá komponenta řeší pouze jednu věc:
-  - Komponenta **rozvržení** (`HeroFeature.tsx`, `StorystreamRail.tsx`) pouze skládá layout a řídí zobrazení.
-  - Komponenta **logiky** (např. `useSearch`, `useTopicFilter`) zapouzdřuje stav a výpočty.
-  - **Prezentační prvky** (`Badge.tsx`, `Kbd.tsx`) nemají žádné vedlejší efekty (side effects).
+  - Komponenta **rozvržení** (`HeroFeature.tsx`, `NewsArchiveClient.tsx`) pouze skládá layout a řídí zobrazení.
+  - Komponenta **logiky** (`LanguageProvider`, filtry a vyhledávání v `NewsArchiveClient.tsx`) zapouzdřuje stav a výpočty.
+  - **Prezentační prvky** (`Kbd.tsx`) nemají žádné vedlejší efekty (side effects).
 
 ### 2.2 Sémantické pojmenování a doménový jazyk
 - Názvy proměnných a funkcí musí přesně odrážet elektrotechnickou a polovodičovou doménu:
@@ -53,7 +53,7 @@ Portál Polovodiče je veřejné médium vystavené internetu. Bezpečnost je in
 
 ### 3.1 Ochrana proti XSS (Cross-Site Scripting)
 1. **Zákaz nechráněného `dangerouslySetInnerHTML`:**
-   - Texty článků a bleskovek se renderují jako čistý text nebo přes bezpečné markdown komponenty.
+   - Texty článků se renderují jako čistý text nebo přes bezpečné markdown komponenty.
    - Pokud je výjimečně potřeba vložit HTML (např. ze schváleného CMS), obsah **musí** projít sanitizací přes `DOMPurify` před samotným renderem.
 2. **Automatický React Escaping:** Všechny uživatelské vstupy (vyhledávací dotazy v `Cmd+K`, vstupy anket) jsou v JSX automaticky escapovány.
 
@@ -123,8 +123,9 @@ function renderArticleSpecs(article: any) {
 ```typescript
 import type { Article } from "@/types/portal";
 
-// PRODUCTION-READY: Negativní prostor okamžitě eliminuje neplatné stavy
-export function formatSemiconductorBadge(article: Article): string | null {
+// PRODUCTION-READY: Negativní prostor okamžitě eliminuje neplatné stavy.
+// Výstup je čistý text metadat, nikoliv rámečkový štítek (rules/theme.md §10).
+export function formatSemiconductorMeta(article: Article): string | null {
   // 1. Guard: Chybí specifikace polovodiče -> okamžitý exit
   if (!article.specs?.material) {
     return null;
@@ -135,7 +136,7 @@ export function formatSemiconductorBadge(article: Article): string | null {
 
   // 2. Specifická výkonová varianta
   if (isWideBandgap && typeof voltageV === "number" && voltageV > 0) {
-    return `${material} // ${voltageV} V`;
+    return `${material} • ${voltageV} V`;
   }
 
   // 3. Standardní materiálový výstup
@@ -191,28 +192,29 @@ import type { ArticleCategory } from "@/types/portal";
 
 /**
  * Zaručuje, že při přidání nové kategorie čipů kompilátor TypeScriptu
- * okamžitě vynutí implementaci příslušné barvy štítku.
+ * okamžitě vynutí implementaci příslušné barvy textu.
+ * Vrací pouze barvu písma – žádné rámečky, podklady ani badge boxy (rules/theme.md §10).
  */
-export function getCategoryAccentClass(category: ArticleCategory): string {
+export function getCategoryTextClass(category: ArticleCategory): string {
   switch (category) {
     case "chips":
-      return "text-fel-cyan border-fel-cyan/30 bg-fel-cyan/10";
+      return "text-fel-cyan";
     case "materials":
-      return "text-wafer-gold border-wafer-gold/30 bg-wafer-gold/10";
+      return "text-wafer-gold";
     case "power-elec":
-      return "text-fel-blue border-fel-blue/30 bg-fel-blue/10";
+      return "text-fel-blue";
     case "embedded":
-      return "text-emerald-400 border-emerald-400/30 bg-emerald-400/10";
+      return "text-emerald-400";
     case "quantum":
-      return "text-fel-violet border-fel-violet/30 bg-fel-violet/10";
+      return "text-fel-violet";
     case "industry":
-      return "text-amber-400 border-amber-400/30 bg-amber-400/10";
+      return "text-amber-400";
     case "academic":
-      return "text-blue-400 border-blue-400/30 bg-blue-400/10";
+      return "text-blue-400";
     default: {
       // TypeScript zde zkontroluje, že všechny varianty byly vyčerpány
       const _exhaustiveCheck: never = category;
-      return "text-neutral-400 border-neutral-400/30 bg-neutral-400/10";
+      return "text-neutral-400";
     }
   }
 }

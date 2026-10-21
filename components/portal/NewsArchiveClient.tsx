@@ -1,14 +1,61 @@
 "use client";
 
 import { useState } from "react";
-import { Search, X } from "lucide-react";
-import type { Article } from "@/types/portal";
+import Link from "next/link";
+import {
+  Search,
+  X,
+  ArrowUpRight,
+  GraduationCap,
+  FlaskConical,
+  Users,
+  Handshake,
+  Newspaper,
+  type LucideIcon,
+} from "lucide-react";
+import type { Article, Audience } from "@/types/portal";
+import type { TranslationKey } from "@/lib/i18n";
+import { AUDIENCE_ORDER, AUDIENCE_SLUGS } from "@/lib/audiences";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { ArticleCard } from "@/components/portal/ArticleCard";
 
 interface NewsArchiveClientProps {
   initialArticles: Article[];
+  /** Je-li zadáno, archiv se chová jako podstránka cílové skupiny (rules/layout.md §2.18). */
+  audience?: Audience;
 }
+
+const AUDIENCE_HEADING_KEY: Record<Audience, TranslationKey> = {
+  students: "audiencePageStudents",
+  researchers: "audiencePageResearchers",
+  public: "audiencePagePublic",
+  partners: "audiencePagePartners",
+  media: "audiencePageMedia",
+};
+
+const AUDIENCE_LABEL_KEY: Record<Audience, TranslationKey> = {
+  students: "audienceStudents",
+  researchers: "audienceResearchers",
+  public: "audiencePublic",
+  partners: "audiencePartners",
+  media: "audienceMedia",
+};
+
+const AUDIENCE_DESC_KEY: Record<Audience, TranslationKey> = {
+  students: "audienceStudentsDesc",
+  researchers: "audienceResearchersDesc",
+  public: "audiencePublicDesc",
+  partners: "audiencePartnersDesc",
+  media: "audienceMediaDesc",
+};
+
+const AUDIENCE_ICON: Record<Audience, LucideIcon> = {
+  students: GraduationCap,
+  researchers: FlaskConical,
+  public: Users,
+  partners: Handshake,
+  media: Newspaper,
+};
 
 function formatArticleCount(count: number, language: "cs" | "en", isSearching = false): string {
   if (language === "en") {
@@ -28,10 +75,13 @@ function formatSectionCount(count: number, language: "cs" | "en"): string {
   return `${count} ${noun}`;
 }
 
-export function NewsArchiveClient({ initialArticles }: NewsArchiveClientProps) {
+export function NewsArchiveClient({ initialArticles, audience }: NewsArchiveClientProps) {
   const { language, t } = useLanguage();
   const [query, setQuery] = useState("");
   const cleanQuery = query.trim().toLowerCase();
+  const heading = audience ? t(AUDIENCE_HEADING_KEY[audience]) : t("archiveHeading");
+  const AudienceIcon = audience ? AUDIENCE_ICON[audience] : null;
+  const emptyLabel = audience && cleanQuery.length === 0 ? t("audienceEmpty") : t("emptySection");
 
   const filtered = cleanQuery.length > 0
     ? initialArticles.filter((article) => {
@@ -49,12 +99,68 @@ export function NewsArchiveClient({ initialArticles }: NewsArchiveClientProps) {
 
   return (
     <div className="space-y-10">
-      {/* Záhlaví archivu */}
+      {/* Záhlaví archivu / podstránky cílové skupiny */}
       <div className="pb-6 border-b border-neutral-200 dark:border-neutral-800">
-        <h1 className="text-3xl sm:text-4xl font-bold font-sans tracking-tight text-neutral-900 dark:text-white">
-          {t("archiveHeading")}
-        </h1>
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2.5">
+              {AudienceIcon && (
+                <AudienceIcon
+                  className="w-6 h-6 shrink-0 text-[#0065bd] dark:text-fel-cyan"
+                  aria-hidden="true"
+                />
+              )}
+              <h1 className="text-3xl sm:text-4xl font-bold font-sans tracking-tight text-neutral-900 dark:text-white">
+                {heading}
+              </h1>
+            </div>
+            {audience && (
+              <p className="mt-2 max-w-2xl text-sm text-neutral-600 dark:text-neutral-400">
+                {t(AUDIENCE_DESC_KEY[audience])}
+              </p>
+            )}
+          </div>
+
+          <Link
+            href="/zpravy/medailonky"
+            className="group inline-flex items-center gap-1 text-xs sm:text-sm font-mono text-[#0065bd] dark:text-fel-cyan hover:underline shrink-0"
+          >
+            <span>{t("profilesLink")}</span>
+            <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </Link>
+        </div>
       </div>
+
+      {/* Sub-menu cílových skupin */}
+      {audience && (
+        <nav
+          aria-label={t("audienceMenuLabel")}
+          className="border-b border-neutral-200 dark:border-neutral-800 overflow-x-auto"
+        >
+          <div className="flex items-center min-w-max">
+            <span className="hidden sm:inline pr-3 text-[11px] font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+              {t("audienceMenuLabel")}
+            </span>
+            {AUDIENCE_ORDER.map((key) => {
+              const isActive = key === audience;
+              return (
+                <Link
+                  key={key}
+                  href={`/pro-koho/${AUDIENCE_SLUGS[key]}`}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`shrink-0 px-3 py-2.5 -mb-px border-b-2 text-xs sm:text-sm font-mono transition-colors ${
+                    isActive
+                      ? "border-[#0065bd] dark:border-fel-cyan text-[#0065bd] dark:text-fel-cyan font-semibold"
+                      : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-[#0065bd] dark:hover:text-fel-cyan"
+                  }`}
+                >
+                  {t(AUDIENCE_LABEL_KEY[key])}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+      )}
 
       {/* Vyhledávací panel */}
       <div className="p-4 sm:p-5 rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141846] shadow-xs space-y-3">
@@ -111,7 +217,7 @@ export function NewsArchiveClient({ initialArticles }: NewsArchiveClientProps) {
         {generalArticles.length === 0 ? (
           <div className="py-12 text-center rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141846]">
             <p className="text-sm font-mono text-neutral-500 dark:text-neutral-400">
-              {t("emptySection")}
+              {emptyLabel}
             </p>
           </div>
         ) : (
@@ -137,7 +243,7 @@ export function NewsArchiveClient({ initialArticles }: NewsArchiveClientProps) {
         {facultyArticles.length === 0 ? (
           <div className="py-12 text-center rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141846]">
             <p className="text-sm font-mono text-neutral-500 dark:text-neutral-400">
-              {t("emptySection")}
+              {emptyLabel}
             </p>
           </div>
         ) : (
