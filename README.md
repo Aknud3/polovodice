@@ -69,7 +69,7 @@ bun run deploy
 │   ├── portal/           # Karty článků, hero, boční panel, feed
 │   ├── providers/        # Context providery (jazyk, téma)
 │   └── ui/               # Tlačítka, dialog vyhledávání, cookie banner
-├── data/                 # Datové modely a ukázková data
+├── data/                 # Datové modely a zástupná (boilerplate) data
 ├── lib/                  # Pomocné funkce a lokalizace (i18n)
 ├── rules/                # Architektonická pravidla a design standardy
 └── public/               # Statické assety (SVG loga, konfigurace)

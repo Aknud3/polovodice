@@ -19,7 +19,6 @@ export const metadata: Metadata = {
     "FPGA",
     "ČVUT FEL",
     "Katedra mikroelektroniky",
-    "onsemi",
     "Chips Act",
     "SiC",
     "GaN",

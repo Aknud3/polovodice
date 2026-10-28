@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   Search,
   X,
-  ArrowUpRight,
   GraduationCap,
   FlaskConical,
   Users,
@@ -101,34 +100,22 @@ export function NewsArchiveClient({ initialArticles, audience }: NewsArchiveClie
     <div className="space-y-10">
       {/* Záhlaví archivu / podstránky cílové skupiny */}
       <div className="pb-6 border-b border-neutral-200 dark:border-neutral-800">
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2.5">
-              {AudienceIcon && (
-                <AudienceIcon
-                  className="w-6 h-6 shrink-0 text-[#0065bd] dark:text-fel-cyan"
-                  aria-hidden="true"
-                />
-              )}
-              <h1 className="text-3xl sm:text-4xl font-bold font-sans tracking-tight text-neutral-900 dark:text-white">
-                {heading}
-              </h1>
-            </div>
-            {audience && (
-              <p className="mt-2 max-w-2xl text-sm text-neutral-600 dark:text-neutral-400">
-                {t(AUDIENCE_DESC_KEY[audience])}
-              </p>
-            )}
-          </div>
-
-          <Link
-            href="/zpravy/medailonky"
-            className="group inline-flex items-center gap-1 text-xs sm:text-sm font-mono text-[#0065bd] dark:text-fel-cyan hover:underline shrink-0"
-          >
-            <span>{t("profilesLink")}</span>
-            <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-          </Link>
+        <div className="flex items-center gap-2.5">
+          {AudienceIcon && (
+            <AudienceIcon
+              className="w-6 h-6 shrink-0 text-[#0065bd] dark:text-fel-cyan"
+              aria-hidden="true"
+            />
+          )}
+          <h1 className="text-3xl sm:text-4xl font-bold font-sans tracking-tight text-neutral-900 dark:text-white">
+            {heading}
+          </h1>
         </div>
+        {audience && (
+          <p className="mt-2 max-w-2xl text-sm text-neutral-600 dark:text-neutral-400">
+            {t(AUDIENCE_DESC_KEY[audience])}
+          </p>
+        )}
       </div>
 
       {/* Sub-menu cílových skupin */}

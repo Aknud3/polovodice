@@ -20,6 +20,7 @@ Každá varianta musí definovat samostatné tokeny pro light i dark náhled a s
 ## 3. Výběrový katalog
 - Katalog variant je v `lightning-grids.html` a slouží pouze k vizuálnímu výběru; neovlivňuje runtime aplikace.
 - Katalog musí obsahovat 10 variant označených `01` až `10`, vždy s light i dark náhledem, názvem a přesnými hex tokeny.
+- Náhledy v katalogu používají boilerplate text (`Titulek zprávy`, `Perex zprávy – zástupný text…`, tag `ŠABLONA`); katalog neobsahuje vymyšlené ani redakční zprávy (`rules/layout.md` §0).
 - Každá varianta má být identifikovatelná jako „bratranec“ FEL: žádné radikální změny na červenou, zelenou nebo fialovou dominantní paletu.
 - Po výběru uživatelem se jediná zvolená varianta propíše do `app/globals.css`; ostatní zůstanou pouze v katalogu.
 
@@ -118,12 +119,13 @@ Kopie `favicon.ico` leží navíc v kořeni `public/favicon.ico`, aby implicitn�
 
 ---
 
-## 8. Šablona pro články bez obrázku
+## 8. Šablona náhledu článku (režim boilerplate)
 
 - Článek bez `imageUrl` NESMÍ vykreslovat rozbitý `<img>` ani prázdný blok; MUSÍ použít šablonu z `components/portal/ArticleMedia.tsx`.
 - Šablona: poměr **16:9**, podklad navy `#081d3d` s dlaždicovým motivem (rhombus grid) v cyan linii `rgba(39,208,208,0.10)`, uprostřed ikona `Cpu` a mono popisek `Article.categoryLabel` v cyan.
 - Podklad je definován jednou v `app/globals.css` ve třídě `.article-media-placeholder` – komponenty NESMÍ obsahovat data URI ani duplikovat tuto kresbu.
 - Šablona se používá na všech místech, kde se zobrazuje náhled: hero, karta článku, cyklovač v bočním sloupci i detail článku.
+- **V režimu boilerplate je šablona jediným náhledem:** zástupné články nemají `imageUrl`, takže žádný náhled neobsahuje fotografii ani externí síťový požadavek (`rules/layout.md` §0).
 - Motiv čipu je zde povolen: jde o dekoraci obsahu, nikoliv o brand mark ikon (§5).
 
 ---
@@ -138,7 +140,7 @@ Kopie `favicon.ico` leží navíc v kořeni `public/favicon.ico`, aby implicitn�
 
 ## 10. Striktní pravidlo NO FLAGS / NO BOXED BADGES na celém webu
 
-Všechny sekce a karty portálu (novinky, akce, projekty, výzvy, medailonky i časová osa) přísně dodržují jednotný princip **čisté novinářské typografie bez rámečkových značek a barevných odznaků**:
+Všechny sekce a karty portálu (novinky, akce, projekty, výzvy i časová osa) přísně dodržují jednotný princip **čisté novinářské typografie bez rámečkových značek a barevných odznaků**. Režim boilerplate (`rules/layout.md` §0) tento princip nemění – zástupný obsah se sází stejnou typografií jako obsah redakční:
 - **Žádné rámečkové štítky („značky“):** Je přísně zakázáno používat ohraničené pilulky, rámečkové štítky či barevné badge boxy (`border`, `rounded-sm`, `bg-...`) pro typy akcí, stavy projektů, označení výzev, cílové skupiny ani položky časové osy.
 - **Sjednocení s novinkami:** Veškerá doplňková metadata (datum, typ, místo, stav, součást, cílová skupina) se zobrazují výhradně jako **čistý jednořádkový text** v technickém písmu `text-[11px] font-mono text-neutral-400 dark:text-neutral-500` s tečkovým oddělovačem `•`, přesně podle vzoru z karet článků (`ArticleCard`):
   - Akce: `datum od–do • typ akce • místo` (např. `06. 11. 2026 • Den otevřených dveří • Karlovo náměstí`).

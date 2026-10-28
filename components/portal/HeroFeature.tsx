@@ -20,6 +20,7 @@ export function HeroFeature({ article }: HeroFeatureProps) {
   const authorDepartment = isEn
     ? (article.en!.authorDepartment ?? article.author.department)
     : article.author.department;
+  const authorName = isEn ? (article.en!.authorName ?? article.author.name) : article.author.name;
 
   return (
     <article className="group relative rounded-sm border border-slate-200 dark:border-neutral-800 bg-white dark:bg-[#141846] overflow-hidden hover:border-[#0065bd] dark:hover:border-fel-cyan/50 transition-all duration-300 shadow-xs hover:shadow-md">
@@ -63,7 +64,7 @@ export function HeroFeature({ article }: HeroFeatureProps) {
               </div>
               <div>
                 <span className="font-semibold text-slate-900 dark:text-neutral-200 block font-sans">
-                  {article.author.name}
+                  {authorName}
                 </span>
                 <span className="text-[11px] text-slate-500 dark:text-neutral-500 block">
                   {authorDepartment}

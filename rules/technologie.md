@@ -32,6 +32,8 @@
 Všechna data portálu jsou striktně typována v souboru `types/portal.ts`:
 
 ### 3.1 Datový model článku a polovodičových parametrů
+
+Zdroj pravdy pro obsah článků je v režimu boilerplate jediná sada `BOILERPLATE_ARTICLES` v `data/boilerplate.ts` (`rules/layout.md` §0). Stejný soubor drží i všechny ostatní zástupné entity (`BOILERPLATE_EVENTS`, `BOILERPLATE_PROJECTS`, `BOILERPLATE_PROJECT_CALLS`, `BOILERPLATE_PARTNERS`, `BOILERPLATE_OPPORTUNITIES`, `BOILERPLATE_FAQ`); `data/mock-data.ts` je zrušen. Model se nemění:
 ```typescript
 export type ArticleCategory =
   | "chips"
@@ -48,6 +50,7 @@ export interface ArticleTranslation {
   content: string;
   categoryLabel: string;
   imageAlt?: string;
+  authorName?: string;
   authorTitle?: string;
   authorDepartment?: string;
   tags?: string[];
@@ -143,16 +146,16 @@ Stávající `cn()` helper a ostatní inženýrské standardy zůstávají beze 
 
 ## 8. Datová vrstva: Informace o fakultě a homepage
 
-- Zprávy o fakultě (letní škola, dny otevřených dveří, přijímací řízení, stáže, stipendia, konference) jsou standardní `Article` s `category: "academic"`. MUSÍ mít vyplněný `slug`, `perex`, `publishedAt` a `author` (obrázek je volitelný, viz §9), aby fungoval detail `/zpravy/[slug]`, archiv i vyhledávání.
-- Každý `Article` MUSÍ mít vyplněné `audience: [Audience, ...Audience[]]` – interní značku cílových skupin, pro které je zpráva určena. Značka je povinná i pro články o fakultě; neprázdné pole vynucuje typ, takže článek bez skupiny nelze publikovat ani zobrazit na `/pro-koho/[audience]` (`rules/layout.md` §2.18).
-- `getArticlesByAudience(audience: Audience)` vrací články obsahující danou skupinu v poli `audience`, v pořadí `MOCK_ARTICLES` – tedy shodně s archivem bez dalšího řazení.
+- Zprávy o fakultě (letní škola, dny otevřených dveří, přijímací řízení, stáže, stipendia, konference) jsou standardní `Article` s `category: "academic"`. MUSÍ mít vyplněný `slug`, `perex`, `publishedAt` a `author` (obrázek je volitelný, viz §9), aby fungoval detail `/zpravy/[slug]`, archiv i vyhledávání. V režimu boilerplate je tato sada nahrazena čtyřmi zástupnými články (`rules/layout.md` §0).
+- Každý `Article` MUSÍ mít vyplněné `audience: [Audience, ...Audience[]]` – interní značku cílových skupin, pro které je zpráva určena. Značka je povinná i pro články o fakultě; neprázdné pole vynucuje typ, takže článek bez skupiny nelze publikovat ani zobrazit na `/pro-koho/[audience]` (`rules/layout.md` §2.17).
+- `getArticlesByAudience(audience: Audience)` vrací články obsahující danou skupinu v poli `audience`, v pořadí `BOILERPLATE_ARTICLES` – tedy shodně s archivem bez dalšího řazení.
 - `lib/api.ts` MUSÍ poskytovat `getFacultyNews(limit?)`: vrací články kategorie `academic` seřazené podle priority (nejdůležitější první), volitelně oříznuté na `limit`, a to ve **zúženém typu `FacultyNewsItem`** (`types/portal.ts`) bez plného textu článku – do klientských komponent se nesmí přenášet `content`.
 - Homepage MUSÍ pracovat se dvěma oddělenými sadami:
   - `facultyNews` = `getFacultyNews()` – pro sekci „Informace o fakultě“ a pro rail widget,
   - `editorialArticles` = `getEditorialArticles()` (tj. `getArticles()` **bez** kategorie `academic`) – pro hero, cyklovač „Další články“ a mřížku „Ostatní novinky“.
 - `getCategoryCounts(articles?)` MUSÍ umět spočítat počty nad předanou sadou, aby počítadla filtrů odpovídala tomu, co mřížka skutečně umí zobrazit (`rules/layout.md` §2.4). Bez argumentu počítá přes celý archiv.
 - Podstránka archivu `/zpravy` v `NewsArchiveClient.tsx` rozděluje výpis článků do dvou samostatných sekcí: **Všeobecné informace** (`category !== "academic"`) a **Informace o fakultě** (`category === "academic"`). Filtry rubrik a materiálů jsou dočasně odstraněny, vyhledávací pole používá placeholder `Hledat...` a filtruje obě sekce současně.
-- Všechny články v `data/mock-data.ts` mají kompletní anglický překlad v objektu `en` (`ArticleTranslation`) a v `lib/api.ts` / `types/portal.ts` je součástí i `FacultyNewsItem`.
+- Všechny články v `data/boilerplate.ts` mají kompletní anglický překlad v objektu `en` (`ArticleTranslation`) a v `lib/api.ts` / `types/portal.ts` je součástí i `FacultyNewsItem`.
 - Klientské komponenty (`HeroFeature`, `ArticleCard`, `EditorialSidebar`, `FacultyNews`, `NewsArchiveClient`, `ArticleDetailClient`, `CommandMenu`, `CookieBanner`) přepínají jak veškeré popisky UI, tak i obsah článků do angličtiny při `language === "en"`.
 - Komponenta `components/portal/SectionTemplate.tsx`, podstránky `app/udalosti/page.tsx` a `app/servis/page.tsx` i komponenta `components/portal/EventList.tsx` jsou smazány. Sekci o fakultě zajišťuje `components/portal/FacultyNews.tsx` (`FacultyNewsSection` a `FacultyNewsRail`).
 
@@ -160,7 +163,7 @@ Stávající `cn()` helper a ostatní inženýrské standardy zůstávají beze 
 
 ## 9. Volitelné obrázky článků a sdílená media komponenta
 
-- V typu `Article` jsou `imageUrl` a `imageAlt` **volitelné** (`imageUrl?: string`), protože redakce nemusí mít u každé zprávy fotografii.
+- V typu `Article` jsou `imageUrl` a `imageAlt` **volitelné** (`imageUrl?: string`), protože redakce nemusí mít u každé zprávy fotografii. Boilerplate sada obrázky nepoužívá vůbec (`rules/layout.md` §0).
 - Všechna místa zobrazující náhled článku (hero, `ArticleCard`, cyklovač v `EditorialSidebar`, detail `/zpravy/[slug]`) MUSÍ použít `components/portal/ArticleMedia.tsx`. Přímé `<img src={article.imageUrl}>` je zakázané.
 - `ArticleMedia` vykresluje buď `<img>` (hero s `loading="eager"`, ostatní `loading="lazy"`), nebo šablonu podle `rules/theme.md` §8; `alt` je prázdný, pokud článek popis nemá.
 - Rotující widget „Informace o fakultě“ potřebuje **celý seznam** z `getFacultyNews()`, protože zobrazuje jednu položku, ale střídá je mezi sebou. Stránka proto NESMÍ tento seznam ořezávat – ořez je jen vizuální (vždy 1 položka najednou).
@@ -170,9 +173,9 @@ Stávající `cn()` helper a ostatní inženýrské standardy zůstávají beze 
 
 ---
 
-## 10. Datové entity rozšířeného portálu (Akce, Projekty, Výzvy, Medailonky, Partneři)
+## 10. Datové entity rozšířeného portálu (Akce, Projekty, Výzvy, Partneři)
 
-Podle `analyza-dratoveho-modelu-webu.md` a `PLAN-ROZSIRENI.md` se typový systém v `types/portal.ts` rozšiřuje o pět entit a sdílené číselníky. Atributy přesně odpovídají analýze §9.
+Podle `analyza-dratoveho-modelu-webu.md` a `PLAN-ROZSIRENI.md` se typový systém v `types/portal.ts` rozšiřuje o entity a sdílené číselníky. Atributy přesně odpovídají analýze §9. Medailonky jsou zrušeny a všechny entity mají v režimu boilerplate zástupné hodnoty v `data/boilerplate.ts` (`rules/layout.md` §0).
 
 ### Číselníky
 ```typescript
@@ -216,17 +219,10 @@ export interface ProjectCall {
   en?: { title: string; description: string; conditions?: string[]; imageAlt?: string };
 }
 
-export interface Profile { // Medailonek
-  id: string; slug: string; name: string; title: string; content: string;
-  publishedAt: string; photoUrl?: string; photoAlt?: string;
-  audience: Audience[];
-  en?: { title: string; content: string; photoAlt?: string };
-}
-
 export interface Partner { id: string; name: string; url: string; }
 
 export interface TimelineItem {
-  kind: "event" | "project" | "profile" | "article";
+  kind: "event" | "project";
   id: string; title: string; date: string; sortDate: string; href: string;
 }
 ```
@@ -235,12 +231,12 @@ export interface TimelineItem {
 - `getEvents(filter?: { type?: EventType | "all" })` – akce řazené vzestupně podle `startsAt`.
 - `getUpcomingEvents(limit = 2)` – nejbližší akce od dnešního data (pro homepage).
 - `getProjects(unit?: FacultyUnit | "all")`, `getProjectCalls()`, `getProjectBySlug(slug)`, `getProjectCallBySlug(slug)`.
-- `getProfiles()`, `getProfileBySlug(slug)`, `getPartners()`.
-- `getTimelineItems(kind?)` – agregace Akcí, Projektů, Medailonků a Článků do jednotného `TimelineItem[]` řazeného sestupně podle `sortDate`; u článků se `sortDate` parsuje z českého formátu `publishedAt` (`DD. MM. YYYY`).
-- `getArticlesByAudience(audience: Audience)` – vrací pouze články s danou skupinou v `audience`, v pořadí `MOCK_ARTICLES` (shodné s archivem); zdroj pro podstránky `/pro-koho/[audience]`.
+- `getPartners()`.
+- `getTimelineItems(kind?)` – agregace Akcí a Projektů do jednotného `TimelineItem[]` řazeného sestupně podle `sortDate`; typy `profile` a `article` jsou zrušeny (`rules/layout.md` §0, §2.16).
+- `getArticlesByAudience(audience: Audience)` – vrací pouze články s danou skupinou v `audience`, v pořadí `BOILERPLATE_ARTICLES` (shodné s archivem); zdroj pro podstránky `/pro-koho/[audience]`.
 - `AUDIENCE_SLUGS` a `AUDIENCE_ORDER` jsou definované v `lib/audiences.ts` (bez importu mock dat, aby je šlo použít i v klientských komponentách) a mapují české URL slugy na interní identifikátory cílových skupin: `studenti` -> `students`, `vyzkumnici` -> `researchers`, `verejnost` -> `public`, `partneri` -> `partners`, `media` -> `media`.
 - Formátování data akce z ISO probíhá v klientských komponentách podle aktivního jazyka (`cs`: `12. 11. 2026`, `en`: `November 12, 2026`).
 
 ### Routy
-- `/akce` (přehled + filtr typu), `/projekty` (mřížka + filtr součástí + výzvy), `/projekty/[slug]` (detail projektu i výzvy), `/vzdelavani`, `/o-nas`, `/zpravy/medailonky`, `/zpravy/medailonky/[slug]`, `/pro-koho/[audience]` (podstránky cílových skupin ve stylu archivu zpráv – pouze články s interní značkou dané skupiny a sub-menu všech pěti skupin).
+- `/akce` (přehled + filtr typu), `/projekty` (mřížka + filtr součástí + výzvy), `/projekty/[slug]` (detail projektu i výzvy), `/vzdelavani`, `/o-nas`, `/zpravy`, `/zpravy/[slug]`, `/pro-koho/[audience]` (podstránky cílových skupin ve stylu archivu zpráv – pouze články s interní značkou dané skupiny a sub-menu všech pěti skupin). Routy `/zpravy/medailonky` a `/zpravy/medailonky/[slug]` jsou odstraněny (`rules/layout.md` §0).
 - Všechny `[slug]` i `[audience]` routy MUSÍ mít `generateStaticParams` odvozené z příslušných getterů a mapování; statický export zůstává povinný.

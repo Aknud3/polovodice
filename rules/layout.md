@@ -5,6 +5,25 @@
 
 ---
 
+## 0. Režim BOILERPLATE (závazný stav)
+
+Portál je v režimu **boilerplate**: slouží k ladění designu bez redakčního obsahu. Veškeré zprávy, články, medailonky a doprovodná obsahová data jsou z webu odstraněny; na jejich místě je neutrální zástupný obsah, který drží přesnou geometrii layoutu.
+
+- **Zdroj obsahu:** jediný soubor `data/boilerplate.ts` (původní `data/mock-data.ts` je zrušen) drží všechny zástupné entity:
+  - 12 redakčních článků (dva za každou rubriku `chips`, `materials`, `power-elec`, `embedded`, `quantum`, `industry`) a 6 zpráv fakulty (`academic`),
+  - 6 akcí (`Název akce NN`, místo `Místo konání`, typy `event` / `conference` / `summer-school`, termíny 11/2026 – 3/2027),
+  - 6 projektů (`Název projektu NN`, stavy a součásti se střídají), 3 výzvy (`Název výzvy NN`, deadliny 12/2026 – 2/2027),
+  - 6 partnerů (`Partner NN` s odkazem `https://example.com`), 3 příležitosti a 3 otázky FAQ.
+- **Žádné fotografie ani vymyšlené vazby:** žádná entita nemá `imageUrl`, akce nemá `registrationUrl` a partneři nenesou názvy reálných firem; kontakt je `Kontaktní osoba` / `kontakt@example.cz`.
+- **Termíny:** akce (`startsAt`, `endsAt`) a výzvy (`deadline`) si drží strojové ISO datumy, protože řídí řazení, filtr „nadcházející“ a formát „od – do“; všechny ostatní texty jsou zástupné.
+- **Zástupné texty (CZ / EN):** titulek `Titulek zprávy NN` / `News headline NN` (zprávy fakulty `Titulek zprávy z fakulty NN`), perex `Perex zprávy – zástupný text pro kontrolu typografie, délky řádku a rytmu sazby.`, datum `DD. MM. YYYY`, rubrika `ŠABLONA` / `TEMPLATE`, autor `Jméno autora` / `Součást fakulty`, tag `šablona` / `template`.
+- **Náhledy:** každý náhled článku vykresluje brandovanou šablonu `article-media-placeholder` (`rules/theme.md` §8). Karty akcí, projektů a výzev náhled nevykreslují, protože entita nemá `imageUrl`; externí obrázky se do projektu nezdrojují.
+- **Medailonky zrušeny:** routy `/zpravy/medailonky` a `/zpravy/medailonky/[slug]`, komponenty `ProfilesClient` / `ProfileDetailClient`, typ `Profile` i datová sada `MOCK_PROFILES` jsou odstraněny. Archiv, vyhledávání ani časová osa na medailonky neodkazují.
+- **Co režim nemění:** strukturu sekcí, mřížky, typografii, tokeny, animace, filtry, vyhledávání ani bilingvní přepínání. Mění se výhradně obsah, který je zástupný.
+- **Návrat redakčního obsahu:** až po uzavření designu, nahrazením `BOILERPLATE_ARTICLES` skutečnou datovou sadou bez zásahu do komponent.
+
+---
+
 ## 1. Souhrnná strukturální dekonstrukce informačního portálu
 
 Na základě dekonstrukce analyzovaných portálů je architektura stránek portálu **Polovodiče** organizována do následující vertikální a horizontální hierarchie:
@@ -41,13 +60,13 @@ Na základě dekonstrukce analyzovaných portálů je architektura stránek port
 └───────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Samostatné stránky webu (hierarchie podle drátového modelu): `/zpravy` (Novinky vč. `/zpravy/medailonky`), `/pro-koho/[audience]` (podstránky cílových skupin jako sekce zpráv), `/akce`, `/projekty` (vč. `/projekty/[slug]`), `/vzdelavani`, `/o-nas`.
+Samostatné stránky webu (hierarchie podle drátového modelu): `/zpravy` (Novinky vč. detailu `/zpravy/[slug]`), `/pro-koho/[audience]` (podstránky cílových skupin jako sekce zpráv), `/akce`, `/projekty` (vč. `/projekty/[slug]`), `/vzdelavani`, `/o-nas`. Medailonky jsou zrušeny (§0).
 
 ---
 
 ## 2. Přehled povinných technických prvků (Required Technical Elements)
 
-Následujících 18 technických prvků představuje průnik nejlepších praktik analyzovaných portálů a tvoří jádro informačního systému **Polovodiče**:
+Následujících 17 technických prvků představuje průnik nejlepších praktik analyzovaných portálů a tvoří jádro informačního systému **Polovodiče**:
 
 ### 2.1 Prvek 1: Minimalistická navigace (Clean Header – Zero Bloat)
 - **Koncepce:**
@@ -111,6 +130,7 @@ Následujících 18 technických prvků představuje průnik nejlepších prakti
   - **Články kategorie `academic` (Informace o fakultě) se v této mřížce nezobrazují** – mají vlastní sekci (§2.5 a §2.3).
 - **Počítadla filtrů:**
   - Čísla u tlačítek rubrik odpovídají **přesně sadě článků, které může mřížka zobrazit** (tj. bez hlavní zprávy týdne a bez kategorie `academic`), aby žádný filtr nevedl na prázdný stav.
+  - V režimu boilerplate má každá ze šesti rubrik dva články, z nichž jeden je hlavní zpráva týdne; počítadla proto ukazují 2 u pěti rubrik a 1 u rubriky hlavní zprávy – přesně tolik karet mřížka zobrazí (§0).
 
 ### 2.5 Prvek 5: Informace o fakultě (Faculty Information Section – hlavní sdělení portálu)
 - **Koncepce:** Jde o **nejhlasitější prvek stránky** („hlasná trouba“). Placeholder „Šablona pro další sekci“ je zrušen; sekce nese nejdůležitější zprávy Fakulty elektrotechnické ČVUT – letní škola, dny otevřených dveří, přijímací řízení, stáže, stipendia, konference.
@@ -153,16 +173,16 @@ Následujících 18 technických prvků představuje průnik nejlepších prakti
   - Filtry rubrik i polovodičových materiálů jsou **dočasně odstraněny** – zůstává pouze vyhledávací pole a počítadlo nalezených článků.
 - **Rozdělení archivu na dvě sekce (povinné):**
   - Výpis článků je vizuálně i strukturálně rozdělen do **dvou samostatných sekcí**:
-    1. **Všeobecné informace** – odborné a technologické články (všechny s `category !== "academic"`),
-    2. **Informace o fakultě** – články spojené s fakultou, studiem a akcemi (`category === "academic"`).
+    1. **Všeobecné informace** – odborné a technologické články (všechny s `category !== "academic"`); v boilerplate sadě 12 karet,
+    2. **Informace o fakultě** – články spojené s fakultou, studiem a akcemi (`category === "academic"`); v boilerplate sadě 6 karet.
   - Každá sekce má vlastní podnadpis s počtem článků a vlastní 3sloupcovou mřížku karet (`ArticleCard`).
   - Vyhledávací pole filtruje články v obou sekcích současně.
-- **Odkaz na Medailonky:** V záhlaví archivu je vedle nadpisu odkaz „Medailonky“ směřující na `/zpravy/medailonky` (§2.17).
+- **Bez odkazu na Medailonky:** záhlaví archivu nenese žádný odkaz na medailonky – sekce je zrušena (§0).
 
 ### 2.10 Prvek 10: Rozcestník cílových skupin (Audience Gateway)
 - **Umístění:** Homepage, mezi sekcí „Informace týdne“ a „Ostatní novinky“; `id="pro-koho"`.
 - **Obsah:** 5 karet (`grid-cols-2 sm:grid-cols-3 lg:grid-cols-5`): **Studenti, Výzkumníci, Veřejnost, Partneři, Média**. Každá karta: ikona (Lucide, 20 px), název skupiny, jednovětný popis a šipka odkazu.
-- **Cíle karet:** Studenti → `/pro-koho/studenti`, Výzkumníci → `/pro-koho/vyzkumnici`, Veřejnost → `/pro-koho/verejnost`, Partneři → `/pro-koho/partneri`, Média → `/pro-koho/media`. Každá cílová adresa je **podstránka zpráv** dle §2.18 – zobrazuje pouze články s interní značkou dané cílové skupiny.
+- **Cíle karet:** Studenti → `/pro-koho/studenti`, Výzkumníci → `/pro-koho/vyzkumnici`, Veřejnost → `/pro-koho/verejnost`, Partneři → `/pro-koho/partneri`, Média → `/pro-koho/media`. Každá cílová adresa je **podstránka zpráv** dle §2.17 – zobrazuje pouze články s interní značkou dané cílové skupiny.
 - **Styl:** karta `border border-border bg-surface`, hover zvednutí (`hover:-translate-y-1`) a akcent ikony/názvu `text-cvut-blue dark:text-fel-cyan`; žádné obrázky.
 
 ### 2.11 Prvek 11: Nadcházející akce (Upcoming Events na homepage)
@@ -208,19 +228,16 @@ Následujících 18 technických prvků představuje průnik nejlepších prakti
 - **Bloky v pořadí:**
   1. **Kontakty (`#kontakty`):** kontaktní blok katedry (adresa, e-mail, telefon) + kontakt pro média.
   2. **Partneři (`#partneri`):** mřížka partnerů (`grid-cols-2 sm:grid-cols-3 lg:grid-cols-6`), každý partner jako textové jméno s odkazem na web.
-  3. **Historie:** časová osa – vertikální seznam `TimelineItem` s **filtrem typu obsahu**: Vše / Události / Projekty / Medailonky / Články (dropdown vzor §2.4). Položky řazené sestupně podle data a odkazující do příslušných detailů. Na ose se nezobrazují žádné ohraničené badge krabičky – typ záznamu a datum jsou čistý mono text `text-[11px] font-mono` oddělený `•`.
-### 2.17 Prvek 17: Medailonky (`/zpravy/medailonky`)
-- **Přehled:** H1 „Medailonky“ + podtitul; mřížka karet (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`); karta: čtvercové foto osoby (nebo placeholder s iniciálou na navy podkladu), jméno, název medailonku, mono datum, proklik na `/zpravy/medailonky/[slug]`.
-- **Detail:** foto, jméno (H1), název medailonku, datum, plný text (markdown renderer jako detail článku), zpět odkaz „Zpět na medailonky“.
+  3. **Historie:** časová osa – vertikální seznam `TimelineItem` s **filtrem typu obsahu**: Vše / Události / Projekty (dropdown vzor §2.4). Položky řazené sestupně podle data a odkazující do příslušných detailů. Na ose se nezobrazují žádné ohraničené badge krabičky – typ záznamu a datum jsou čistý mono text `text-[11px] font-mono` oddělený `•`. Typy `profile` a `article` jsou zrušeny (§0), takže časová osa agreguje výhradně akce a projekty.
 
-### 2.18 Prvek 18: Podstránky cílových skupin (`/pro-koho/[audience]`) – sekce zpráv
-- **Koncepce a účel:** Každá z pěti cílových skupin (*Studenti*, *Výzkumníci*, *Veřejnost*, *Partneři*, *Média*) má vlastní podstránku, která je **stejnou sekcí jako archiv zpráv** (`/zpravy`, §2.9) – zobrazuje výhradně články, které mají v interním poli `audience` přiřazenou danou skupinu. Nejde o agregaci akcí, projektů ani medailonků.
+### 2.17 Prvek 17: Podstránky cílových skupin (`/pro-koho/[audience]`) – sekce zpráv
+- **Koncepce a účel:** Každá z pěti cílových skupin (*Studenti*, *Výzkumníci*, *Veřejnost*, *Partneři*, *Média*) má vlastní podstránku, která je **stejnou sekcí jako archiv zpráv** (`/zpravy`, §2.9) – zobrazuje výhradně články, které mají v interním poli `audience` přiřazenou danou skupinu. Nejde o agregaci akcí ani projektů.
 - **Interní značka zprávy:** Každý `Article` MUSÍ mít vyplněné `audience: [Audience, ...Audience[]]` – tedy alespoň jednu skupinu. Značka je čistě datová: na kartách ani v detailu článku se jako samostatný odznak nezobrazuje.
 - **Adresy (URL):** `/pro-koho/studenti`, `/pro-koho/vyzkumnici`, `/pro-koho/verejnost`, `/pro-koho/partneri`, `/pro-koho/media`. Všechny routy jsou staticky exportovatelné (`generateStaticParams`); neznámý slug vede na `notFound()`.
 - **Záhlaví stránky:** ikona cílové skupiny (Lucide, 24 px, akcent `text-[#0065bd] dark:text-fel-cyan`), H1 „Pro studenty“ / „Pro výzkumníky“ / „Pro veřejnost“ / „Pro partnery“ / „Pro média“, pod ním jednovětný redakční popis zaměření z rozcestníku. Počet výsledků zobrazuje panel hledání; sekce mají vlastní počítadla článků.
 - **Sub-menu cílových skupin (povinné):** Pod záhlavím je horizontální textové menu všech 5 skupin s popiskem „Cílové skupiny:“ (na mobilu se popisek skrývá), každá položka je odkaz na svou podstránku. Aktivní skupina má `aria-current="page"`, akcentní barvu písma a spodní linku `border-b-2 border-[#0065bd] dark:border-fel-cyan`; neaktivní položky jsou `text-neutral-500 dark:text-neutral-400` s hover akcentem. Navigace má `aria-label`; žádné rámečkové pilulky ani barevné chipy. Na `< 640px` se lišta posouvá uvnitř sebe (§3.3), zbytek stránky zůstává bez horizontálního scrollu.
 - **Výpis:** stejná architektura jako `/zpravy` – vyhledávací pole s placeholderem „Hledat...“, počítadlo výsledků a dvě sekce (**Všeobecné informace** `category !== "academic"`, **Informace o fakultě** `category === "academic"`) s 3sloupcovou mřížkou `ArticleCard`. Filtruje se vždy nejprve podle aktivní cílové skupiny, teprve poté podle hledaného dotazu. Pořadí článků je shodné s archivem; podstránka ani archiv neřadí klientsky.
-- **Odkaz na Medailonky:** zůstává v záhlaví shodně s archivem.
+- **Bez odkazu na Medailonky:** podstránka cílové skupiny odkaz na medailonky neobsahuje, shodně s archivem (§0).
 - **Prázdné stavy:** bez aktivního dotazu a bez článků pro skupinu se v obou sekcích zobrazí „Pro tuto cílovou skupinu zatím nejsou publikované žádné zprávy.“; pokud dotaz nic nenajde, použije se stávající „V této sekci nebyly nalezeny žádné články.“ (`emptySection`).
 ---
 
@@ -267,5 +284,5 @@ Následujících 18 technických prvků představuje průnik nejlepších prakti
 - Portál je plně bilingvní v češtině (`cs`) a angličtině (`en`).
 - Přepínač jazyka je součástí hlavní navigace a změna se ukládá do `localStorage` pod klíčem `polovodice-language`.
 - Překlady rozhraní jsou centralizované v `lib/i18n.ts`; komponenty nesmí duplikovat jazykovou logiku.
-- Všechny články v `data/mock-data.ts` mají obě jazykové verze (českou i kompletní anglickou verzi v poli `en`: `title`, `perex`, `content`, `categoryLabel`, `imageAlt`, `authorTitle`, `authorDepartment`, `tags`).
+- Všechny boilerplate články v `data/boilerplate.ts` mají obě jazykové verze (českou i kompletní anglickou verzi v poli `en`: `title`, `perex`, `content`, `categoryLabel`, `imageAlt`, `authorTitle`, `authorDepartment`, `tags`).
 - Při přepnutí do anglického režimu (`en`) se okamžitě přepne celé rozhraní (navbar, vyhledávání, filtry, cookie lišta, patička, archiv i detail článku) i kompletní obsah všech článků do angličtiny.

@@ -151,13 +151,7 @@ export type TranslationKey =
   | "timelineAll"
   | "timelineEvents"
   | "timelineProjects"
-  | "timelineProfiles"
-  | "timelineArticles"
   | "emptyTimeline"
-  | "profilesHeading"
-  | "profilesSubtitle"
-  | "backToProfiles"
-  | "profilesLink"
   | "footerContact"
   | "footerSocial";
 
@@ -313,13 +307,7 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     timelineAll: "Vše",
     timelineEvents: "Události",
     timelineProjects: "Projekty",
-    timelineProfiles: "Medailonky",
-    timelineArticles: "Články",
     emptyTimeline: "Pro zadaný filtr nebyly nalezeny žádné položky.",
-    profilesHeading: "Medailonky",
-    profilesSubtitle: "Lidé, kteří stojí za výzkumem, výukou a spoluprací s průmyslem.",
-    backToProfiles: "Zpět na medailonky",
-    profilesLink: "Medailonky",
     footerContact: "Kontakt",
     footerSocial: "Sledujte nás",
   },
@@ -472,13 +460,7 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     timelineAll: "All",
     timelineEvents: "Events",
     timelineProjects: "Projects",
-    timelineProfiles: "Profiles",
-    timelineArticles: "Articles",
     emptyTimeline: "No items found for the selected filter.",
-    profilesHeading: "Profiles",
-    profilesSubtitle: "The people behind the research, teaching and industry cooperation.",
-    backToProfiles: "Back to profiles",
-    profilesLink: "Profiles",
     footerContact: "Contact",
     footerSocial: "Follow us",
   },

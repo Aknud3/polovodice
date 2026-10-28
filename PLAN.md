@@ -2,7 +2,23 @@
 
 > **Vedení dokumentu:** V `PLAN.md` je vždy právě **jedna** „Aktuální změna“. Po dokončení se přejmenuje na „Dokončená změna“ a nová aktivní změna se přidá nad ni. Dokončené sekce jsou historické; pokud se rozcházejí s `rules/`, platí aktuální `rules/`.
 
-## Aktuální změna: Interní značky cílových skupin u zpráv a podstránky `/pro-koho/[audience]` jako sekce zpráv
+## Aktuální změna: Režim BOILERPLATE – z webu je odstraněn veškerý vymyšlený obsah
+
+Veškerá redakční i ukázková data jsou z webu odstraněna. Jediný zdroj dat je neutrální boilerplate sada `data/boilerplate.ts` (původní `data/mock-data.ts` zrušen): zprávy, zprávy fakulty, akce, projekty, výzvy, partneři, příležitosti i FAQ mají zástupné texty (`Titulek zprávy NN`, `Název akce NN`, `Partner NN`, `Otázka NN`), žádnou fotografii a žádnou vymyšlenou vazbu (akce nemá `registrationUrl`, partneři odkazují na `https://example.com`, kontakt je `Kontaktní osoba`). Web tak ukazuje čistou strukturu a design bez obsahového balastu. Medailonky, storystream, tržní indexy, stav čistých prostor, kampusové akce a anketa jsou zrušeny i se svými daty a typy.
+
+- Specifikace: `rules/layout.md` §0, §2.4, §2.9, §2.16, §2.17, §8; `rules/theme.md` §3, §8, §10; `rules/technologie.md` §3.1, §8, §9, §10
+
+### Akceptační kritéria
+
+1. `data/boilerplate.ts` je jediným zdrojem dat: 12 redakčních článků (dva na rubriku, jeden z nich hero), 6 zpráv fakulty, 6 akcí (`event` / `conference` / `summer-school`), 6 projektů (stavy i součásti se střídají), 3 výzvy, 6 partnerů, 3 příležitosti a 3 otázky FAQ; vše má CZ i EN variantu.
+2. Zástupné texty: `Titulek zprávy NN`, `Název akce NN`, `Místo konání`, `Název projektu NN`, `Název výzvy NN`, `Partner NN`, `Název příležitosti NN`, `Otázka NN`, datum `DD. MM. YYYY`, rubrika `ŠABLONA`, autor `Jméno autora` / `Součást fakulty`, tag `šablona`.
+3. Žádná entita nemá `imageUrl`, žádná akce `registrationUrl`, žádný partner reálnou firmu a kontakt není fiktivní osoba (`Kontaktní osoba` / `kontakt@example.cz`); `data/mock-data.ts` ani deklarace `MOCK_*` v projektu neexistují.
+4. Routy `/zpravy/medailonky` a `/zpravy/medailonky/[slug]`, komponenty `ProfilesClient` / `ProfileDetailClient`, typ `Profile` a klíče i18n medailonků jsou smazané; archiv ani podstránky cílových skupin na medailonky neodkazují.
+5. Časová osa na `/o-nas` agreguje jen akce a projekty; filtr nabízí Vše / Události / Projekty.
+6. Homepage (hero, novinky, nadcházející akce, fakulta), archiv, detail článku, `/akce`, `/projekty` (+ detail), `/vzdelavani`, `/o-nas`, vyhledávací dialog i `/pro-koho/*` fungují nad boilerplate sadou a drží původní layout i počítadla.
+7. Statický export (`bun run build`) projde bez chyb a neexistující slug vede na 404.
+
+## Dokončená změna: Interní značky cílových skupin u zpráv a podstránky `/pro-koho/[audience]` jako sekce zpráv
 
 Každá zpráva (`Article`) nese povinnou interní značku `audience: [Audience, ...Audience[]]`. Karty rozcestníku na homepage (*Studenti*, *Výzkumníci*, *Veřejnost*, *Partneři*, *Média*) otevírají podstránku `/pro-koho/[audience]`, která je **stejnou sekcí jako archiv zpráv** – obsahuje sub-menu všech pěti skupin, vyhledávání a dvě sekce archivu (**Všeobecné informace**, **Informace o fakultě**) a zobrazuje výhradně články s přiřazenou značkou dané skupiny.
 
@@ -10,7 +26,7 @@ Každá zpráva (`Article`) nese povinnou interní značku `audience: [Audience,
 
 ### Akceptační kritéria
 
-1. `Article` v `types/portal.ts` obsahuje povinné pole `audience: [Audience, ...Audience[]]`; každý článek v `data/mock-data.ts` má alespoň jednu cílovou skupinu.
+1. `Article` v `types/portal.ts` obsahuje povinné pole `audience: [Audience, ...Audience[]]`; každý článek v `data/boilerplate.ts` má alespoň jednu cílovou skupinu.
 2. Existuje statická routa `/pro-koho/[audience]` s `generateStaticParams()` pro všech 5 českých URL slugů (`studenti`, `vyzkumnici`, `verejnost`, `partneri`, `media`).
 3. Podstránka má záhlaví s ikonou skupiny, H1 („Pro studenty“ atd.) a popisem zaměření.
 4. Pod záhlavím je horizontální sub-menu všech 5 cílových skupin s aktivním stavem (akcentní písmo + spodní linka, bez rámečků).
@@ -80,7 +96,7 @@ Placeholder „Šablona pro další sekci“ je nahrazen redakční sekcí **„
 - Rozvržení obou instancí a limity mřížky: `rules/layout.md` §2.3, §2.4, §2.5
 - Barevné tokeny sekce: `rules/theme.md` §6
 - Datová vrstva a nové API funkce: `rules/technologie.md` §8
-- Data zpráv fakulty: `data/mock-data.ts` (kategorie `academic`)
+- Data zpráv fakulty: `data/boilerplate.ts` (kategorie `academic`)
 
 ### Akceptační kritéria (historická)
 

@@ -23,29 +23,17 @@ interface AboutClientProps {
 }
 
 function getKindLabel(kind: TimelineItem["kind"], t: (k: string) => string) {
-  switch (kind) {
-    case "event":
-      return {
-        label: t("timelineEvents"),
-        className: "text-[#0879bb] dark:text-[#27d0d0]",
-      };
-    case "project":
-      return {
-        label: t("timelineProjects"),
-        className: "text-[#2856cb] dark:text-[#3beeb1]",
-      };
-    case "profile":
-      return {
-        label: t("timelineProfiles"),
-        className: "text-[#b47a00] dark:text-[#e2a21a]",
-      };
-    case "article":
-    default:
-      return {
-        label: t("timelineArticles"),
-        className: "text-neutral-500 dark:text-neutral-400",
-      };
+  if (kind === "event") {
+    return {
+      label: t("timelineEvents"),
+      className: "text-[#0879bb] dark:text-[#27d0d0]",
+    };
   }
+
+  return {
+    label: t("timelineProjects"),
+    className: "text-[#2856cb] dark:text-[#3beeb1]",
+  };
 }
 
 export function AboutClient({ partners, timeline }: AboutClientProps) {
@@ -57,8 +45,6 @@ export function AboutClient({ partners, timeline }: AboutClientProps) {
     { id: "all", label: t("timelineAll") },
     { id: "event", label: t("timelineEvents") },
     { id: "project", label: t("timelineProjects") },
-    { id: "profile", label: t("timelineProfiles") },
-    { id: "article", label: t("timelineArticles") },
   ];
 
   const activeOption = kindOptions.find((opt) => opt.id === selectedKind) ?? kindOptions[0];

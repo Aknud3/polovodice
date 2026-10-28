@@ -24,6 +24,7 @@ export function ArticleDetailClient({ article, related }: ArticleDetailClientPro
   const authorDepartment = isEn
     ? (article.en!.authorDepartment ?? article.author.department)
     : article.author.department;
+  const authorName = isEn ? (article.en!.authorName ?? article.author.name) : article.author.name;
   const tags = isEn ? (article.en!.tags ?? article.tags) : article.tags;
 
   return (
@@ -65,7 +66,7 @@ export function ArticleDetailClient({ article, related }: ArticleDetailClientPro
               </div>
               <div>
                 <span className="font-semibold text-neutral-900 dark:text-white block font-sans">
-                  {article.author.name}
+                  {authorName}
                 </span>
                 <span className="text-[11px] text-neutral-500 block">
                   {authorDepartment}

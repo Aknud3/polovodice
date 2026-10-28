@@ -2,18 +2,12 @@ import type {
   Article,
   ArticleCategory,
   Audience,
-  StorystreamItem,
-  CleanroomStatus,
-  MarketIndexItem,
-  CampusEvent,
-  PollData,
   CategoryCounts,
   FacultyNewsItem,
   PortalEvent,
   EventType,
   Project,
   ProjectCall,
-  Profile,
   Partner,
   FacultyUnit,
   TimelineItem,
@@ -21,20 +15,18 @@ import type {
   FaqItem,
 } from "@/types/portal";
 import {
-  MOCK_ARTICLES,
-  MOCK_STORYSTREAM,
-  MOCK_MARKET_INDICES,
-  MOCK_CLEANROOM_STATUS,
-  MOCK_CAMPUS_EVENTS,
-  MOCK_POLL_DATA,
-  MOCK_EVENTS,
-  MOCK_PROJECTS,
-  MOCK_PROJECT_CALLS,
-  MOCK_PROFILES,
-  MOCK_PARTNERS,
-  MOCK_OPPORTUNITIES,
-  MOCK_FAQ,
-} from "@/data/mock-data";
+  BOILERPLATE_ARTICLES,
+  BOILERPLATE_EVENTS,
+  BOILERPLATE_PROJECTS,
+  BOILERPLATE_PROJECT_CALLS,
+  BOILERPLATE_PARTNERS,
+  BOILERPLATE_OPPORTUNITIES,
+  BOILERPLATE_FAQ,
+} from "@/data/boilerplate";
+
+/* ------------------------------------------------------------------ */
+/* Zprávy – režim boilerplate (rules/layout.md §0)                      */
+/* ------------------------------------------------------------------ */
 
 /**
  * Získá seznam článků s volitelnou filtrací podle kategorie a vyhledávacího dotazu.
@@ -49,7 +41,7 @@ export async function getArticles(options?: {
   const query = options?.query?.trim().toLowerCase() ?? "";
   const limit = options?.limit;
 
-  let results = MOCK_ARTICLES;
+  let results = BOILERPLATE_ARTICLES;
 
   // 1. Filtr kategorie
   if (category !== "all") {
@@ -61,7 +53,7 @@ export async function getArticles(options?: {
     results = results.filter((art) => {
       const matchTitle = art.title.toLowerCase().includes(query);
       const matchPerex = art.perex.toLowerCase().includes(query);
-      const matchTag = art.tags.some((t) => t.toLowerCase().includes(query));
+      const matchTag = art.tags.some((tag) => tag.toLowerCase().includes(query));
       return matchTitle || matchPerex || matchTag;
     });
   }
@@ -76,31 +68,25 @@ export async function getArticles(options?: {
 
 /**
  * Získá články s interní značkou konkrétní cílové skupiny.
- * Zdroj pro podstránky /pro-koho/[audience] (rules/layout.md §2.18).
+ * Zdroj pro podstránky /pro-koho/[audience] (rules/layout.md §2.17).
  */
 export async function getArticlesByAudience(audience: Audience): Promise<Article[]> {
-  return MOCK_ARTICLES.filter((article) => article.audience.includes(audience));
+  return BOILERPLATE_ARTICLES.filter((article) => article.audience.includes(audience));
 }
 
-/**
- * Získá hlavní prioritní zprávu pro Hero otvírák portálu.
- */
+/** Získá hlavní prioritní zprávu pro Hero otvírák portálu. */
 export async function getFeaturedArticle(): Promise<Article> {
-  const featured = MOCK_ARTICLES.find((art) => art.featured === true);
-  if (featured) {
-    return featured;
-  }
-  return MOCK_ARTICLES[0];
+  return BOILERPLATE_ARTICLES.find((art) => art.featured === true) ?? BOILERPLATE_ARTICLES[0];
 }
 
 /**
  * Získá nejdůležitější zprávy o fakultě (kategorie "academic") pro sekci
  * „Informace o fakultě“ i pro kompaktní widget v bočním sloupci.
  * Vrací zúžený typ bez plného obsahu článků, aby se do klientských komponent
- * nepřenášel celý text. Pořadí odpovídá prioritě v datech.
+ * nepřenášel celý text. Pořadí odpovídá pořadí v datech.
  */
 export async function getFacultyNews(limit?: number): Promise<FacultyNewsItem[]> {
-  const faculty = MOCK_ARTICLES.filter((art) => art.category === "academic").map(
+  const faculty = BOILERPLATE_ARTICLES.filter((art) => art.category === "academic").map(
     ({ id, slug, title, perex, publishedAt, categoryLabel, en }) => ({
       id,
       slug,
@@ -124,7 +110,7 @@ export async function getFacultyNews(limit?: number): Promise<FacultyNewsItem[]>
  * cyklovač „Další články“ a mřížku „Ostatní novinky“.
  */
 export async function getEditorialArticles(limit?: number): Promise<Article[]> {
-  const editorial = MOCK_ARTICLES.filter((art) => art.category !== "academic");
+  const editorial = BOILERPLATE_ARTICLES.filter((art) => art.category !== "academic");
 
   if (typeof limit === "number" && limit > 0) {
     return editorial.slice(0, limit);
@@ -143,58 +129,12 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
     return null;
   }
 
-  const found = MOCK_ARTICLES.find((art) => art.slug === cleanSlug);
-  return found ?? null;
+  return BOILERPLATE_ARTICLES.find((art) => art.slug === cleanSlug) ?? null;
 }
 
-/**
- * Získá související články ke konkrétnímu článku.
- */
+/** Získá související články ke konkrétnímu článku. */
 export async function getRelatedArticles(currentSlug: string, limit = 3): Promise<Article[]> {
-  const current = await getArticleBySlug(currentSlug);
-  if (!current) {
-    return MOCK_ARTICLES.slice(0, limit);
-  }
-
-  return MOCK_ARTICLES
-    .filter((art) => art.slug !== currentSlug)
-    .filter((art) => art.category === current.category || art.tags.some((t) => current.tags.includes(t)))
-    .slice(0, limit);
-}
-
-/**
- * Získá proud rychlých zpráv pro pravý sloupec (Minuta po minutě / Storystream).
- */
-export async function getStorystreamItems(): Promise<StorystreamItem[]> {
-  return MOCK_STORYSTREAM;
-}
-
-/**
- * Získá tržní a technologické indexy pro horní veřejnou lištu.
- */
-export async function getMarketIndices(): Promise<MarketIndexItem[]> {
-  return MOCK_MARKET_INDICES;
-}
-
-/**
- * Získá živý provozní stav čistých prostorů KN:E na Karlově náměstí.
- */
-export async function getCleanroomStatus(): Promise<CleanroomStatus> {
-  return MOCK_CLEANROOM_STATUS;
-}
-
-/**
- * Získá přehled nadcházejících seminářů a akcí.
- */
-export async function getCampusEvents(limit = 3): Promise<CampusEvent[]> {
-  return MOCK_CAMPUS_EVENTS.slice(0, limit);
-}
-
-/**
- * Získá data pro interaktivní hlasovací anketu.
- */
-export async function getPollData(): Promise<PollData> {
-  return MOCK_POLL_DATA;
+  return BOILERPLATE_ARTICLES.filter((art) => art.slug !== currentSlug).slice(0, limit);
 }
 
 /**
@@ -202,7 +142,9 @@ export async function getPollData(): Promise<PollData> {
  * Volitelně počítá nad předanou sadou, aby počítadla filtrů odpovídala
  * přesně tomu, co dokáže zobrazit mřížka „Ostatní novinky“.
  */
-export async function getCategoryCounts(articles: Article[] = MOCK_ARTICLES): Promise<CategoryCounts> {
+export async function getCategoryCounts(
+  articles: Article[] = BOILERPLATE_ARTICLES,
+): Promise<CategoryCounts> {
   const counts: CategoryCounts = {
     all: articles.length,
   };
@@ -218,19 +160,13 @@ export async function getCategoryCounts(articles: Article[] = MOCK_ARTICLES): Pr
 /* Rozšířené entity portálu (rules/technologie.md §10)                  */
 /* ------------------------------------------------------------------ */
 
-/** Parsuje české datum „DD. MM. YYYY“ na ISO „YYYY-MM-DD“. */
-function parseCsDate(date: string): string {
-  const match = date.trim().match(/^(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})$/);
-  if (!match) return "1970-01-01";
-  const [, d, m, y] = match;
-  return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
-}
-
 /**
  * Získá akce řazené vzestupně podle data konání, volitelně filtrované podle typu.
  */
 export async function getEvents(filter?: { type?: EventType | "all" }): Promise<PortalEvent[]> {
-  const events = MOCK_EVENTS.filter((event) => !filter?.type || filter.type === "all" || event.type === filter.type);
+  const events = BOILERPLATE_EVENTS.filter(
+    (event) => !filter?.type || filter.type === "all" || event.type === filter.type,
+  );
   return [...events].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 }
 
@@ -240,59 +176,51 @@ export async function getEvents(filter?: { type?: EventType | "all" }): Promise<
  */
 export async function getUpcomingEvents(limit = 2): Promise<PortalEvent[]> {
   const today = new Date().toISOString().slice(0, 10);
-  const sorted = [...MOCK_EVENTS].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+  const sorted = [...BOILERPLATE_EVENTS].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
   const upcoming = sorted.filter((event) => (event.endsAt ?? event.startsAt) >= today);
   if (upcoming.length > 0) return upcoming.slice(0, limit);
   return sorted.slice(-limit);
 }
 
-/**
- * Získá projekty, volitelně filtrované podle fakulty/součásti.
- */
+/** Získá projekty, volitelně filtrované podle fakulty/součásti. */
 export async function getProjects(unit?: FacultyUnit | "all"): Promise<Project[]> {
-  if (!unit || unit === "all") return MOCK_PROJECTS;
-  return MOCK_PROJECTS.filter((project) => project.unit === unit);
+  if (!unit || unit === "all") return BOILERPLATE_PROJECTS;
+  return BOILERPLATE_PROJECTS.filter((project) => project.unit === unit);
 }
 
 export async function getProjectCalls(): Promise<ProjectCall[]> {
-  return MOCK_PROJECT_CALLS;
+  return BOILERPLATE_PROJECT_CALLS;
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  return MOCK_PROJECTS.find((project) => project.slug === slug) ?? null;
+  return BOILERPLATE_PROJECTS.find((project) => project.slug === slug) ?? null;
 }
 
 export async function getProjectCallBySlug(slug: string): Promise<ProjectCall | null> {
-  return MOCK_PROJECT_CALLS.find((call) => call.slug === slug) ?? null;
-}
-
-export async function getProfiles(): Promise<Profile[]> {
-  return MOCK_PROFILES;
-}
-
-export async function getProfileBySlug(slug: string): Promise<Profile | null> {
-  return MOCK_PROFILES.find((profile) => profile.slug === slug) ?? null;
+  return BOILERPLATE_PROJECT_CALLS.find((call) => call.slug === slug) ?? null;
 }
 
 export async function getPartners(): Promise<Partner[]> {
-  return MOCK_PARTNERS;
+  return BOILERPLATE_PARTNERS;
 }
 
 export async function getOpportunities(): Promise<Opportunity[]> {
-  return MOCK_OPPORTUNITIES;
+  return BOILERPLATE_OPPORTUNITIES;
 }
 
 export async function getFaqItems(): Promise<FaqItem[]> {
-  return MOCK_FAQ;
+  return BOILERPLATE_FAQ;
 }
 
 /**
- * Agreguje Akce, Projekty, Medailonky a Články do jednotné časové osy
- * Historie, řazené sestupně podle data. Volitelně filtruje typ položky.
+ * Agreguje Akce a Projekty do jednotné časové osy Historie,
+ * řazené sestupně podle data. Volitelně filtruje typ položky.
  */
-export async function getTimelineItems(kind?: TimelineItem["kind"] | "all"): Promise<TimelineItem[]> {
+export async function getTimelineItems(
+  kind?: TimelineItem["kind"] | "all",
+): Promise<TimelineItem[]> {
   const items: TimelineItem[] = [
-    ...MOCK_EVENTS.map((event): TimelineItem => ({
+    ...BOILERPLATE_EVENTS.map((event): TimelineItem => ({
       kind: "event",
       id: event.id,
       title: event.title,
@@ -300,29 +228,13 @@ export async function getTimelineItems(kind?: TimelineItem["kind"] | "all"): Pro
       sortDate: event.startsAt,
       href: "/akce",
     })),
-    ...MOCK_PROJECTS.map((project): TimelineItem => ({
+    ...BOILERPLATE_PROJECTS.map((project): TimelineItem => ({
       kind: "project",
       id: project.id,
       title: project.title,
       date: project.startsAt ?? "",
       sortDate: project.startsAt ?? "1970-01-01",
       href: `/projekty/${project.slug}`,
-    })),
-    ...MOCK_PROFILES.map((profile): TimelineItem => ({
-      kind: "profile",
-      id: profile.id,
-      title: `${profile.name} – ${profile.title}`,
-      date: profile.publishedAt,
-      sortDate: parseCsDate(profile.publishedAt),
-      href: `/zpravy/medailonky/${profile.slug}`,
-    })),
-    ...MOCK_ARTICLES.map((article): TimelineItem => ({
-      kind: "article",
-      id: article.id,
-      title: article.title,
-      date: article.publishedAt,
-      sortDate: parseCsDate(article.publishedAt),
-      href: `/zpravy/${article.slug}`,
     })),
   ];
 

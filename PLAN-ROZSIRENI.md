@@ -1,5 +1,7 @@
 # Plán rozšíření portálu Polovodiče podle drátového modelu
 
+> **Stav dokumentu: historický.** Rozšíření podle drátového modelu je dokončeno; aktuální závazná specifikace je v `rules/`. Fáze 6 (Medailonky) a redakční článková data jsou zrušeny režimem boilerplate – viz `PLAN.md` „Režim BOILERPLATE“ a `rules/layout.md` §0.
+
 > Zdroj pravdy pro obsahovou architekturu: `analyza-dratoveho-modelu-webu.md`.
 > Zdroj pravdy pro vizuální identitu: `rules/theme.md` – **design systém se nemění** (tokeny Green Silicon, IBM Plex, border-driven depth, 4/8px grid, light/dark). Rozšiřujeme pouze informační architekturu, sekce a datové entity.
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Search, X, ArrowRight } from "lucide-react";
-import { MOCK_ARTICLES } from "@/data/mock-data";
+import { BOILERPLATE_ARTICLES } from "@/data/boilerplate";
 import type { ArticleCategory } from "@/types/portal";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Kbd } from "./Kbd";
@@ -51,7 +51,7 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
   }
 
   const cleanQuery = query.trim().toLowerCase();
-  const matchingArticles = MOCK_ARTICLES.filter((article) => {
+  const matchingArticles = BOILERPLATE_ARTICLES.filter((article) => {
     if (activeCategory !== "all" && article.category !== activeCategory) {
       return false;
     }
@@ -144,12 +144,9 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
                           <h4 className="line-clamp-2 text-sm font-semibold text-slate-900 transition-colors group-hover:text-[#0065bd] dark:text-neutral-100 dark:group-hover:text-fel-cyan">
                             {title}
                           </h4>
-                          <time
-                            className="mt-1 block text-[10px] font-mono text-slate-400"
-                            dateTime={article.publishedAt}
-                          >
+                          <span className="mt-1 block text-[10px] font-mono text-slate-400">
                             {article.publishedAt}
-                          </time>
+                          </span>
                         </div>
                         <ArrowRight className="h-4 w-4 shrink-0 text-slate-400 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100" />
                       </Link>

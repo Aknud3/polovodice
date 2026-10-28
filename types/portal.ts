@@ -9,12 +9,10 @@ export type ArticleCategory =
   | "power-elec"   // Výkonová elektronika, měniče, elektromobilita
   | "embedded"     // Vestavné systémy, ARM Cortex, RISC-V, senzorika
   | "quantum"      // Kvantové technologie, fotonika, optické čipy
-  | "industry"     // Národní polovodičová strategie, onsemi, investice, Chips Act
+  | "industry"     // Národní polovodičová strategie, investice, Chips Act
   | "academic";    // Program EK, Katedra mikroelektroniky, stipendia, akce
 
 export type SemiconductorMaterial = "Si" | "SiC" | "GaN" | "GaAs" | "InP" | "Diamond";
-
-export type ArticleCategoryFilter = ArticleCategory | "all";
 
 export type CategoryCounts = Partial<Record<ArticleCategory, number>> & {
   all: number;
@@ -44,6 +42,7 @@ export interface ArticleTranslation {
   content: string;
   categoryLabel: string;
   imageAlt?: string;
+  authorName?: string;
   authorTitle?: string;
   authorDepartment?: string;
   tags?: string[];
@@ -171,23 +170,6 @@ export interface ProjectCall {
   en?: ProjectCallTranslation;
 }
 
-/** Medailonek osoby (sekce Novinky). */
-export interface Profile {
-  id: string;
-  slug: string;
-  name: string;
-  title: string;                 // Název medailonku
-  content: string;               // Markdown text
-  publishedAt: string;           // Formát např. "05. 10. 2026"
-  photoUrl?: string;
-  photoAlt?: string;
-  en?: {
-    title: string;
-    content: string;
-    photoAlt?: string;
-  };
-}
-
 export interface Partner {
   id: string;
   name: string;
@@ -196,7 +178,7 @@ export interface Partner {
 
 /** Jednotná položka časové osy Historie (agregace entit). */
 export interface TimelineItem {
-  kind: "event" | "project" | "profile" | "article";
+  kind: "event" | "project";
   id: string;
   title: string;
   date: string;                  // Zobrazované datum
@@ -219,57 +201,4 @@ export interface FaqItem {
   question: string;
   answer: string;
   en?: { question: string; answer: string };
-}
-
-export interface StorystreamItem {
-  id: string;
-  timestamp: string;             // Např. "15:42"
-  date: string;
-  title: string;
-  category: ArticleCategory;
-  urgent?: boolean;              // Červený indikátor pro mimořádné události
-  url?: string;
-}
-
-export interface CleanroomStatus {
-  facility: string;              // "Čisté prostory Karlovo náměstí KN:E"
-  isoClass: "ISO 5" | "ISO 6" | "ISO 7";
-  operationalState: "V provozu" | "Omezený provoz" | "Sanitární den";
-  temperatureCelsius: number;    // Např. 21.2 °C
-  humidityPercent: number;       // Např. 44.5 %
-  airParticlesPerM3: number;     // Čistota vzduchu
-  lastCalibrationDate: string;
-}
-
-export interface MarketIndexItem {
-  symbol: string;                // Např. "SOX", "ONSEMI", "STM", "ASML"
-  name: string;
-  value: string;                 // Např. "$5,240.12"
-  changePercent: number;         // Např. +1.42
-}
-
-export interface CampusEvent {
-  id: string;
-  title: string;
-  description: string;
-  dateDay: string;               // Např. "12"
-  dateMonth: string;             // Např. "ŘÍJ"
-  fullDate: string;              // Např. "12. 10. 2026"
-  time: string;                  // Např. "16:15"
-  location: string;              // Např. "Zengerova posluchárna KN:E-107"
-  category: "Přednáška" | "Workshop" | "Konference" | "Obhajoby";
-  targetAudience: "Veřejnost" | "Inženýři" | "Studenti" | "Všichni";
-}
-
-export interface PollOption {
-  id: string;
-  text: string;
-  votes: number;
-}
-
-export interface PollData {
-  id: string;
-  question: string;
-  totalVotes: number;
-  options: PollOption[];
 }

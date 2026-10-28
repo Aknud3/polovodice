@@ -17,6 +17,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
   const perex = isEn ? article.en!.perex : article.perex;
   const categoryLabel = isEn ? article.en!.categoryLabel : article.categoryLabel;
   const imageAlt = isEn ? (article.en!.imageAlt ?? article.imageAlt) : article.imageAlt;
+  const authorName = isEn ? (article.en!.authorName ?? article.author.name) : article.author.name;
 
   return (
     <article className="group relative rounded-sm border border-slate-200 dark:border-neutral-800 bg-white dark:bg-[#141846] overflow-hidden hover:border-[#0065bd] dark:hover:border-fel-cyan/40 hover:-translate-y-1 hover:shadow-md transition-all duration-200 flex flex-col h-full">
@@ -54,7 +55,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
           {/* Patička karty */}
           <div className="mt-4 pt-3 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between gap-2 text-xs font-mono text-neutral-400">
             <span className="truncate min-w-0 max-w-[180px] text-[11px]">
-              {article.author.name}
+              {authorName}
             </span>
             <span className="inline-flex items-center gap-0.5 text-[#0065bd] dark:text-fel-cyan font-semibold group-hover:translate-x-0.5 transition-transform">
               {t("detail")} <ArrowUpRight className="w-3.5 h-3.5" />
